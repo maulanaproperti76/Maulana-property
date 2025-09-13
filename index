@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rumah Premium Semarang - Portfolio</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         /* Reset dan base styles */
         * {
@@ -198,6 +199,14 @@
             line-height: 1.6;
         }
         
+        .modal-meta {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 1rem;
+            color: #888;
+            font-size: 0.9rem;
+        }
+        
         /* Footer styles */
         footer {
             background-color: #333;
@@ -216,6 +225,35 @@
             margin: 0 0.5rem;
             font-size: 1.5rem;
             text-decoration: none;
+        }
+        
+        /* Loading animation */
+        .loader {
+            display: flex;
+            justify-content: center;
+            margin: 2rem 0;
+        }
+        
+        .loader .dot {
+            width: 12px;
+            height: 12px;
+            margin: 0 5px;
+            background-color: #E1306C;
+            border-radius: 50%;
+            animation: bounce 1.5s infinite ease-in-out;
+        }
+        
+        .loader .dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+        
+        .loader .dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
         }
         
         /* Responsive styles */
@@ -238,6 +276,12 @@
             
             .gallery-grid {
                 grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            }
+            
+            .modal-content {
+                padding: 1rem;
+                margin: 10% auto;
+                width: 95%;
             }
         }
     </style>
@@ -270,6 +314,11 @@
         <div class="gallery-grid" id="gallery-grid">
             <!-- Gambar-gambar akan dimuat melalui JavaScript -->
         </div>
+        <div class="loader" id="loader">
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+        </div>
     </section>
 
     <!-- Modal untuk detail gambar -->
@@ -279,6 +328,10 @@
             <img src="" alt="" class="modal-image" id="modal-image">
             <h3 class="modal-title" id="modal-title"></h3>
             <p class="modal-description" id="modal-description"></p>
+            <div class="modal-meta">
+                <span id="modal-date"></span>
+                <span id="modal-likes"></span>
+            </div>
         </div>
     </div>
 
@@ -286,7 +339,7 @@
     <footer id="contact">
         <div class="social-links">
             <a href="https://www.instagram.com/rumahpremiumsemarang?igsh=djhiMXRnYWQwNGty" target="_blank" aria-label="Instagram">
-                Instagram
+                <i class="fab fa-instagram"></i>
             </a>
         </div>
         <p>&copy; 2023 Rumah Premium Semarang. All rights reserved.</p>
@@ -294,84 +347,109 @@
 
     <script>
         // Data gambar (dalam implementasi nyata, ini bisa diambil dari API Instagram)
-        // Untuk saat ini, kita akan menggunakan data dummy
+        // Untuk saat ini, kita akan menggunakan data dummy yang menyerupai konten Instagram
         const portfolioItems = [
             {
                 id: 1,
-                imageUrl: "https://source.unsplash.com/random/600x600/?luxury-house,1",
-                title: "Rumah Minimalis Modern",
-                description: "Desain rumah minimalis dengan sentuhan modern, cocok untuk keluarga muda. Material berkualitas tinggi dengan finishing eksklusif."
+                imageUrl: "https://source.unsplash.com/random/600x600/?interior,1",
+                title: "Desain Interior Modern",
+                description: "Desain interior modern dengan perpaduan warna yang elegan dan furniture custom.",
+                date: "15 Oktober 2023",
+                likes: 125
             },
             {
                 id: 2,
-                imageUrl: "https://source.unsplash.com/random/600x600/?luxury-house,2",
-                title: "Interior Mewah",
-                description: "Interior rumah dengan desain mewah dan furniture custom. Setiap detail dirancang untuk kenyamanan dan estetika."
+                imageUrl: "https://source.unsplash.com/random/600x600/?interior,2",
+                title: "Ruang Keluarga Nyaman",
+                description: "Ruang keluarga yang nyaman dengan pencahayaan alami dan sirkulasi udara yang baik.",
+                date: "12 Oktober 2023",
+                likes: 98
             },
             {
                 id: 3,
-                imageUrl: "https://source.unsplash.com/random/600x600/?luxury-house,3",
-                title: "Eksterior Elegant",
-                description: "Tampilan eksterior yang elegant dengan kombinasi material premium. Desain yang membuat rumah Anda tampil beda."
+                imageUrl: "https://source.unsplash.com/random/600x600/?interior,3",
+                title: "Kitchen Set Premium",
+                description: "Kitchen set custom dengan material terbaik dan desain yang ergonomis.",
+                date: "10 Oktober 2023",
+                likes: 156
             },
             {
                 id: 4,
-                imageUrl: "https://source.unsplash.com/random/600x600/?luxury-house,4",
-                title: "Taman Asri",
-                description: "Taman yang dirancang khusus untuk menciptakan suasana asri dan nyaman. Cocok untuk bersantai di akhir pekan."
+                imageUrl: "https://source.unsplash.com/random/600x600/?interior,4",
+                title: "Kamar Tidur Mewah",
+                description: "Kamar tidur dengan desain mewah dan furniture berkualitas tinggi.",
+                date: "8 Oktober 2023",
+                likes: 201
             },
             {
                 id: 5,
-                imageUrl: "https://source.unsplash.com/random/600x600/?luxury-house,5",
-                title: "Kitchen Set Premium",
-                description: "Kitchen set custom dengan material terbaik dan desain ergonomis. Dapur impian untuk memasak bersama keluarga."
+                imageUrl: "https://source.unsplash.com/random/600x600/?interior,5",
+                title: "Taman Minimalis",
+                description: "Taman minimalis dengan tanaman hias yang terawat dan tempat bersantai.",
+                date: "5 Oktober 2023",
+                likes: 178
             },
             {
                 id: 6,
-                imageUrl: "https://source.unsplash.com/random/600x600/?luxury-house,6",
-                title: "Kamar Tidur Nyaman",
-                description: "Kamar tidur dengan desain yang menenangkan dan furniture berkualitas. Tempat istirahat yang sempurna setelah hari yang panjang."
+                imageUrl: "https://source.unsplash.com/random/600x600/?interior,6",
+                title: "Desain Eksterior",
+                description: "Desain eksterior rumah dengan kombinasi material yang modern dan elegan.",
+                date: "3 Oktober 2023",
+                likes: 142
             },
             {
                 id: 7,
-                imageUrl: "https://source.unsplash.com/random/600x600/?luxury-house,7",
-                title: "Ruang Keluarga Hangat",
-                description: "Ruang keluarga yang hangat dengan pencahayaan yang tepat. Dirancang untuk menciptakan momen berkualitas bersama keluarga."
+                imageUrl: "https://source.unsplash.com/random/600x600/?interior,7",
+                title: "Ruang Kerja Home Office",
+                description: "Ruang kerja yang nyaman dan produktif untuk bekerja dari rumah.",
+                date: "1 Oktober 2023",
+                likes: 115
             },
             {
                 id: 8,
-                imageUrl: "https://source.unsplash.com/random/600x600/?luxury-house,8",
-                title: "Home Theater",
-                description: "Ruang home theater dengan akustik yang dirancang khusus. Pengalaman menonton layaknya di bioskop."
+                imageUrl: "https://source.unsplash.com/random/600x600/?interior,8",
+                title: "Kamar Anak Kreatif",
+                description: "Kamar anak dengan desain kreatif dan warna-warna cerah yang menyenangkan.",
+                date: "28 September 2023",
+                likes: 167
             },
             {
                 id: 9,
-                imageUrl: "https://source.unsplash.com/random/600x600/?luxury-house,9",
-                title: "Kolam Renang Private",
-                description: "Kolam renang private dengan desain yang memukau. Cocok untuk relaksasi dan menjaga kesehatan."
+                imageUrl: "https://source.unsplash.com/random/600x600/?interior,9",
+                title: "Kamar Mandi Luxurious",
+                description: "Kamar mandi dengan desain mewah dan perlengkapan berkualitas tinggi.",
+                date: "25 September 2023",
+                likes: 189
             }
         ];
 
         // Fungsi untuk memuat gallery
         function loadGallery() {
             const galleryGrid = document.getElementById('gallery-grid');
+            const loader = document.getElementById('loader');
             
-            portfolioItems.forEach(item => {
-                const galleryItem = document.createElement('div');
-                galleryItem.className = 'gallery-item';
-                galleryItem.innerHTML = `
-                    <img src="${item.imageUrl}" alt="${item.title}">
-                    <div class="gallery-item-overlay">
-                        <h3>${item.title}</h3>
-                    </div>
-                `;
-                
-                galleryItem.addEventListener('click', () => {
-                    openModal(item);
+            // Simulasi loading data
+            setTimeout(() => {
+                portfolioItems.forEach(item => {
+                    const galleryItem = document.createElement('div');
+                    galleryItem.className = 'gallery-item';
+                    galleryItem.innerHTML = `
+                        <img src="${item.imageUrl}" alt="${item.title}" loading="lazy">
+                        <div class="gallery-item-overlay">
+                            <h3>${item.title}</h3>
+                        </div>
+                    `;
+                    
+                    galleryItem.addEventListener('click', () => {
+                        openModal(item);
+                    });
+                    
+                    galleryGrid.appendChild(galleryItem);
                 });
                 
-                galleryGrid.appendChild(galleryItem);
-            });
+                // Sembunyikan loader setelah konten dimuat
+                loader.style.display = 'none';
+            }, 1500);
         }
 
         // Fungsi untuk membuka modal
@@ -380,11 +458,15 @@
             const modalImage = document.getElementById('modal-image');
             const modalTitle = document.getElementById('modal-title');
             const modalDescription = document.getElementById('modal-description');
+            const modalDate = document.getElementById('modal-date');
+            const modalLikes = document.getElementById('modal-likes');
             
             modalImage.src = item.imageUrl;
             modalImage.alt = item.title;
             modalTitle.textContent = item.title;
             modalDescription.textContent = item.description;
+            modalDate.textContent = item.date;
+            modalLikes.textContent = `${item.likes} Suka`;
             
             modal.classList.add('show');
             
