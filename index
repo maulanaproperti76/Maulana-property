@@ -3,10 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rumah Premium Semarang - Portfolio</title>
+    <title>Surya Abadi Elektrik - Jasa Pengeboran Sumur Profesional</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* Reset dan base styles */
         * {
             margin: 0;
             padding: 0;
@@ -15,286 +14,488 @@
         }
         
         body {
-            background-color: #fafafa;
+            background-color: #f5f9fc;
             color: #333;
             line-height: 1.6;
         }
         
-        /* Header styles */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header */
         header {
-            background-color: white;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            padding: 1rem 2rem;
+            background: linear-gradient(135deg, #0a4a8e 0%, #1a75bc 100%);
+            color: white;
+            padding: 20px 0;
             position: sticky;
             top: 0;
             z-index: 100;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
         }
         
-        .header-container {
-            max-width: 1200px;
-            margin: 0 auto;
+        .header-content {
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
         
         .logo {
-            height: 50px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .logo i {
+            font-size: 2.5rem;
+            color: #ffcc00;
+        }
+        
+        .logo-text h1 {
+            font-size: 1.8rem;
+            line-height: 1.2;
+        }
+        
+        .logo-text p {
+            font-size: 0.9rem;
+            opacity: 0.9;
         }
         
         nav ul {
             display: flex;
             list-style: none;
-        }
-        
-        nav li {
-            margin-left: 1.5rem;
+            gap: 25px;
         }
         
         nav a {
+            color: white;
             text-decoration: none;
-            color: #333;
             font-weight: 500;
             transition: color 0.3s;
+            font-size: 1.1rem;
         }
         
         nav a:hover {
-            color: #E1306C; /* Warna Instagram */
+            color: #ffcc00;
         }
         
-        /* Hero section */
+        /* Hero Section */
         .hero {
-            text-align: center;
-            padding: 4rem 2rem;
-            background: linear-gradient(135deg, #fdfcfb 0%, #e2d1c3 100%);
+            background: url('https://images.unsplash.com/photo-1598791318878-10e76d178023?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80') no-repeat center center/cover;
+            height: 500px;
+            display: flex;
+            align-items: center;
+            position: relative;
+            color: white;
         }
         
-        .hero h1 {
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+        }
+        
+        .hero-content {
+            position: relative;
+            max-width: 600px;
+            padding: 30px;
+            background: rgba(10, 74, 142, 0.8);
+            border-radius: 10px;
+            margin-left: 50px;
+        }
+        
+        .hero-content h2 {
             font-size: 2.5rem;
-            margin-bottom: 1rem;
-            color: #333;
+            margin-bottom: 20px;
         }
         
-        .hero p {
+        .hero-content p {
+            font-size: 1.2rem;
+            margin-bottom: 25px;
+        }
+        
+        .btn {
+            display: inline-block;
+            background: #ffcc00;
+            color: #0a4a8e;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            text-decoration: none;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.3s;
+        }
+        
+        .btn:hover {
+            background: #ffd633;
+            transform: translateY(-3px);
+        }
+        
+        /* Services */
+        .services {
+            padding: 80px 0;
+            background: white;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 50px;
+            color: #0a4a8e;
+        }
+        
+        .section-title h2 {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+        
+        .section-title p {
             font-size: 1.2rem;
             max-width: 700px;
             margin: 0 auto;
             color: #666;
         }
         
-        /* Gallery styles */
-        .gallery {
-            max-width: 1200px;
-            margin: 2rem auto;
-            padding: 0 1rem;
-        }
-        
-        .gallery-title {
-            text-align: center;
-            margin-bottom: 2rem;
-            font-size: 2rem;
-            color: #333;
-        }
-        
-        .gallery-grid {
+        .services-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 1.5rem;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
         }
         
-        .gallery-item {
-            position: relative;
+        .service-card {
+            background: #f8f8f8;
+            border-radius: 10px;
             overflow: hidden;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            cursor: pointer;
-            aspect-ratio: 1/1;
+            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
         
-        .gallery-item img {
+        .service-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+        
+        .service-image {
+            height: 200px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .service-image img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: transform 0.5s ease;
+            transition: transform 0.5s;
         }
         
-        .gallery-item:hover img {
+        .service-card:hover .service-image img {
+            transform: scale(1.1);
+        }
+        
+        .service-icon {
+            position: absolute;
+            bottom: -25px;
+            right: 20px;
+            background: #0a4a8e;
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+        }
+        
+        .service-content {
+            padding: 35px 25px 25px;
+        }
+        
+        .service-content h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: #0a4a8e;
+        }
+        
+        /* About */
+        .about {
+            padding: 80px 0;
+            background: #f0f7ff;
+        }
+        
+        .about-content {
+            display: flex;
+            align-items: center;
+            gap: 50px;
+        }
+        
+        .about-text {
+            flex: 1;
+        }
+        
+        .about-text h2 {
+            font-size: 2.2rem;
+            margin-bottom: 20px;
+            color: #0a4a8e;
+        }
+        
+        .about-text p {
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+        
+        .about-image {
+            flex: 1;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        .about-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        
+        /* Contact */
+        .contact {
+            padding: 80px 0;
+            background: white;
+        }
+        
+        .contact-info {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .contact-info h3 {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: #0a4a8e;
+        }
+        
+        .contact-info p {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
+        
+        .whatsapp-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: #25D366;
+            color: white;
+            padding: 15px 30px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-top: 20px;
+            transition: background 0.3s, transform 0.3s;
+        }
+        
+        .whatsapp-btn:hover {
+            background: #128C7E;
             transform: scale(1.05);
         }
         
-        .gallery-item-overlay {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: linear-gradient(transparent, rgba(0, 0, 0, 0.7));
-            padding: 1rem;
+        /* Footer */
+        footer {
+            background: #0a4a8e;
             color: white;
-            opacity: 0;
-            transition: opacity 0.3s ease;
+            padding: 40px 0 20px;
+            text-align: center;
         }
         
-        .gallery-item:hover .gallery-item-overlay {
-            opacity: 1;
-        }
-        
-        /* Modal styles */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.9);
-            z-index: 1000;
-            overflow: auto;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-        
-        .modal.show {
-            display: block;
-            opacity: 1;
-        }
-        
-        .modal-content {
-            position: relative;
-            background-color: white;
-            margin: 5% auto;
-            padding: 2rem;
-            width: 90%;
-            max-width: 800px;
-            border-radius: 8px;
-            animation: modalFadeIn 0.3s;
-        }
-        
-        @keyframes modalFadeIn {
-            from { opacity: 0; transform: translateY(-50px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        .close-modal {
-            position: absolute;
-            top: 1rem;
-            right: 1.5rem;
-            font-size: 2rem;
-            cursor: pointer;
-            color: #333;
-        }
-        
-        .modal-image {
-            width: 100%;
-            border-radius: 8px;
-            margin-bottom: 1rem;
-        }
-        
-        .modal-title {
-            font-size: 1.5rem;
-            margin-bottom: 0.5rem;
-        }
-        
-        .modal-description {
-            color: #666;
-            line-height: 1.6;
-        }
-        
-        .modal-meta {
+        .footer-content {
             display: flex;
-            justify-content: space-between;
-            margin-top: 1rem;
-            color: #888;
+            flex-direction: column;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .footer-logo {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #ffcc00;
+        }
+        
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            flex-wrap: wrap;
+        }
+        
+        .footer-links a {
+            color: white;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-links a:hover {
+            color: #ffcc00;
+        }
+        
+        .copyright {
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
             font-size: 0.9rem;
         }
         
-        /* Footer styles */
-        footer {
-            background-color: #333;
-            color: white;
-            text-align: center;
-            padding: 2rem;
-            margin-top: 3rem;
+        /* WhatsApp Popup */
+        .whatsapp-popup {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 1000;
         }
         
-        .social-links {
-            margin-bottom: 1rem;
-        }
-        
-        .social-links a {
-            color: white;
-            margin: 0 0.5rem;
-            font-size: 1.5rem;
-            text-decoration: none;
-        }
-        
-        /* Loading animation */
-        .loader {
+        .whatsapp-button {
             display: flex;
+            align-items: center;
             justify-content: center;
-            margin: 2rem 0;
-        }
-        
-        .loader .dot {
-            width: 12px;
-            height: 12px;
-            margin: 0 5px;
-            background-color: #E1306C;
+            width: 70px;
+            height: 70px;
+            background: #25D366;
+            color: white;
             border-radius: 50%;
-            animation: bounce 1.5s infinite ease-in-out;
+            font-size: 2rem;
+            box-shadow: 0 5px 20px rgba(37, 211, 102, 0.5);
+            cursor: pointer;
+            transition: transform 0.3s, background 0.3s;
+            animation: pulse 1.5s infinite;
         }
         
-        .loader .dot:nth-child(2) {
-            animation-delay: 0.2s;
+        .whatsapp-button:hover {
+            transform: scale(1.1);
+            background: #128C7E;
         }
         
-        .loader .dot:nth-child(3) {
-            animation-delay: 0.4s;
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7);
+            }
+            70% {
+                box-shadow: 0 0 0 15px rgba(37, 211, 102, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(37, 211, 102, 0);
+            }
         }
         
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-15px); }
+        .popup-content {
+            position: absolute;
+            bottom: 85px;
+            right: 0;
+            width: 300px;
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s;
         }
         
-        /* Responsive styles */
+        .popup-content.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .popup-content h3 {
+            color: #0a4a8e;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .popup-content p {
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .popup-content a {
+            display: block;
+            text-align: center;
+            background: #25D366;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            margin-top: 10px;
+            transition: background 0.3s;
+        }
+        
+        .popup-content a:hover {
+            background: #128C7E;
+        }
+        
+        .close-popup {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #999;
+            transition: color 0.3s;
+        }
+        
+        .close-popup:hover {
+            color: #333;
+        }
+        
+        /* Responsive */
         @media (max-width: 768px) {
-            .header-container {
+            .header-content {
                 flex-direction: column;
+                text-align: center;
+                gap: 20px;
             }
             
             nav ul {
-                margin-top: 1rem;
+                flex-direction: column;
+                gap: 15px;
             }
             
-            .hero h1 {
-                font-size: 2rem;
+            .hero-content {
+                margin: 0 auto;
+                text-align: center;
             }
             
-            .hero p {
-                font-size: 1rem;
+            .about-content {
+                flex-direction: column;
             }
             
-            .gallery-grid {
-                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            }
-            
-            .modal-content {
-                padding: 1rem;
-                margin: 10% auto;
-                width: 95%;
+            .services-grid {
+                grid-template-columns: 1fr;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Header dengan logo -->
+    <!-- Header -->
     <header>
-        <div class="header-container">
-            <img src="logo.png" alt="Rumah Premium Semarang Logo" class="logo">
+        <div class="container header-content">
+            <div class="logo">
+                <i class="fas fa-water"></i>
+                <div class="logo-text">
+                    <h1>Surya Abadi Elektrik</h1>
+                    <p>Jasa Pengeboran Sumur Profesional</p>
+                </div>
+            </div>
             <nav>
                 <ul>
-                    <li><a href="#home">Home</a></li>
-                    <li><a href="#gallery">Gallery</a></li>
+                    <li><a href="#home">Beranda</a></li>
+                    <li><a href="#services">Layanan</a></li>
                     <li><a href="#about">Tentang Kami</a></li>
                     <li><a href="#contact">Kontak</a></li>
                 </ul>
@@ -302,188 +503,193 @@
         </div>
     </header>
 
-    <!-- Hero section -->
+    <!-- Hero Section -->
     <section class="hero" id="home">
-        <h1>Rumah Premium Semarang</h1>
-        <p>Portofolio karya dan layanan terbaik kami dalam menciptakan hunian premium di Semarang dan sekitarnya.</p>
-    </section>
-
-    <!-- Gallery section -->
-    <section class="gallery" id="gallery">
-        <h2 class="gallery-title">Portofolio Kami</h2>
-        <div class="gallery-grid" id="gallery-grid">
-            <!-- Gambar-gambar akan dimuat melalui JavaScript -->
-        </div>
-        <div class="loader" id="loader">
-            <div class="dot"></div>
-            <div class="dot"></div>
-            <div class="dot"></div>
+        <div class="hero-content">
+            <h2>Solusi Air Bersih untuk Anda</h2>
+            <p>Melayani jasa pengeboran sumur dangkal, sumur dalam, sumur resapan, service sumur, dan filterisasi air dengan pengalaman sejak 2010.</p>
+            <a href="#contact" class="btn">Hubungi Kami</a>
         </div>
     </section>
 
-    <!-- Modal untuk detail gambar -->
-    <div class="modal" id="image-modal">
-        <div class="modal-content">
-            <span class="close-modal" id="close-modal">&times;</span>
-            <img src="" alt="" class="modal-image" id="modal-image">
-            <h3 class="modal-title" id="modal-title"></h3>
-            <p class="modal-description" id="modal-description"></p>
-            <div class="modal-meta">
-                <span id="modal-date"></span>
-                <span id="modal-likes"></span>
+    <!-- Services Section -->
+    <section class="services" id="services">
+        <div class="container">
+            <div class="section-title">
+                <h2>Layanan Kami</h2>
+                <p>Kami menyediakan berbagai layanan profesional untuk memenuhi kebutuhan air bersih Anda</p>
             </div>
+            <div class="services-grid">
+                <div class="service-card">
+                    <div class="service-image">
+                        <img src="https://images.unsplash.com/photo-1595433306944-4b61b6c5a8f3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=774&q=80" alt="Sumur Dangkal">
+                        <div class="service-icon">
+                            <i class="fas fa-pump"></i>
+                        </div>
+                    </div>
+                    <div class="service-content">
+                        <h3>Sumur Dangkal</h3>
+                        <p>Pengeboran sumur dangkal untuk kebutuhan air rumah tangga dengan kedalaman hingga 30 meter.</p>
+                    </div>
+                </div>
+                <div class="service-card">
+                    <div class="service-image">
+                        <img src="https://images.unsplash.com/photo-1586773860418-d37222d8fce3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1776&q=80" alt="Sumur Dalam">
+                        <div class="service-icon">
+                            <i class="fas fa-industry"></i>
+                        </div>
+                    </div>
+                    <div class="service-content">
+                        <h3>Sumur Dalam</h3>
+                        <p>Pengeboran sumur dalam untuk industri, hotel, dan kebutuhan volume air besar dengan kedalaman hingga 200 meter.</p>
+                    </div>
+                </div>
+                <div class="service-card">
+                    <div class="service-image">
+                        <img src="https://images.unsplash.com/photo-1612489846076-ef8f35d63139?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=774&q=80" alt="Sumur Resapan">
+                        <div class="service-icon">
+                            <i class="fas fa-recycle"></i>
+                        </div>
+                    </div>
+                    <div class="service-content">
+                        <h3>Sumur Resapan</h3>
+                        <p>Pembuatan sumur resapan untuk konservasi air tanah dan pencegahan banjir.</p>
+                    </div>
+                </div>
+                <div class="service-card">
+                    <div class="service-image">
+                        <img src="https://images.unsplash.com/photo-1583305727416-43e7a7f26d78?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=774&q=80" alt="Service Sumur">
+                        <div class="service-icon">
+                            <i class="fas fa-tools"></i>
+                        </div>
+                    </div>
+                    <div class="service-content">
+                        <h3>Service Sumur</h3>
+                        <p>Perbaikan dan perawatan sumur yang bermasalah, termasuk pompa dan instalasinya.</p>
+                    </div>
+                </div>
+                <div class="service-card">
+                    <div class="service-image">
+                        <img src="https://images.unsplash.com/photo-1559027615-15c6f3b2edce?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=774&q=80" alt="Filterisasi Air">
+                        <div class="service-icon">
+                            <i class="fas fa-filter"></i>
+                        </div>
+                    </div>
+                    <div class="service-content">
+                        <h3>Filterisasi Air</h3>
+                        <p>Instalasi sistem filter air untuk menjernihkan dan menyaring air dari berbagai kontaminan.</p>
+                    </div>
+                </div>
+                <div class="service-card">
+                    <div class="service-image">
+                        <img src="https://images.unsplash.com/photo-1611273426858-450d8e3c9fce?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80" alt="Pendalaman Sumur">
+                        <div class="service-icon">
+                            <i class="fas fa-hard-hat"></i>
+                        </div>
+                    </div>
+                    <div class="service-content">
+                        <h3>Pendalaman Sumur</h3>
+                        <p>Pendalaman sumur yang sudah kering atau debit airnya berkurang.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="about" id="about">
+        <div class="container">
+            <div class="section-title">
+                <h2>Tentang Kami</h2>
+                <p>Perusahaan profesional dengan pengalaman lebih dari satu dekade</p>
+            </div>
+            <div class="about-content">
+                <div class="about-text">
+                    <h2>Surya Abadi Elektrik</h2>
+                    <p>Kami adalah perusahaan jasa pengeboran sumur yang telah beroperasi sejak tahun 2010. Dengan pengalaman lebih dari 13 tahun, kami telah melayani ratusan pelanggan di seluruh Indonesia.</p>
+                    <p>Tim kami terdiri dari tenaga ahli yang berpengalaman dalam menangani berbagai jenis pengeboran sumur, dari sumur dangkal untuk kebutuhan rumah tangga hingga sumur dalam untuk industri.</p>
+                    <p>Kami menggunakan peralatan modern dan teknologi terbaru untuk memastikan hasil kerja yang maksimal dan memuaskan pelanggan.</p>
+                    <p>Komitmen kami adalah menyediakan solusi air bersih yang berkualitas dengan layanan profesional dan harga yang kompetitif.</p>
+                </div>
+                <div class="about-image">
+                    <img src="https://images.unsplash.com/photo-1611273426858-450d8e3c9fce?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80" alt="Proses Pengeboran Sumur">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact" id="contact">
+        <div class="container">
+            <div class="section-title">
+                <h2>Hubungi Kami</h2>
+                <p>Silakan hubungi kami untuk konsultasi dan penawaran</p>
+            </div>
+            <div class="contact-info">
+                <h3>Surya Abadi Elektrik</h3>
+                <p><i class="fas fa-phone"></i> Telepon: 085100044750</p>
+                <p><i class="fas fa-map-marker-alt"></i> Melayani Seluruh Jawa</p>
+                <p><i class="fas fa-clock"></i> Buka: Senin - Minggu, 08:00 - 17:00 WIB</p>
+                <a href="https://wa.me/6285100044750?text=Halo,%20saya%20ingin%20konsultasi%20tentang%20jasa%20pengeboran%20sumur" class="whatsapp-btn" target="_blank">
+                    <i class="fab fa-whatsapp"></i> Hubungi via WhatsApp
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">Surya Abadi Elektrik</div>
+                <div class="footer-links">
+                    <a href="#home">Beranda</a>
+                    <a href="#services">Layanan</a>
+                    <a href="#about">Tentang Kami</a>
+                    <a href="#contact">Kontak</a>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2023 Surya Abadi Elektrik. Semua Hak Dilindungi.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- WhatsApp Popup -->
+    <div class="whatsapp-popup">
+        <div class="whatsapp-button" id="whatsappButton">
+            <i class="fab fa-whatsapp"></i>
+        </div>
+        <div class="popup-content" id="popupContent">
+            <span class="close-popup" id="closePopup">&times;</span>
+            <h3>Hubungi Kami</h3>
+            <p>Klik tombol di bawah untuk terhubung dengan WhatsApp kami</p>
+            <a href="https://wa.me/6285100044750?text=Halo,%20saya%20ingin%20konsultasi%20tentang%20jasa%20pengeboran%20sumur" target="_blank">Chat Sekarang</a>
         </div>
     </div>
 
-    <!-- Footer -->
-    <footer id="contact">
-        <div class="social-links">
-            <a href="https://www.instagram.com/rumahpremiumsemarang?igsh=djhiMXRnYWQwNGty" target="_blank" aria-label="Instagram">
-                <i class="fab fa-instagram"></i>
-            </a>
-        </div>
-        <p>&copy; 2023 Rumah Premium Semarang. All rights reserved.</p>
-    </footer>
-
     <script>
-        // Data gambar (dalam implementasi nyata, ini bisa diambil dari API Instagram)
-        // Untuk saat ini, kita akan menggunakan data dummy yang menyerupai konten Instagram
-        const portfolioItems = [
-            {
-                id: 1,
-                imageUrl: "https://source.unsplash.com/random/600x600/?interior,1",
-                title: "Desain Interior Modern",
-                description: "Desain interior modern dengan perpaduan warna yang elegan dan furniture custom.",
-                date: "15 Oktober 2023",
-                likes: 125
-            },
-            {
-                id: 2,
-                imageUrl: "https://source.unsplash.com/random/600x600/?interior,2",
-                title: "Ruang Keluarga Nyaman",
-                description: "Ruang keluarga yang nyaman dengan pencahayaan alami dan sirkulasi udara yang baik.",
-                date: "12 Oktober 2023",
-                likes: 98
-            },
-            {
-                id: 3,
-                imageUrl: "https://source.unsplash.com/random/600x600/?interior,3",
-                title: "Kitchen Set Premium",
-                description: "Kitchen set custom dengan material terbaik dan desain yang ergonomis.",
-                date: "10 Oktober 2023",
-                likes: 156
-            },
-            {
-                id: 4,
-                imageUrl: "https://source.unsplash.com/random/600x600/?interior,4",
-                title: "Kamar Tidur Mewah",
-                description: "Kamar tidur dengan desain mewah dan furniture berkualitas tinggi.",
-                date: "8 Oktober 2023",
-                likes: 201
-            },
-            {
-                id: 5,
-                imageUrl: "https://source.unsplash.com/random/600x600/?interior,5",
-                title: "Taman Minimalis",
-                description: "Taman minimalis dengan tanaman hias yang terawat dan tempat bersantai.",
-                date: "5 Oktober 2023",
-                likes: 178
-            },
-            {
-                id: 6,
-                imageUrl: "https://source.unsplash.com/random/600x600/?interior,6",
-                title: "Desain Eksterior",
-                description: "Desain eksterior rumah dengan kombinasi material yang modern dan elegan.",
-                date: "3 Oktober 2023",
-                likes: 142
-            },
-            {
-                id: 7,
-                imageUrl: "https://source.unsplash.com/random/600x600/?interior,7",
-                title: "Ruang Kerja Home Office",
-                description: "Ruang kerja yang nyaman dan produktif untuk bekerja dari rumah.",
-                date: "1 Oktober 2023",
-                likes: 115
-            },
-            {
-                id: 8,
-                imageUrl: "https://source.unsplash.com/random/600x600/?interior,8",
-                title: "Kamar Anak Kreatif",
-                description: "Kamar anak dengan desain kreatif dan warna-warna cerah yang menyenangkan.",
-                date: "28 September 2023",
-                likes: 167
-            },
-            {
-                id: 9,
-                imageUrl: "https://source.unsplash.com/random/600x600/?interior,9",
-                title: "Kamar Mandi Luxurious",
-                description: "Kamar mandi dengan desain mewah dan perlengkapan berkualitas tinggi.",
-                date: "25 September 2023",
-                likes: 189
-            }
-        ];
-
-        // Fungsi untuk memuat gallery
-        function loadGallery() {
-            const galleryGrid = document.getElementById('gallery-grid');
-            const loader = document.getElementById('loader');
+        // WhatsApp Popup Functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const whatsappButton = document.getElementById('whatsappButton');
+            const popupContent = document.getElementById('popupContent');
+            const closePopup = document.getElementById('closePopup');
             
-            // Simulasi loading data
-            setTimeout(() => {
-                portfolioItems.forEach(item => {
-                    const galleryItem = document.createElement('div');
-                    galleryItem.className = 'gallery-item';
-                    galleryItem.innerHTML = `
-                        <img src="${item.imageUrl}" alt="${item.title}" loading="lazy">
-                        <div class="gallery-item-overlay">
-                            <h3>${item.title}</h3>
-                        </div>
-                    `;
-                    
-                    galleryItem.addEventListener('click', () => {
-                        openModal(item);
-                    });
-                    
-                    galleryGrid.appendChild(galleryItem);
-                });
-                
-                // Sembunyikan loader setelah konten dimuat
-                loader.style.display = 'none';
-            }, 1500);
-        }
-
-        // Fungsi untuk membuka modal
-        function openModal(item) {
-            const modal = document.getElementById('image-modal');
-            const modalImage = document.getElementById('modal-image');
-            const modalTitle = document.getElementById('modal-title');
-            const modalDescription = document.getElementById('modal-description');
-            const modalDate = document.getElementById('modal-date');
-            const modalLikes = document.getElementById('modal-likes');
+            whatsappButton.addEventListener('click', function() {
+                popupContent.classList.toggle('show');
+            });
             
-            modalImage.src = item.imageUrl;
-            modalImage.alt = item.title;
-            modalTitle.textContent = item.title;
-            modalDescription.textContent = item.description;
-            modalDate.textContent = item.date;
-            modalLikes.textContent = `${item.likes} Suka`;
+            closePopup.addEventListener('click', function() {
+                popupContent.classList.remove('show');
+            });
             
-            modal.classList.add('show');
-            
-            // Tambahkan event listener untuk menutup modal
-            document.getElementById('close-modal').onclick = function() {
-                modal.classList.remove('show');
-            }
-            
-            window.onclick = function(event) {
-                if (event.target == modal) {
-                    modal.classList.remove('show');
+            // Close popup when clicking outside
+            document.addEventListener('click', function(event) {
+                if (!whatsappButton.contains(event.target) && !popupContent.contains(event.target)) {
+                    popupContent.classList.remove('show');
                 }
-            }
-        }
-
-        // Memuat gallery ketika halaman siap
-        document.addEventListener('DOMContentLoaded', loadGallery);
+            });
+        });
     </script>
 </body>
 </html>
