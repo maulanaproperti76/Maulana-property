@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rumah Premium Semarang - Portfolio</title>
+    <style>
+        /* Reset dan base styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #fafafa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        /* Header styles */
+        header {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            height: 50px;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+        
+        nav li {
+            margin-left: 1.5rem;
+        }
+        
+        nav a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        nav a:hover {
+            color: #E1306C; /* Warna Instagram */
+        }
+        
+        /* Hero section */
+        .hero {
+            text-align: center;
+            padding: 4rem 2rem;
+            background: linear-gradient(135deg, #fdfcfb 0%, #e2d1c3 100%);
+        }
+        
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: #333;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto;
+            color: #666;
+        }
+        
+        /* Gallery styles */
+        .gallery {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+        
+        .gallery-title {
+            text-align: center;
+            margin-bottom: 2rem;
+            font-size: 2rem;
+            color: #333;
+        }
+        
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .gallery-item {
+            position: relative;
+            overflow: hidden;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            aspect-ratio: 1/1;
+        }
+        
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        
+        .gallery-item:hover img {
+            transform: scale(1.05);
+        }
+        
+        .gallery-item-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.7));
+            padding: 1rem;
+            color: white;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .gallery-item:hover .gallery-item-overlay {
+            opacity: 1;
+        }
+        
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            overflow: auto;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .modal.show {
+            display: block;
+            opacity: 1;
+        }
+        
+        .modal-content {
+            position: relative;
+            background-color: white;
+            margin: 5% auto;
+            padding: 2rem;
+            width: 90%;
+            max-width: 800px;
+            border-radius: 8px;
+            animation: modalFadeIn 0.3s;
+        }
+        
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: translateY(-50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: 1rem;
+            right: 1.5rem;
+            font-size: 2rem;
+            cursor: pointer;
+            color: #333;
+        }
+        
+        .modal-image {
+            width: 100%;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+        
+        .modal-title {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .modal-description {
+            color: #666;
+            line-height: 1.6;
+        }
+        
+        /* Footer styles */
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            margin-top: 3rem;
+        }
+        
+        .social-links {
+            margin-bottom: 1rem;
+        }
+        
+        .social-links a {
+            color: white;
+            margin: 0 0.5rem;
+            font-size: 1.5rem;
+            text-decoration: none;
+        }
+        
+        /* Responsive styles */
+        @media (max-width: 768px) {
+            .header-container {
+                flex-direction: column;
+            }
+            
+            nav ul {
+                margin-top: 1rem;
+            }
+            
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .hero p {
+                font-size: 1rem;
+            }
+            
+            .gallery-grid {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header dengan logo -->
+    <header>
+        <div class="header-container">
+            <img src="logo.png" alt="Rumah Premium Semarang Logo" class="logo">
+            <nav>
+                <ul>
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#gallery">Gallery</a></li>
+                    <li><a href="#about">Tentang Kami</a></li>
+                    <li><a href="#contact">Kontak</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero section -->
+    <section class="hero" id="home">
+        <h1>Rumah Premium Semarang</h1>
+        <p>Portofolio karya dan layanan terbaik kami dalam menciptakan hunian premium di Semarang dan sekitarnya.</p>
+    </section>
+
+    <!-- Gallery section -->
+    <section class="gallery" id="gallery">
+        <h2 class="gallery-title">Portofolio Kami</h2>
+        <div class="gallery-grid" id="gallery-grid">
+            <!-- Gambar-gambar akan dimuat melalui JavaScript -->
+        </div>
+    </section>
+
+    <!-- Modal untuk detail gambar -->
+    <div class="modal" id="image-modal">
+        <div class="modal-content">
+            <span class="close-modal" id="close-modal">&times;</span>
+            <img src="" alt="" class="modal-image" id="modal-image">
+            <h3 class="modal-title" id="modal-title"></h3>
+            <p class="modal-description" id="modal-description"></p>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer id="contact">
+        <div class="social-links">
+            <a href="https://www.instagram.com/rumahpremiumsemarang?igsh=djhiMXRnYWQwNGty" target="_blank" aria-label="Instagram">
+                Instagram
+            </a>
+        </div>
+        <p>&copy; 2023 Rumah Premium Semarang. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Data gambar (dalam implementasi nyata, ini bisa diambil dari API Instagram)
+        // Untuk saat ini, kita akan menggunakan data dummy
+        const portfolioItems = [
+            {
+                id: 1,
+                imageUrl: "https://source.unsplash.com/random/600x600/?luxury-house,1",
+                title: "Rumah Minimalis Modern",
+                description: "Desain rumah minimalis dengan sentuhan modern, cocok untuk keluarga muda. Material berkualitas tinggi dengan finishing eksklusif."
+            },
+            {
+                id: 2,
+                imageUrl: "https://source.unsplash.com/random/600x600/?luxury-house,2",
+                title: "Interior Mewah",
+                description: "Interior rumah dengan desain mewah dan furniture custom. Setiap detail dirancang untuk kenyamanan dan estetika."
+            },
+            {
+                id: 3,
+                imageUrl: "https://source.unsplash.com/random/600x600/?luxury-house,3",
+                title: "Eksterior Elegant",
+                description: "Tampilan eksterior yang elegant dengan kombinasi material premium. Desain yang membuat rumah Anda tampil beda."
+            },
+            {
+                id: 4,
+                imageUrl: "https://source.unsplash.com/random/600x600/?luxury-house,4",
+                title: "Taman Asri",
+                description: "Taman yang dirancang khusus untuk menciptakan suasana asri dan nyaman. Cocok untuk bersantai di akhir pekan."
+            },
+            {
+                id: 5,
+                imageUrl: "https://source.unsplash.com/random/600x600/?luxury-house,5",
+                title: "Kitchen Set Premium",
+                description: "Kitchen set custom dengan material terbaik dan desain ergonomis. Dapur impian untuk memasak bersama keluarga."
+            },
+            {
+                id: 6,
+                imageUrl: "https://source.unsplash.com/random/600x600/?luxury-house,6",
+                title: "Kamar Tidur Nyaman",
+                description: "Kamar tidur dengan desain yang menenangkan dan furniture berkualitas. Tempat istirahat yang sempurna setelah hari yang panjang."
+            },
+            {
+                id: 7,
+                imageUrl: "https://source.unsplash.com/random/600x600/?luxury-house,7",
+                title: "Ruang Keluarga Hangat",
+                description: "Ruang keluarga yang hangat dengan pencahayaan yang tepat. Dirancang untuk menciptakan momen berkualitas bersama keluarga."
+            },
+            {
+                id: 8,
+                imageUrl: "https://source.unsplash.com/random/600x600/?luxury-house,8",
+                title: "Home Theater",
+                description: "Ruang home theater dengan akustik yang dirancang khusus. Pengalaman menonton layaknya di bioskop."
+            },
+            {
+                id: 9,
+                imageUrl: "https://source.unsplash.com/random/600x600/?luxury-house,9",
+                title: "Kolam Renang Private",
+                description: "Kolam renang private dengan desain yang memukau. Cocok untuk relaksasi dan menjaga kesehatan."
+            }
+        ];
+
+        // Fungsi untuk memuat gallery
+        function loadGallery() {
+            const galleryGrid = document.getElementById('gallery-grid');
+            
+            portfolioItems.forEach(item => {
+                const galleryItem = document.createElement('div');
+                galleryItem.className = 'gallery-item';
+                galleryItem.innerHTML = `
+                    <img src="${item.imageUrl}" alt="${item.title}">
+                    <div class="gallery-item-overlay">
+                        <h3>${item.title}</h3>
+                    </div>
+                `;
+                
+                galleryItem.addEventListener('click', () => {
+                    openModal(item);
+                });
+                
+                galleryGrid.appendChild(galleryItem);
+            });
+        }
+
+        // Fungsi untuk membuka modal
+        function openModal(item) {
+            const modal = document.getElementById('image-modal');
+            const modalImage = document.getElementById('modal-image');
+            const modalTitle = document.getElementById('modal-title');
+            const modalDescription = document.getElementById('modal-description');
+            
+            modalImage.src = item.imageUrl;
+            modalImage.alt = item.title;
+            modalTitle.textContent = item.title;
+            modalDescription.textContent = item.description;
+            
+            modal.classList.add('show');
+            
+            // Tambahkan event listener untuk menutup modal
+            document.getElementById('close-modal').onclick = function() {
+                modal.classList.remove('show');
+            }
+            
+            window.onclick = function(event) {
+                if (event.target == modal) {
+                    modal.classList.remove('show');
+                }
+            }
+        }
+
+        // Memuat gallery ketika halaman siap
+        document.addEventListener('DOMContentLoaded', loadGallery);
+    </script>
+</body>
+</html>
