@@ -343,7 +343,7 @@
                         throw new Error(`HTTP error! Status: ${response.status}`);
                     }
                     const data = await response.json();
-                    const properties = data.data; // Mengambil array data properti
+                    const properties = data; // Mengambil array data properti
             
                     if (properties && properties.length > 0) {
                         properties.forEach(property => {
@@ -432,4 +432,5 @@
     </script>
 </body>
 </html>
+
 
