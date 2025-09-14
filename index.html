@@ -250,16 +250,6 @@
         th:nth-child(3) { width: 30%; }
         th:nth-child(4) { width: 20%; }
         th:nth-child(5) { width: 20%; }
-        
-        .debug-info {
-            background-color: #f8f9fa;
-            padding: 15px;
-            border-radius: 8px;
-            margin-top: 20px;
-            font-family: monospace;
-            font-size: 14px;
-            display: none;
-        }
     </style>
 </head>
 <body>
@@ -275,9 +265,6 @@
             </button>
             <button id="refreshData">
                 <i class="fas fa-sync-alt"></i> Segarkan Data
-            </button>
-            <button id="debugToggle">
-                <i class="fas fa-bug"></i> Mode Debug
             </button>
         </div>
         
@@ -307,8 +294,6 @@
             </table>
         </div>
         
-        <div class="debug-info" id="debugInfo"></div>
-        
         <footer>
             <p>© 2023 Website Data Properti | Data diambil dari Google Sheets</p>
         </footer>
@@ -324,39 +309,16 @@
         document.addEventListener('DOMContentLoaded', function() {
             const loadButton = document.getElementById('loadData');
             const refreshButton = document.getElementById('refreshData');
-            const debugToggle = document.getElementById('debugToggle');
             const loadingElement = document.querySelector('.loading');
             const errorElement = document.getElementById('errorMessage');
             const tableBody = document.querySelector('#dataTable tbody');
             const dataCountElement = document.getElementById('dataCount');
-            const debugInfoElement = document.getElementById('debugInfo');
             const modal = document.getElementById('imageModal');
             const modalImg = document.getElementById('modalImage');
             const closeModal = document.querySelector('.close');
             
-            let debugMode = false;
-            
             // ID spreadsheet Anda
             const spreadsheetId = '1NadxFspxUmz8sdIpqmwCyjCKGfmMTpFCOYhErnbxZJQ';
-            
-            // Fungsi untuk mengekstrak URL dari formula Google Sheets
-            function extractUrlFromFormula(formula) {
-                if (!formula) return null;
-                
-                // Untuk formula =IMAGE("URL")
-                if (formula.startsWith('=IMAGE("') && formula.endsWith('")')) {
-                    return formula.substring(8, formula.length - 2);
-                }
-                
-                // Untuk formula =HYPERLINK("URL", "TEXT")
-                if (formula.startsWith('=HYPERLINK("')) {
-                    const urlStart = formula.indexOf('"') + 1;
-                    const urlEnd = formula.indexOf('"', urlStart);
-                    return formula.substring(urlStart, urlEnd);
-                }
-                
-                return formula;
-            }
             
             // Fungsi untuk memuat data dari Google Sheets
             function loadSheetData() {
@@ -378,11 +340,6 @@
                         return response.text();
                     })
                     .then(csvData => {
-                        if (debugMode) {
-                            debugInfoElement.textContent = "Data CSV:\n" + csvData;
-                            debugInfoElement.style.display = 'block';
-                        }
-                        
                         // Parse data CSV
                         const rows = csvData.split('\n');
                         
@@ -391,7 +348,7 @@
                         let validDataCount = 0;
                         
                         // Isi data tabel
-                        dataRows.forEach((row, index) => {
+                        dataRows.forEach(row => {
                             if (row.trim() === '') return;
                             
                             // Split row dengan memperhatikan koma dalam quoted values
@@ -434,11 +391,14 @@
                                 
                                 // Kolom Foto (gambar)
                                 const tdPhoto = document.createElement('td');
-                                let photoValue = cells[3].replace(/^"|"$/g, '');
+                                let photoUrl = cells[3].replace(/^"|"$/g, '');
                                 
-                                // Ekstrak URL dari formula jika ada
-                                const photoUrl = extractUrlFromFormula(photoValue);
+                                // Perbaikan URL foto
+                                if (photoUrl.startsWith('=IMAGE("') && photoUrl.endsWith('")')) {
+                                    photoUrl = photoUrl.substring(8, photoUrl.length - 2);
+                                }
                                 
+                                // Cek apakah URL foto valid
                                 if (photoUrl && photoUrl !== 'null' && (photoUrl.startsWith('http') || photoUrl.startsWith('https'))) {
                                     const img = document.createElement('img');
                                     img.src = photoUrl;
@@ -446,15 +406,9 @@
                                     img.classList.add('property-img');
                                     img.onload = function() {
                                         // Gambar berhasil dimuat
-                                        if (debugMode) {
-                                            console.log('Gambar berhasil dimuat:', photoUrl);
-                                        }
                                     };
                                     img.onerror = function() {
                                         // Jika gambar gagal dimuat, ganti dengan placeholder
-                                        if (debugMode) {
-                                            console.log('Gagal memuat gambar:', photoUrl);
-                                        }
                                         this.src = 'https://via.placeholder.com/100x70?text=Gagal+Memuat';
                                     };
                                     img.onclick = function() {
@@ -469,19 +423,19 @@
                                     img.alt = 'Tidak ada foto';
                                     img.classList.add('property-img');
                                     tdPhoto.appendChild(img);
-                                    
-                                    if (debugMode && photoValue) {
-                                        console.log('URL foto tidak valid:', photoValue);
-                                    }
                                 }
                                 tr.appendChild(tdPhoto);
                                 
                                 // Kolom Link
                                 const tdLink = document.createElement('td');
-                                let linkValue = cells[4].replace(/^"|"$/g, '');
+                                let linkUrl = cells[4].replace(/^"|"$/g, '');
                                 
-                                // Ekstrak URL dari formula jika ada
-                                const linkUrl = extractUrlFromFormula(linkValue);
+                                // Perbaikan URL Google Maps
+                                if (linkUrl.startsWith('=HYPERLINK("') && linkUrl.includes('","')) {
+                                    const urlStart = linkUrl.indexOf('"') + 1;
+                                    const urlEnd = linkUrl.indexOf('"', urlStart);
+                                    linkUrl = linkUrl.substring(urlStart, urlEnd);
+                                }
                                 
                                 if (linkUrl && linkUrl !== 'null' && linkUrl.startsWith('http')) {
                                     const link = document.createElement('a');
@@ -490,25 +444,13 @@
                                     link.textContent = 'Lihat di Maps';
                                     link.rel = 'noopener noreferrer';
                                     tdLink.appendChild(link);
-                                    
-                                    if (debugMode) {
-                                        console.log('Link maps:', linkUrl);
-                                    }
                                 } else {
                                     tdLink.textContent = 'Tidak ada link';
-                                    
-                                    if (debugMode && linkValue) {
-                                        console.log('Link tidak valid:', linkValue);
-                                    }
                                 }
                                 tr.appendChild(tdLink);
                                 
                                 tableBody.appendChild(tr);
                                 validDataCount++;
-                                
-                                if (debugMode) {
-                                    console.log(`Baris ${index + 1}:`, cells);
-                                }
                             }
                         });
                         
@@ -529,19 +471,6 @@
             // Event listener untuk tombol
             loadButton.addEventListener('click', loadSheetData);
             refreshButton.addEventListener('click', loadSheetData);
-            
-            debugToggle.addEventListener('click', function() {
-                debugMode = !debugMode;
-                debugInfoElement.style.display = debugMode ? 'block' : 'none';
-                this.innerHTML = debugMode ? 
-                    '<i class="fas fa-bug-slash"></i> Nonaktifkan Debug' : 
-                    '<i class="fas fa-bug"></i> Mode Debug';
-                
-                if (debugMode) {
-                    console.log('Mode debug diaktifkan');
-                    loadSheetData(); // Muat ulang data untuk debug
-                }
-            });
             
             // Modal functionality
             closeModal.addEventListener('click', function() {
