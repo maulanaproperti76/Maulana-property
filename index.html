@@ -268,7 +268,7 @@
         </header>
         
         <div class="info-box">
-            <p><strong>Informasi:</strong> Website ini menampilkan data properti dari Google Spreadsheet. Foto dari Telegram akan ditampilkan melalui Google Apps Script proxy.</p>
+            <p><strong>Informasi:</strong> Website ini menampilkan data properti dari Google Spreadsheet. Foto dari Telegram akan ditampilkan melalui backend Vercel yang aman.</p>
         </div>
         
         <div class="controls">
@@ -301,8 +301,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <!-- Data akan diisi oleh JavaScript -->
-                </tbody>
+                    </tbody>
             </table>
         </div>
         
@@ -311,7 +310,6 @@
         </footer>
     </div>
 
-    <!-- Modal untuk gambar -->
     <div id="imageModal" class="modal">
         <span class="close">&times;</span>
         <img class="modal-content" id="modalImage">
@@ -329,222 +327,93 @@
             const modalImg = document.getElementById('modalImage');
             const closeModal = document.querySelector('.close');
             
-            // ID spreadsheet Anda
-            const spreadsheetId = '1NadxFspxUmz8sdIpqmwCyjCKGfmMTpFCOYhErnbxZJQ';
+            // URL API backend Anda di Vercel
+            const BACKEND_API_URL = 'https://foto-backend-git-main-maulanas-projects-7a809c9c.vercel.app/api/photos';
             
-            // URL Google Apps Script untuk proxy gambar Telegram
-            // Ganti dengan URL Google Apps Script Anda setelah deploy
-            const scriptUrl = 'https://script.google.com/macros/s/AKfycbxVSo1isHNs6mqaV5gNiKHU5zcy_czpAj_Og2wntdnuqwjN8x__FguYaCmcSJN8Jit6hQ/exec';
-            
-            // Fungsi untuk mengekstrak URL dari formula Google Sheets
-            function extractUrlFromFormula(formula) {
-                if (!formula) return null;
-                
-                // Untuk formula =IMAGE("URL")
-                if (formula.startsWith('=IMAGE("') && formula.endsWith('")')) {
-                    return formula.substring(8, formula.length - 2);
-                }
-                
-                // Untuk formula =HYPERLINK("URL", "TEXT")
-                if (formula.startsWith('=HYPERLINK("')) {
-                    const urlStart = formula.indexOf('"') + 1;
-                    const urlEnd = formula.indexOf('"', urlStart);
-                    return formula.substring(urlStart, urlEnd);
-                }
-                
-                return formula;
-            }
-            
-            // Fungsi untuk memeriksa apakah URL adalah URL Telegram
-            function isTelegramUrl(url) {
-                return url && url.includes('api.telegram.org');
-            }
-            
-            // Fungsi untuk mendapatkan URL gambar melalui proxy
-            function getTelegramImageUrl(telegramUrl) {
-                // Ekstrak file_path dari URL Telegram
-                const filePathMatch = telegramUrl.match(/\/file\/bot[^/]+\/(.+)/);
-                if (filePathMatch && filePathMatch[1]) {
-                    return `${scriptUrl}?file_path=${encodeURIComponent(filePathMatch[1])}`;
-                }
-                return null;
-            }
-            
-            // Fungsi untuk memuat data dari Google Sheets
-            function loadSheetData() {
+            async function fetchAndDisplayPhotos() {
                 // Tampilkan loading, sembunyikan error
                 loadingElement.style.display = 'block';
                 errorElement.style.display = 'none';
-                
-                // Bersihkan tabel
                 tableBody.innerHTML = '';
-                
-                // URL endpoint untuk mengambil data sebagai CSV
-                const url = `https://docs.google.com/spreadsheets/d/${spreadsheetId}/gviz/tq?tqx=out:csv`;
-                
-                fetch(url)
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error('Gagal mengambil data: ' + response.statusText);
-                        }
-                        return response.text();
-                    })
-                    .then(csvData => {
-                        // Parse data CSV
-                        const rows = csvData.split('\n');
-                        
-                        // Lewati baris header (baris pertama)
-                        const dataRows = rows.slice(1);
-                        let validDataCount = 0;
-                        
-                        // Isi data tabel
-                        dataRows.forEach((row) => {
-                            if (row.trim() === '') return;
-                            
-                            // Split row dengan memperhatikan koma dalam quoted values
-                            const cells = [];
-                            let currentCell = '';
-                            let insideQuotes = false;
-                            
-                            for (let i = 0; i < row.length; i++) {
-                                const char = row[i];
-                                
-                                if (char === '"') {
-                                    insideQuotes = !insideQuotes;
-                                } else if (char === ',' && !insideQuotes) {
-                                    cells.push(currentCell.trim());
-                                    currentCell = '';
-                                } else {
-                                    currentCell += char;
-                                }
+                dataCountElement.textContent = '';
+            
+                try {
+                    const response = await fetch(BACKEND_API_URL);
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+                    const data = await response.json();
+                    const properties = data.data; // Mengambil array data properti
+            
+                    if (properties && properties.length > 0) {
+                        properties.forEach(property => {
+                            const tr = document.createElement('tr');
+            
+                            // Kolom Type
+                            const tdType = document.createElement('td');
+                            tdType.textContent = property.type || 'N/A';
+                            tr.appendChild(tdType);
+            
+                            // Kolom Harga
+                            const tdPrice = document.createElement('td');
+                            tdPrice.textContent = property.harga || 'N/A';
+                            tr.appendChild(tdPrice);
+            
+                            // Kolom Alamat
+                            const tdAddress = document.createElement('td');
+                            tdAddress.textContent = property.alamat || 'N/A';
+                            tr.appendChild(tdAddress);
+            
+                            // Kolom Foto
+                            const tdPhoto = document.createElement('td');
+                            if (property.foto) {
+                                const img = document.createElement('img');
+                                img.src = property.foto;
+                                img.alt = 'Foto Properti';
+                                img.classList.add('property-img');
+                                img.onclick = function() {
+                                    modal.style.display = "block";
+                                    modalImg.src = this.src;
+                                };
+                                tdPhoto.appendChild(img);
+                            } else {
+                                tdPhoto.textContent = 'Tidak Ada Foto';
                             }
-                            cells.push(currentCell.trim());
-                            
-                            // Pastikan kita memiliki cukup kolom
-                            if (cells.length >= 5) {
-                                const tr = document.createElement('tr');
-                                
-                                // Kolom Type
-                                const tdType = document.createElement('td');
-                                tdType.textContent = cells[0].replace(/^"|"$/g, '');
-                                tr.appendChild(tdType);
-                                
-                                // Kolom Harga
-                                const tdPrice = document.createElement('td');
-                                tdPrice.textContent = cells[1].replace(/^"|"$/g, '');
-                                tr.appendChild(tdPrice);
-                                
-                                // Kolom Alamat
-                                const tdAddress = document.createElement('td');
-                                tdAddress.textContent = cells[2].replace(/^"|"$/g, '');
-                                tr.appendChild(tdAddress);
-                                
-                                // Kolom Foto (gambar)
-                                const tdPhoto = document.createElement('td');
-                                let photoValue = cells[3].replace(/^"|"$/g, '');
-                                
-                                // Ekstrak URL dari formula jika ada
-                                const photoUrl = extractUrlFromFormula(photoValue);
-                                
-                                if (photoUrl && photoUrl !== 'null' && (photoUrl.startsWith('http') || photoUrl.startsWith('https'))) {
-                                    if (isTelegramUrl(photoUrl)) {
-                                        // URL Telegram - gunakan proxy
-                                        const proxyUrl = getTelegramImageUrl(photoUrl);
-                                        if (proxyUrl) {
-                                            const img = document.createElement('img');
-                                            img.src = proxyUrl;
-                                            img.alt = 'Foto Properti';
-                                            img.classList.add('property-img');
-                                            img.onload = function() {
-                                                console.log('Gambar dari Telegram berhasil dimuat melalui proxy');
-                                            };
-                                            img.onerror = function() {
-                                                console.log('Gagal memuat gambar dari Telegram melalui proxy');
-                                                this.src = 'https://via.placeholder.com/100x70/2196f3/ffffff?text=Telegram+Photo';
-                                            };
-                                            img.onclick = function() {
-                                                modal.style.display = "block";
-                                                modalImg.src = this.src;
-                                            }
-                                            tdPhoto.appendChild(img);
-                                        } else {
-                                            // Jika proxy URL tidak berhasil dibuat
-                                            const img = document.createElement('img');
-                                            img.src = 'https://via.placeholder.com/100x70/2196f3/ffffff?text=Telegram+Photo';
-                                            img.alt = 'Foto dari Telegram';
-                                            img.classList.add('property-img');
-                                            tdPhoto.appendChild(img);
-                                        }
-                                    } else {
-                                        // URL biasa - dapat ditampilkan langsung
-                                        const img = document.createElement('img');
-                                        img.src = photoUrl;
-                                        img.alt = 'Foto Properti';
-                                        img.classList.add('property-img');
-                                        img.onload = function() {
-                                            console.log('Gambar berhasil dimuat:', photoUrl);
-                                        };
-                                        img.onerror = function() {
-                                            console.log('Gagal memuat gambar:', photoUrl);
-                                            this.src = 'https://via.placeholder.com/100x70?text=Gagal+Memuat';
-                                        };
-                                        img.onclick = function() {
-                                            modal.style.display = "block";
-                                            modalImg.src = this.src;
-                                        }
-                                        tdPhoto.appendChild(img);
-                                    }
-                                } else {
-                                    // Jika tidak ada URL gambar, tampilkan placeholder
-                                    const img = document.createElement('img');
-                                    img.src = 'https://via.placeholder.com/100x70?text=Tidak+Ada+Foto';
-                                    img.alt = 'Tidak ada foto';
-                                    img.classList.add('property-img');
-                                    tdPhoto.appendChild(img);
-                                }
-                                tr.appendChild(tdPhoto);
-                                
-                                // Kolom Link
-                                const tdLink = document.createElement('td');
-                                let linkValue = cells[4].replace(/^"|"$/g, '');
-                                
-                                // Ekstrak URL dari formula jika ada
-                                const linkUrl = extractUrlFromFormula(linkValue);
-                                
-                                if (linkUrl && linkUrl !== 'null' && linkUrl.startsWith('http')) {
-                                    const link = document.createElement('a');
-                                    link.href = linkUrl;
-                                    link.target = '_blank';
-                                    link.textContent = 'Lihat di Maps';
-                                    link.rel = 'noopener noreferrer';
-                                    tdLink.appendChild(link);
-                                } else {
-                                    tdLink.textContent = 'Tidak ada link';
-                                }
-                                tr.appendChild(tdLink);
-                                
-                                tableBody.appendChild(tr);
-                                validDataCount++;
+                            tr.appendChild(tdPhoto);
+            
+                            // Kolom Link
+                            const tdLink = document.createElement('td');
+                            if (property.link) {
+                                const link = document.createElement('a');
+                                link.href = property.link;
+                                link.target = '_blank';
+                                link.textContent = 'Lihat di Maps';
+                                link.rel = 'noopener noreferrer';
+                                tdLink.appendChild(link);
+                            } else {
+                                tdLink.textContent = 'Tidak ada link';
                             }
+                            tr.appendChild(tdLink);
+            
+                            tableBody.appendChild(tr);
                         });
-                        
-                        // Update jumlah data
-                        dataCountElement.textContent = `Menampilkan ${validDataCount} properti`;
-                        
-                        // Sembunyikan loading
-                        loadingElement.style.display = 'none';
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        loadingElement.style.display = 'none';
-                        errorElement.textContent = 'Terjadi kesalahan: ' + error.message;
-                        errorElement.style.display = 'block';
-                    });
+                        dataCountElement.textContent = `Menampilkan ${properties.length} properti`;
+                    } else {
+                        tableBody.innerHTML = '<tr><td colspan="5" style="text-align:center;">Tidak ada data properti yang ditemukan.</td></tr>';
+                        dataCountElement.textContent = `Menampilkan 0 properti`;
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    errorElement.textContent = 'Terjadi kesalahan: ' + error.message;
+                    errorElement.style.display = 'block';
+                } finally {
+                    loadingElement.style.display = 'none';
+                }
             }
             
             // Event listener untuk tombol
-            loadButton.addEventListener('click', loadSheetData);
-            refreshButton.addEventListener('click', loadSheetData);
+            loadButton.addEventListener('click', fetchAndDisplayPhotos);
+            refreshButton.addEventListener('click', fetchAndDisplayPhotos);
             
             // Modal functionality
             closeModal.addEventListener('click', function() {
@@ -558,9 +427,8 @@
             });
             
             // Otomatis memuat data saat halaman dimuat
-            loadSheetData();
+            fetchAndDisplayPhotos();
         });
     </script>
 </body>
 </html>
-
