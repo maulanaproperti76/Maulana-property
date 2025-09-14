@@ -142,6 +142,7 @@
             object-fit: cover;
             border-radius: 8px;
             transition: transform 0.3s;
+            cursor: pointer;
         }
         
         .property-img:hover {
@@ -177,6 +178,36 @@
             font-style: italic;
         }
         
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 100;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            overflow: auto;
+        }
+        
+        .modal-content {
+            display: block;
+            margin: 5% auto;
+            max-width: 90%;
+            max-height: 80%;
+            border-radius: 8px;
+        }
+        
+        .close {
+            position: absolute;
+            top: 15px;
+            right: 35px;
+            color: #f1f1f1;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
         @media (max-width: 768px) {
             .container {
                 padding: 15px;
@@ -208,7 +239,7 @@
         }
         
         /* Gaya khusus untuk kolom harga */
-        td:nth-child(3) {
+        td:nth-child(2) {
             font-weight: bold;
             color: #27ae60;
         }
@@ -216,8 +247,8 @@
         /* Gaya untuk header kolom */
         th:nth-child(1) { width: 15%; }
         th:nth-child(2) { width: 15%; }
-        th:nth-child(3) { width: 20%; }
-        th:nth-child(4) { width: 30%; }
+        th:nth-child(3) { width: 30%; }
+        th:nth-child(4) { width: 20%; }
         th:nth-child(5) { width: 20%; }
     </style>
 </head>
@@ -268,6 +299,12 @@
         </footer>
     </div>
 
+    <!-- Modal untuk gambar -->
+    <div id="imageModal" class="modal">
+        <span class="close">&times;</span>
+        <img class="modal-content" id="modalImage">
+    </div>
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const loadButton = document.getElementById('loadData');
@@ -276,6 +313,9 @@
             const errorElement = document.getElementById('errorMessage');
             const tableBody = document.querySelector('#dataTable tbody');
             const dataCountElement = document.getElementById('dataCount');
+            const modal = document.getElementById('imageModal');
+            const modalImg = document.getElementById('modalImage');
+            const closeModal = document.querySelector('.close');
             
             // ID spreadsheet Anda
             const spreadsheetId = '1NadxFspxUmz8sdIpqmwCyjCKGfmMTpFCOYhErnbxZJQ';
@@ -305,6 +345,7 @@
                         
                         // Lewati baris header (baris pertama)
                         const dataRows = rows.slice(1);
+                        let validDataCount = 0;
                         
                         // Isi data tabel
                         dataRows.forEach(row => {
@@ -350,12 +391,22 @@
                                 
                                 // Kolom Foto (gambar)
                                 const tdPhoto = document.createElement('td');
-                                const photoUrl = cells[3].replace(/^"|"$/g, '');
+                                let photoUrl = cells[3].replace(/^"|"$/g, '');
+                                
+                                // Perbaikan URL foto
+                                if (photoUrl.startsWith('=IMAGE("') && photoUrl.endsWith('")')) {
+                                    photoUrl = photoUrl.substring(8, photoUrl.length - 2);
+                                }
+                                
                                 if (photoUrl && photoUrl !== 'null' && photoUrl.startsWith('http')) {
                                     const img = document.createElement('img');
                                     img.src = photoUrl;
                                     img.alt = 'Foto Properti';
                                     img.classList.add('property-img');
+                                    img.onclick = function() {
+                                        modal.style.display = "block";
+                                        modalImg.src = this.src;
+                                    }
                                     tdPhoto.appendChild(img);
                                 } else {
                                     tdPhoto.textContent = 'Tidak ada foto';
@@ -364,12 +415,24 @@
                                 
                                 // Kolom Link
                                 const tdLink = document.createElement('td');
-                                const linkUrl = cells[4].replace(/^"|"$/g, '');
+                                let linkUrl = cells[4].replace(/^"|"$/g, '');
+                                
+                                // Perbaikan URL Google Maps
+                                if (linkUrl.startsWith('=HYPERLINK("') && linkUrl.includes('","')) {
+                                    const firstQuote = linkUrl.indexOf('"');
+                                    const secondQuote = linkUrl.indexOf('"', firstQuote + 1);
+                                    const thirdQuote = linkUrl.indexOf('"', secondQuote + 1);
+                                    
+                                    if (thirdQuote !== -1) {
+                                        linkUrl = linkUrl.substring(secondQuote + 2, thirdQuote);
+                                    }
+                                }
+                                
                                 if (linkUrl && linkUrl !== 'null' && linkUrl.startsWith('http')) {
                                     const link = document.createElement('a');
                                     link.href = linkUrl;
                                     link.target = '_blank';
-                                    link.textContent = 'Lihat Detail';
+                                    link.textContent = 'Lihat di Maps';
                                     link.rel = 'noopener noreferrer';
                                     tdLink.appendChild(link);
                                 } else {
@@ -378,11 +441,12 @@
                                 tr.appendChild(tdLink);
                                 
                                 tableBody.appendChild(tr);
+                                validDataCount++;
                             }
                         });
                         
                         // Update jumlah data
-                        dataCountElement.textContent = `Menampilkan ${dataRows.filter(row => row.trim() !== '').length} properti`;
+                        dataCountElement.textContent = `Menampilkan ${validDataCount} properti`;
                         
                         // Sembunyikan loading
                         loadingElement.style.display = 'none';
@@ -398,6 +462,17 @@
             // Event listener untuk tombol
             loadButton.addEventListener('click', loadSheetData);
             refreshButton.addEventListener('click', loadSheetData);
+            
+            // Modal functionality
+            closeModal.addEventListener('click', function() {
+                modal.style.display = "none";
+            });
+            
+            window.addEventListener('click', function(event) {
+                if (event.target == modal) {
+                    modal.style.display = "none";
+                }
+            });
             
             // Otomatis memuat data saat halaman dimuat
             loadSheetData();
