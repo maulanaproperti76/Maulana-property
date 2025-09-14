@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RumahDijual.com - Temukan Rumah Impian Anda</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>Pembaca Google Spreadsheet</title>
     <style>
         * {
             margin: 0;
@@ -12,763 +11,257 @@
             box-sizing: border-box;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-
-        :root {
-            --primary: #2c3e50;
-            --secondary: #3498db;
-            --accent: #e74c3c;
-            --light: #ecf0f1;
-            --dark: #2c3e50;
-            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-
+        
         body {
-            background-color: #f9f9f9;
+            background-color: #f5f5f5;
             color: #333;
             line-height: 1.6;
+            padding: 20px;
         }
-
+        
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 0 20px;
-        }
-
-        /* Header Styles */
-        header {
-            background-color: var(--primary);
-            color: white;
-            padding: 20px 0;
-            box-shadow: var(--shadow);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-
-        .header-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo {
-            font-size: 1.8rem;
-            font-weight: bold;
-            color: white;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-        }
-
-        .logo i {
-            margin-right: 10px;
-            color: var(--accent);
-        }
-
-        nav ul {
-            display: flex;
-            list-style: none;
-        }
-
-        nav ul li {
-            margin-left: 20px;
-        }
-
-        nav ul li a {
-            color: white;
-            text-decoration: none;
-            transition: color 0.3s;
-        }
-
-        nav ul li a:hover {
-            color: var(--accent);
-        }
-
-        /* Hero Section */
-        .hero {
-            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1173&q=80');
-            background-size: cover;
-            background-position: center;
-            color: white;
-            text-align: center;
-            padding: 100px 20px;
-            margin-bottom: 40px;
-        }
-
-        .hero h1 {
-            font-size: 3rem;
-            margin-bottom: 20px;
-        }
-
-        .hero p {
-            font-size: 1.2rem;
-            max-width: 700px;
-            margin: 0 auto 30px;
-        }
-
-        .btn {
-            display: inline-block;
-            background-color: var(--accent);
-            color: white;
-            padding: 12px 25px;
-            border-radius: 5px;
-            text-decoration: none;
-            font-weight: bold;
-            transition: background-color 0.3s;
-        }
-
-        .btn:hover {
-            background-color: #c0392b;
-        }
-
-        /* Property List */
-        .property-list {
-            padding: 40px 0;
-        }
-
-        .section-title {
-            text-align: center;
-            margin-bottom: 40px;
-            color: var(--dark);
-            font-size: 2.2rem;
-        }
-
-        .properties {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 30px;
-        }
-        
-        /* Loading and error messages */
-        .message-box {
-            text-align: center;
-            padding: 20px;
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        
-        .message-box.hidden {
-            display: none;
-        }
-
-        .property-card {
-            background: white;
+            background-color: white;
             border-radius: 10px;
-            overflow: hidden;
-            box-shadow: var(--shadow);
-            transition: transform 0.3s;
-            cursor: pointer;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            padding: 30px;
         }
-
-        .property-card:hover {
-            transform: translateY(-10px);
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
         }
-
-        .property-image {
-            height: 200px;
-            overflow: hidden;
-        }
-
-        .property-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.5s;
-        }
-
-        .property-card:hover .property-image img {
-            transform: scale(1.1);
-        }
-
-        .property-details {
-            padding: 20px;
-        }
-
-        .property-price {
-            color: var(--accent);
-            font-weight: bold;
-            font-size: 1.5rem;
+        
+        h1 {
+            color: #4285f4;
             margin-bottom: 10px;
         }
-
-        .property-address {
-            color: #777;
-            margin-bottom: 15px;
+        
+        .description {
+            color: #666;
+            font-size: 18px;
         }
-
-        .property-features {
+        
+        .controls {
             display: flex;
-            justify-content: space-between;
-            border-top: 1px solid #eee;
-            padding-top: 15px;
-            margin-top: 15px;
+            justify-content: center;
+            margin-bottom: 20px;
+            gap: 10px;
         }
-
-        .feature {
-            display: flex;
-            align-items: center;
-        }
-
-        .feature i {
-            margin-right: 5px;
-            color: var(--secondary);
-        }
-
-        /* Property Detail Page */
-        #property-detail {
-            display: none;
-            padding: 40px 0;
-        }
-
-        .back-btn {
-            background-color: var(--dark);
+        
+        button {
+            background-color: #4285f4;
             color: white;
             border: none;
             padding: 10px 20px;
             border-radius: 5px;
             cursor: pointer;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
+            font-size: 16px;
+            transition: background-color 0.3s;
         }
-
-        .back-btn i {
-            margin-right: 8px;
+        
+        button:hover {
+            background-color: #3367d6;
         }
-
-        .property-detail-content {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 30px;
-        }
-
-        .image-gallery {
-            position: relative;
-        }
-
-        .main-image {
-            width: 100%;
-            height: 400px;
-            object-fit: cover;
-            border-radius: 10px;
-        }
-
-        .gallery-controls {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 15px;
-        }
-
-        .gallery-btn {
-            background-color: var(--primary);
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        .thumbnails {
-            display: flex;
-            gap: 10px;
-            margin-top: 15px;
-        }
-
-        .thumbnail {
-            width: 70px;
-            height: 70px;
-            object-fit: cover;
-            border-radius: 5px;
-            cursor: pointer;
-            opacity: 0.7;
-            transition: opacity 0.3s;
-        }
-
-        .thumbnail:hover, .thumbnail.active {
-            opacity: 1;
-        }
-
-        .detail-info h2 {
-            color: var(--dark);
-            margin-bottom: 15px;
-        }
-
-        .detail-price {
-            color: var(--accent);
-            font-size: 1.8rem;
-            font-weight: bold;
-            margin-bottom: 15px;
-        }
-
-        .detail-address {
-            color: #777;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-        }
-
-        .detail-address i {
-            margin-right: 10px;
-            color: var(--secondary);
-        }
-
-        .detail-description {
-            margin-bottom: 20px;
-            line-height: 1.8;
-        }
-
-        .detail-features {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-
-        .feature-item {
-            display: flex;
-            align-items: center;
-        }
-
-        .feature-item i {
-            margin-right: 10px;
-            color: var(--secondary);
-        }
-
-        .map-link {
-            display: inline-block;
-            background-color: var(--secondary);
-            color: white;
-            padding: 12px 25px;
-            border-radius: 5px;
-            text-decoration: none;
-            margin-top: 20px;
-            font-weight: bold;
-        }
-
-        /* Footer */
-        footer {
-            background-color: var(--dark);
-            color: white;
-            padding: 40px 0;
-            margin-top: 60px;
-        }
-
-        .footer-content {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 30px;
-        }
-
-        .footer-section h3 {
-            margin-bottom: 20px;
-            font-size: 1.4rem;
-        }
-
-        .footer-section p {
-            margin-bottom: 15px;
-        }
-
-        .footer-section a {
-            color: #ddd;
-            text-decoration: none;
-            display: block;
-            margin-bottom: 10px;
-        }
-
-        .footer-section a:hover {
-            color: var(--accent);
-        }
-
-        .social-icons a {
-            display: inline-block;
-            margin-right: 15px;
-            font-size: 1.5rem;
-        }
-
-        .copyright {
+        
+        .loading {
             text-align: center;
-            margin-top: 40px;
-            padding-top: 20px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            margin: 30px 0;
+            display: none;
         }
-
-        /* Responsive Design */
+        
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-left: 4px solid #4285f4;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .table-container {
+            overflow-x: auto;
+            margin-top: 20px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        th {
+            background-color: #f8f9fa;
+            font-weight: bold;
+            color: #4285f4;
+            position: sticky;
+            top: 0;
+        }
+        
+        tr:hover {
+            background-color: #f1f8ff;
+        }
+        
+        .error {
+            color: #d93025;
+            text-align: center;
+            padding: 20px;
+            display: none;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #666;
+            font-size: 14px;
+        }
+        
         @media (max-width: 768px) {
-            .property-detail-content {
-                grid-template-columns: 1fr;
+            .container {
+                padding: 15px;
             }
             
-            .header-content {
-                flex-direction: column;
-                text-align: center;
-            }
-            
-            nav ul {
-                margin-top: 20px;
-                justify-content: center;
-            }
-            
-            .hero h1 {
-                font-size: 2.2rem;
-            }
-            
-            .hero p {
-                font-size: 1rem;
+            th, td {
+                padding: 8px 10px;
+                font-size: 14px;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Header -->
-    <header>
-        <div class="container header-content">
-            <a href="#" class="logo">
-                <i class="fas fa-home"></i>
-                RumahDijual.com
-            </a>
-            <nav>
-                <ul>
-                    <li><a href="#">Beranda</a></li>
-                    <li><a href="#">Properti</a></li>
-                    <li><a href="#">Tentang Kami</a></li>
-                    <li><a href="#">Kontak</a></li>
-                </ul>
-            </nav>
+    <div class="container">
+        <header>
+            <h1>Website Pembaca Spreadsheet</h1>
+            <p class="description">Menampilkan data dari Google Spreadsheet secara real-time</p>
+        </header>
+        
+        <div class="controls">
+            <button id="loadData">Muat Data</button>
+            <button id="refreshData">Segarkan Data</button>
         </div>
-    </header>
-
-    <!-- Hero Section -->
-    <section class="hero">
-        <div class="container">
-            <h1>Temukan Rumah Impian Anda</h1>
-            <p>Kami menyediakan berbagai pilihan properti terbaik dengan harga kompetitif dan lokasi strategis di seluruh Indonesia.</p>
-            <a href="#properties" class="btn">Jelajahi Properti</a>
+        
+        <div class="loading">
+            <div class="spinner"></div>
+            <p>Sedang memuat data...</p>
         </div>
-    </section>
-
-    <!-- Property List -->
-    <section id="properties" class="property-list">
-        <div class="container">
-            <h2 class="section-title">Rumah Tersedia</h2>
-            <div id="loading-message" class="message-box">Memuat data properti dari Google Sheet...</div>
-            <div id="error-message" class="message-box hidden">
-                <p>Gagal memuat data. Mohon periksa URL Google Sheets atau koneksi internet Anda.</p>
-                <p>Pastikan Anda telah mempublikasikan spreadsheet ke web dan melihatnya dari server web.</p>
-            </div>
-            <div id="properties-container" class="properties">
-                <!-- Property cards akan dibuat oleh JavaScript dari data Google Sheet -->
-            </div>
+        
+        <div class="error" id="errorMessage"></div>
+        
+        <div class="table-container">
+            <table id="dataTable">
+                <thead>
+                    <tr>
+                        <!-- Header akan diisi oleh JavaScript -->
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Data akan diisi oleh JavaScript -->
+                </tbody>
+            </table>
         </div>
-    </section>
-
-    <!-- Property Detail Page -->
-    <section id="property-detail">
-        <div class="container">
-            <button class="back-btn" id="backToList">
-                <i class="fas fa-arrow-left"></i> Kembali ke Daftar
-            </button>
-            <div class="property-detail-content">
-                <div class="image-gallery">
-                    <img id="main-image" class="main-image" src="" alt="Property Image">
-                    <div class="gallery-controls">
-                        <button class="gallery-btn" id="prev-btn"><i class="fas fa-chevron-left"></i> Sebelumnya</button>
-                        <button class="gallery-btn" id="next-btn">Selanjutnya <i class="fas fa-chevron-right"></i></button>
-                    </div>
-                    <div class="thumbnails">
-                        <!-- Thumbnails akan dibuat oleh JavaScript -->
-                    </div>
-                </div>
-                <div class="detail-info">
-                    <h2 id="detail-title"></h2>
-                    <div class="detail-price" id="detail-price"></div>
-                    <div class="detail-address">
-                        <i class="fas fa-map-marker-alt"></i>
-                        <span id="detail-address"></span>
-                    </div>
-                    <p class="detail-description" id="detail-description"></p>
-                    <div class="detail-features" id="detail-features">
-                        <!-- Features akan dibuat oleh JavaScript -->
-                    </div>
-                    <a href="#" id="map-link" class="map-link" target="_blank">
-                        <i class="fas fa-map"></i> Lihat di Google Maps
-                    </a>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer>
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h3>RumahDijual.com</h3>
-                    <p>Platform terpercaya untuk mencari properti impian Anda dengan berbagai pilihan terbaik di Indonesia.</p>
-                </div>
-                <div class="footer-section">
-                    <h3>Kontak Kami</h3>
-                    <p><i class="fas fa-phone"></i> +62 123 456 7890</p>
-                    <p><i class="fas fa-envelope"></i> info@rumahdijual.com</p>
-                    <p><i class="fas fa-map-marker-alt"></i> Jl. Contoh Alamat No. 123, Jakarta</p>
-                </div>
-                <div class="footer-section">
-                    <h3>Tautan Cepat</h3>
-                    <a href="#">Beranda</a>
-                    <a href="#">Properti</a>
-                    <a href="#">Tentang Kami</a>
-                    <a href="#">Kontak</a>
-                </div>
-                <div class="footer-section">
-                    <h3>Ikuti Kami</h3>
-                    <div class="social-icons">
-                        <a href="#"><i class="fab fa-facebook"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fab fa-youtube"></i></a>
-                    </div>
-                </div>
-            </div>
-            <div class="copyright">
-                <p>&copy; 2023 RumahDijual.com - All rights reserved</p>
-            </div>
-        </div>
-    </footer>
+        
+        <footer>
+            <p>© 2023 Website Pembaca Spreadsheet | Data diambil dari Google Sheets</p>
+        </footer>
+    </div>
 
     <script>
-        // DOM elements
-        const propertiesContainer = document.getElementById('properties-container');
-        const propertyListSection = document.getElementById('properties');
-        const propertyDetailSection = document.getElementById('property-detail');
-        const backToListBtn = document.getElementById('backToList');
-        const mainImage = document.getElementById('main-image');
-        const prevBtn = document.getElementById('prev-btn');
-        const nextBtn = document.getElementById('next-btn');
-        const thumbnailsContainer = document.querySelector('.thumbnails');
-        const detailTitle = document.getElementById('detail-title');
-        const detailPrice = document.getElementById('detail-price');
-        const detailAddress = document.getElementById('detail-address');
-        const detailDescription = document.getElementById('detail-description');
-        const detailFeatures = document.getElementById('detail-features');
-        const mapLink = document.getElementById('map-link');
-        const loadingMessage = document.getElementById('loading-message');
-        const errorMessage = document.getElementById('error-message');
-
-        let propertiesData = [];
-        let currentProperty = null;
-        let currentImageIndex = 0;
-
-        // URL Google Sheet yang sudah dipublikasikan dalam format CSV
-        const spreadsheetUrl = 'https://script.google.com/macros/s/AKfycbxVSo1isHNs6mqaV5gNiKHU5zcy_czpAj_Og2wntdnuqwjN8x__FguYaCmcSJN8Jit6hQ/exec';
-
-        // Fungsi untuk mengambil data dari Google Sheet
-        async function fetchProperties() {
-            loadingMessage.classList.remove('hidden');
-            errorMessage.classList.add('hidden');
+        document.addEventListener('DOMContentLoaded', function() {
+            const loadButton = document.getElementById('loadData');
+            const refreshButton = document.getElementById('refreshData');
+            const loadingElement = document.querySelector('.loading');
+            const errorElement = document.getElementById('errorMessage');
+            const tableHead = document.querySelector('#dataTable thead tr');
+            const tableBody = document.querySelector('#dataTable tbody');
             
-            try {
-                // Fetch data from the URL.
-                // NOTE: Fetching from a local file (file://) to an external URL (https://) is blocked by browser security (CORS).
-                // To test this code, you must upload it to a web server (like GitHub Pages) or run a local server (e.g., python -m http.server).
-                const response = await fetch(spreadsheetUrl);
-                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+            // ID spreadsheet Anda
+            const spreadsheetId = '1NadxFspxUmz8sdIpqmwCyjCKGfmMTpFCOYhErnbxZJQ';
+            
+            // Fungsi untuk memuat data dari Google Sheets
+            function loadSheetData() {
+                // Tampilkan loading, sembunyikan error
+                loadingElement.style.display = 'block';
+                errorElement.style.display = 'none';
                 
-                const csvText = await response.text();
-                const parsedData = parseCsv(csvText);
-
-                // Transform the raw data into a structured format
-                propertiesData = parsedData.map(row => {
-                    // Split image URLs by comma and trim whitespace
-                    const images = row.foto ? row.foto.split(',').map(url => url.trim()) : ['https://placehold.co/600x400'];
-                    
-                    // Construct the features array
-                    const features = [];
-                    if (row.kamar_tidur) features.push({ icon: 'bed', text: `${row.kamar_tidur} Kamar Tidur` });
-                    if (row.kamar_mandi) features.push({ icon: 'bath', text: `${row.kamar_mandi} Kamar Mandi` });
-                    if (row.luas_m2) features.push({ icon: 'ruler-combined', text: `Luas ${row.luas_m2} m²` });
-                    if (row.garasi) features.push({ icon: 'car', text: `${row.garasi}` });
-                    if (row.fitur_lainnya) {
-                        const otherFeatures = row.fitur_lainnya.split(',').map(f => f.trim());
-                        otherFeatures.forEach(f => {
-                            let icon = '';
-                            if (f.toLowerCase().includes('taman')) icon = 'tree';
-                            if (f.toLowerCase().includes('kolam')) icon = 'swimming-pool';
-                            if (f.toLowerCase().includes('keamanan')) icon = 'shield-alt';
-                            if (f.toLowerCase().includes('dapur')) icon = 'utensils';
-                            if (f.toLowerCase().includes('keluarga')) icon = 'couch';
-                            features.push({ icon, text: f });
+                // Bersihkan tabel
+                tableHead.innerHTML = '';
+                tableBody.innerHTML = '';
+                
+                // URL endpoint untuk mengambil data sebagai CSV
+                const url = `https://docs.google.com/spreadsheets/d/${spreadsheetId}/gviz/tq?tqx=out:csv`;
+                
+                fetch(url)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Gagal mengambil data: ' + response.statusText);
+                        }
+                        return response.text();
+                    })
+                    .then(csvData => {
+                        // Parse data CSV
+                        const rows = csvData.split('\n');
+                        const headers = rows[0].split(',').map(header => header.replace(/"/g, '').trim());
+                        
+                        // Buat header tabel
+                        headers.forEach(header => {
+                            const th = document.createElement('th');
+                            th.textContent = header;
+                            tableHead.appendChild(th);
                         });
-                    }
-
-                    return {
-                        id: row.id,
-                        title: row.nama || 'Untitled Property',
-                        price: `Rp ${row.harga}` || 'Harga Tidak Tersedia',
-                        address: row.alamat || 'Alamat tidak tersedia',
-                        description: row.deskripsi || 'Tidak ada deskripsi yang tersedia.',
-                        images: images,
-                        features: features,
-                        mapUrl: row.map_url || '#'
-                    };
-                });
-                
-                if (propertiesData.length > 0) {
-                    generatePropertyCards(propertiesData);
-                } else {
-                    propertiesContainer.innerHTML = '<p class="text-center text-gray-500">Tidak ada properti yang tersedia saat ini.</p>';
-                }
-
-            } catch (error) {
-                console.error("Kesalahan saat mengambil data:", error);
-                errorMessage.classList.remove('hidden');
-                propertiesContainer.innerHTML = ''; // Clear any previous content
-            } finally {
-                loadingMessage.classList.add('hidden');
+                        
+                        // Isi data tabel
+                        for (let i = 1; i < rows.length; i++) {
+                            if (rows[i].trim() === '') continue;
+                            
+                            const cells = rows[i].split(',').map(cell => {
+                                // Menangani nilai yang mungkin mengandung koma dalam tanda kutip
+                                return cell.replace(/^"|"$/g, '').trim();
+                            });
+                            
+                            const tr = document.createElement('tr');
+                            
+                            cells.forEach(cell => {
+                                const td = document.createElement('td');
+                                td.textContent = cell;
+                                tr.appendChild(td);
+                            });
+                            
+                            tableBody.appendChild(tr);
+                        }
+                        
+                        // Sembunyikan loading
+                        loadingElement.style.display = 'none';
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        loadingElement.style.display = 'none';
+                        errorElement.textContent = 'Terjadi kesalahan: ' + error.message;
+                        errorElement.style.display = 'block';
+                    });
             }
-        }
-
-        // Simple CSV parsing function
-        function parseCsv(csv) {
-            const lines = csv.split('\n').filter(line => line.trim() !== '');
-            const headers = lines[0].split(',').map(h => h.trim().replace(/"/g, ''));
-            return lines.slice(1).map(line => {
-                const values = line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(v => v.trim().replace(/"/g, ''));
-                const obj = {};
-                headers.forEach((header, i) => {
-                    obj[header] = values[i];
-                });
-                return obj;
-            });
-        }
-
-        // Generate property cards based on the fetched data
-        function generatePropertyCards(properties) {
-            propertiesContainer.innerHTML = '';
             
-            properties.forEach(property => {
-                const card = document.createElement('div');
-                card.className = 'property-card';
-                card.innerHTML = `
-                    <div class="property-image">
-                        <img src="${property.images[0]}" onerror="this.onerror=null;this.src='https://placehold.co/600x400';" alt="${property.title}">
-                    </div>
-                    <div class="property-details">
-                        <div class="property-price">${property.price}</div>
-                        <h3>${property.title}</h3>
-                        <div class="property-address">${property.address}</div>
-                        <div class="property-features">
-                            ${property.features.slice(0, 2).map(f => `
-                                <div class="feature">
-                                    <i class="fas fa-${f.icon}"></i>
-                                    <span>${f.text}</span>
-                                </div>
-                            `).join('')}
-                        </div>
-                    </div>
-                `;
-                
-                card.addEventListener('click', () => {
-                    showPropertyDetail(property);
-                });
-                
-                propertiesContainer.appendChild(card);
-            });
-        }
-
-        // Show property detail
-        function showPropertyDetail(property) {
-            currentProperty = property;
-            currentImageIndex = 0;
+            // Event listener untuk tombol
+            loadButton.addEventListener('click', loadSheetData);
+            refreshButton.addEventListener('click', loadSheetData);
             
-            detailTitle.textContent = property.title;
-            detailPrice.textContent = property.price;
-            detailAddress.textContent = property.address;
-            detailDescription.textContent = property.description;
-            mapLink.href = property.mapUrl;
-            
-            // Generate features
-            detailFeatures.innerHTML = '';
-            property.features.forEach(feature => {
-                const featureItem = document.createElement('div');
-                featureItem.className = 'feature-item';
-                featureItem.innerHTML = `
-                    <i class="fas fa-${feature.icon}"></i>
-                    <span>${feature.text}</span>
-                `;
-                detailFeatures.appendChild(featureItem);
-            });
-            
-            // Generate thumbnails
-            thumbnailsContainer.innerHTML = '';
-            property.images.forEach((image, index) => {
-                const thumbnail = document.createElement('img');
-                thumbnail.src = image;
-                thumbnail.alt = `Thumbnail ${index + 1}`;
-                thumbnail.className = 'thumbnail';
-                if (index === 0) thumbnail.classList.add('active');
-                
-                thumbnail.addEventListener('click', () => {
-                    currentImageIndex = index;
-                    updateMainImage();
-                });
-                
-                thumbnailsContainer.appendChild(thumbnail);
-            });
-            
-            updateMainImage();
-            
-            propertyListSection.style.display = 'none';
-            propertyDetailSection.style.display = 'block';
-            
-            window.scrollTo(0, 0);
-        }
-
-        // Update main image
-        function updateMainImage() {
-            mainImage.src = currentProperty.images[currentImageIndex];
-            
-            document.querySelectorAll('.thumbnail').forEach((thumb, index) => {
-                if (index === currentImageIndex) {
-                    thumb.classList.add('active');
-                } else {
-                    thumb.classList.remove('active');
-                }
-            });
-        }
-
-        // Event listeners
-        backToListBtn.addEventListener('click', () => {
-            propertyDetailSection.style.display = 'none';
-            propertyListSection.style.display = 'block';
+            // Otomatis memuat data saat halaman dimuat
+            loadSheetData();
         });
-
-        prevBtn.addEventListener('click', () => {
-            if (currentProperty.images && currentProperty.images.length > 0) {
-                if (currentImageIndex > 0) {
-                    currentImageIndex--;
-                } else {
-                    currentImageIndex = currentProperty.images.length - 1;
-                }
-                updateMainImage();
-            }
-        });
-
-        nextBtn.addEventListener('click', () => {
-            if (currentProperty.images && currentProperty.images.length > 0) {
-                if (currentImageIndex < currentProperty.images.length - 1) {
-                    currentImageIndex++;
-                } else {
-                    currentImageIndex = 0;
-                }
-                updateMainImage();
-            }
-        });
-
-        // Initialize by fetching data
-        fetchProperties();
     </script>
 </body>
 </html>
-
-
-
