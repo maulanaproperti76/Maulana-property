@@ -398,18 +398,31 @@
                                     photoUrl = photoUrl.substring(8, photoUrl.length - 2);
                                 }
                                 
-                                if (photoUrl && photoUrl !== 'null' && photoUrl.startsWith('http')) {
+                                // Cek apakah URL foto valid
+                                if (photoUrl && photoUrl !== 'null' && (photoUrl.startsWith('http') || photoUrl.startsWith('https'))) {
                                     const img = document.createElement('img');
                                     img.src = photoUrl;
                                     img.alt = 'Foto Properti';
                                     img.classList.add('property-img');
+                                    img.onload = function() {
+                                        // Gambar berhasil dimuat
+                                    };
+                                    img.onerror = function() {
+                                        // Jika gambar gagal dimuat, ganti dengan placeholder
+                                        this.src = 'https://via.placeholder.com/100x70?text=Gagal+Memuat';
+                                    };
                                     img.onclick = function() {
                                         modal.style.display = "block";
                                         modalImg.src = this.src;
                                     }
                                     tdPhoto.appendChild(img);
                                 } else {
-                                    tdPhoto.textContent = 'Tidak ada foto';
+                                    // Jika tidak ada URL gambar, tampilkan placeholder
+                                    const img = document.createElement('img');
+                                    img.src = 'https://via.placeholder.com/100x70?text=Tidak+Ada+Foto';
+                                    img.alt = 'Tidak ada foto';
+                                    img.classList.add('property-img');
+                                    tdPhoto.appendChild(img);
                                 }
                                 tr.appendChild(tdPhoto);
                                 
@@ -419,13 +432,9 @@
                                 
                                 // Perbaikan URL Google Maps
                                 if (linkUrl.startsWith('=HYPERLINK("') && linkUrl.includes('","')) {
-                                    const firstQuote = linkUrl.indexOf('"');
-                                    const secondQuote = linkUrl.indexOf('"', firstQuote + 1);
-                                    const thirdQuote = linkUrl.indexOf('"', secondQuote + 1);
-                                    
-                                    if (thirdQuote !== -1) {
-                                        linkUrl = linkUrl.substring(secondQuote + 2, thirdQuote);
-                                    }
+                                    const urlStart = linkUrl.indexOf('"') + 1;
+                                    const urlEnd = linkUrl.indexOf('"', urlStart);
+                                    linkUrl = linkUrl.substring(urlStart, urlEnd);
                                 }
                                 
                                 if (linkUrl && linkUrl !== 'null' && linkUrl.startsWith('http')) {
