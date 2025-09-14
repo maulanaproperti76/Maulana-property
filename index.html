@@ -251,18 +251,6 @@
         th:nth-child(4) { width: 20%; }
         th:nth-child(5) { width: 20%; }
         
-        .debug-info {
-            background-color: #f8f9fa;
-            padding: 15px;
-            border-radius: 8px;
-            margin-top: 20px;
-            font-family: monospace;
-            font-size: 14px;
-            display: none;
-            max-height: 300px;
-            overflow-y: auto;
-        }
-        
         .info-box {
             background-color: #e3f2fd;
             padding: 15px;
@@ -280,7 +268,7 @@
         </header>
         
         <div class="info-box">
-            <p><strong>Informasi:</strong> Foto properti berasal dari Telegram API dan tidak dapat ditampilkan langsung di browser karena memerlukan autentikasi. Silakan gunakan aplikasi Telegram untuk melihat foto-foto tersebut.</p>
+            <p><strong>Informasi:</strong> Website ini menampilkan data properti dari Google Spreadsheet. Foto dari Telegram akan ditampilkan melalui Google Apps Script proxy.</p>
         </div>
         
         <div class="controls">
@@ -289,9 +277,6 @@
             </button>
             <button id="refreshData">
                 <i class="fas fa-sync-alt"></i> Segarkan Data
-            </button>
-            <button id="debugToggle">
-                <i class="fas fa-bug"></i> Mode Debug
             </button>
         </div>
         
@@ -321,8 +306,6 @@
             </table>
         </div>
         
-        <div class="debug-info" id="debugInfo"></div>
-        
         <footer>
             <p>© 2023 Website Data Properti | Data diambil dari Google Sheets</p>
         </footer>
@@ -338,23 +321,20 @@
         document.addEventListener('DOMContentLoaded', function() {
             const loadButton = document.getElementById('loadData');
             const refreshButton = document.getElementById('refreshData');
-            const debugToggle = document.getElementById('debugToggle');
             const loadingElement = document.querySelector('.loading');
             const errorElement = document.getElementById('errorMessage');
             const tableBody = document.querySelector('#dataTable tbody');
             const dataCountElement = document.getElementById('dataCount');
-            const debugInfoElement = document.getElementById('debugInfo');
             const modal = document.getElementById('imageModal');
             const modalImg = document.getElementById('modalImage');
             const closeModal = document.querySelector('.close');
             
-            let debugMode = false;
-            
             // ID spreadsheet Anda
             const spreadsheetId = '1NadxFspxUmz8sdIpqmwCyjCKGfmMTpFCOYhErnbxZJQ';
             
-            // Token bot Telegram (hanya untuk informasi)
-            const telegramBotToken = '8340884463:AAFD2lIMCrXz7eMS32XwVejOsNbGeB6XriY';
+            // URL Google Apps Script untuk proxy gambar Telegram
+            // Ganti dengan URL Google Apps Script Anda setelah deploy
+            const scriptUrl = 'https://script.google.com/macros/s/AKfycbwIIKwMfogkl29eCDhAXlcoY5k-z389cUEpC0K5OkhVA9cdXZThqAOpbnNjmMadcbBsWw/exec';
             
             // Fungsi untuk mengekstrak URL dari formula Google Sheets
             function extractUrlFromFormula(formula) {
@@ -375,9 +355,19 @@
                 return formula;
             }
             
-            // Fungsi untuk memeriksa apakah URL adalah URL Telegram yang memerlukan autentikasi
+            // Fungsi untuk memeriksa apakah URL adalah URL Telegram
             function isTelegramUrl(url) {
                 return url && url.includes('api.telegram.org');
+            }
+            
+            // Fungsi untuk mendapatkan URL gambar melalui proxy
+            function getTelegramImageUrl(telegramUrl) {
+                // Ekstrak file_path dari URL Telegram
+                const filePathMatch = telegramUrl.match(/\/file\/bot[^/]+\/(.+)/);
+                if (filePathMatch && filePathMatch[1]) {
+                    return `${scriptUrl}?file_path=${encodeURIComponent(filePathMatch[1])}`;
+                }
+                return null;
             }
             
             // Fungsi untuk memuat data dari Google Sheets
@@ -400,11 +390,6 @@
                         return response.text();
                     })
                     .then(csvData => {
-                        if (debugMode) {
-                            debugInfoElement.textContent = "Data CSV:\n" + csvData;
-                            debugInfoElement.style.display = 'block';
-                        }
-                        
                         // Parse data CSV
                         const rows = csvData.split('\n');
                         
@@ -413,7 +398,7 @@
                         let validDataCount = 0;
                         
                         // Isi data tabel
-                        dataRows.forEach((row, index) => {
+                        dataRows.forEach((row) => {
                             if (row.trim() === '') return;
                             
                             // Split row dengan memperhatikan koma dalam quoted values
@@ -463,38 +448,44 @@
                                 
                                 if (photoUrl && photoUrl !== 'null' && (photoUrl.startsWith('http') || photoUrl.startsWith('https'))) {
                                     if (isTelegramUrl(photoUrl)) {
-                                        // URL Telegram - tidak dapat ditampilkan langsung di browser
-                                        const img = document.createElement('img');
-                                        img.src = 'https://via.placeholder.com/100x70/2196f3/ffffff?text=Telegram+Photo';
-                                        img.alt = 'Foto dari Telegram (tidak dapat ditampilkan)';
-                                        img.classList.add('property-img');
-                                        img.title = 'Foto dari Telegram tidak dapat ditampilkan langsung di browser';
-                                        tdPhoto.appendChild(img);
-                                        
-                                        // Tambahkan link ke Telegram
-                                        const link = document.createElement('a');
-                                        link.href = 'https://t.me/your_bot_username'; // Ganti dengan username bot Anda
-                                        link.target = '_blank';
-                                        link.textContent = 'Lihat di Telegram';
-                                        link.style.display = 'block';
-                                        link.style.fontSize = '12px';
-                                        link.style.marginTop = '5px';
-                                        tdPhoto.appendChild(link);
+                                        // URL Telegram - gunakan proxy
+                                        const proxyUrl = getTelegramImageUrl(photoUrl);
+                                        if (proxyUrl) {
+                                            const img = document.createElement('img');
+                                            img.src = proxyUrl;
+                                            img.alt = 'Foto Properti';
+                                            img.classList.add('property-img');
+                                            img.onload = function() {
+                                                console.log('Gambar dari Telegram berhasil dimuat melalui proxy');
+                                            };
+                                            img.onerror = function() {
+                                                console.log('Gagal memuat gambar dari Telegram melalui proxy');
+                                                this.src = 'https://via.placeholder.com/100x70/2196f3/ffffff?text=Telegram+Photo';
+                                            };
+                                            img.onclick = function() {
+                                                modal.style.display = "block";
+                                                modalImg.src = this.src;
+                                            }
+                                            tdPhoto.appendChild(img);
+                                        } else {
+                                            // Jika proxy URL tidak berhasil dibuat
+                                            const img = document.createElement('img');
+                                            img.src = 'https://via.placeholder.com/100x70/2196f3/ffffff?text=Telegram+Photo';
+                                            img.alt = 'Foto dari Telegram';
+                                            img.classList.add('property-img');
+                                            tdPhoto.appendChild(img);
+                                        }
                                     } else {
-                                        // URL biasa - dapat ditampilkan
+                                        // URL biasa - dapat ditampilkan langsung
                                         const img = document.createElement('img');
                                         img.src = photoUrl;
                                         img.alt = 'Foto Properti';
                                         img.classList.add('property-img');
                                         img.onload = function() {
-                                            if (debugMode) {
-                                                console.log('Gambar berhasil dimuat:', photoUrl);
-                                            }
+                                            console.log('Gambar berhasil dimuat:', photoUrl);
                                         };
                                         img.onerror = function() {
-                                            if (debugMode) {
-                                                console.log('Gagal memuat gambar:', photoUrl);
-                                            }
+                                            console.log('Gagal memuat gambar:', photoUrl);
                                             this.src = 'https://via.placeholder.com/100x70?text=Gagal+Memuat';
                                         };
                                         img.onclick = function() {
@@ -534,10 +525,6 @@
                                 
                                 tableBody.appendChild(tr);
                                 validDataCount++;
-                                
-                                if (debugMode) {
-                                    console.log(`Baris ${index + 1}:`, cells);
-                                }
                             }
                         });
                         
@@ -558,19 +545,6 @@
             // Event listener untuk tombol
             loadButton.addEventListener('click', loadSheetData);
             refreshButton.addEventListener('click', loadSheetData);
-            
-            debugToggle.addEventListener('click', function() {
-                debugMode = !debugMode;
-                debugInfoElement.style.display = debugMode ? 'block' : 'none';
-                this.innerHTML = debugMode ? 
-                    '<i class="fas fa-bug-slash"></i> Nonaktifkan Debug' : 
-                    '<i class="fas fa-bug"></i> Mode Debug';
-                
-                if (debugMode) {
-                    console.log('Mode debug diaktifkan');
-                    loadSheetData(); // Muat ulang data untuk debug
-                }
-            });
             
             // Modal functionality
             closeModal.addEventListener('click', function() {
