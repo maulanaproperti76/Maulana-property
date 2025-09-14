@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pembaca Google Spreadsheet</title>
+    <title>Website Properti - Data Spreadsheet</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
             margin: 0;
@@ -13,19 +14,21 @@
         }
         
         body {
-            background-color: #f5f5f5;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
             color: #333;
             line-height: 1.6;
             padding: 20px;
+            min-height: 100vh;
         }
         
         .container {
             max-width: 1200px;
             margin: 0 auto;
             background-color: white;
-            border-radius: 10px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
             padding: 30px;
+            overflow: hidden;
         }
         
         header {
@@ -36,35 +39,48 @@
         }
         
         h1 {
-            color: #4285f4;
+            color: #2c3e50;
             margin-bottom: 10px;
+            font-size: 2.5rem;
         }
         
         .description {
-            color: #666;
-            font-size: 18px;
+            color: #7f8c8d;
+            font-size: 1.1rem;
+            max-width: 800px;
+            margin: 0 auto;
         }
         
         .controls {
             display: flex;
             justify-content: center;
             margin-bottom: 20px;
-            gap: 10px;
+            gap: 15px;
+            flex-wrap: wrap;
         }
         
         button {
-            background-color: #4285f4;
+            background: linear-gradient(to right, #3498db, #2980b9);
             color: white;
             border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
+            padding: 12px 25px;
+            border-radius: 50px;
             cursor: pointer;
             font-size: 16px;
-            transition: background-color 0.3s;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
         }
         
         button:hover {
-            background-color: #3367d6;
+            transform: translateY(-2px);
+            box-shadow: 0 7px 14px rgba(50, 50, 93, 0.1), 0 3px 6px rgba(0, 0, 0, 0.08);
+        }
+        
+        button:active {
+            transform: translateY(1px);
         }
         
         .loading {
@@ -75,10 +91,10 @@
         
         .spinner {
             border: 4px solid rgba(0, 0, 0, 0.1);
-            border-left: 4px solid #4285f4;
+            border-left: 4px solid #3498db;
             border-radius: 50%;
-            width: 30px;
-            height: 30px;
+            width: 40px;
+            height: 40px;
             animation: spin 1s linear infinite;
             margin: 0 auto 15px;
         }
@@ -91,6 +107,8 @@
         .table-container {
             overflow-x: auto;
             margin-top: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
         }
         
         table {
@@ -100,35 +118,63 @@
         }
         
         th, td {
-            padding: 12px 15px;
+            padding: 15px;
             text-align: left;
-            border-bottom: 1px solid #ddd;
+            border-bottom: 1px solid #eaeaea;
         }
         
         th {
-            background-color: #f8f9fa;
+            background: linear-gradient(to bottom, #f8f9fa, #e9ecef);
             font-weight: bold;
-            color: #4285f4;
+            color: #2c3e50;
             position: sticky;
             top: 0;
+            text-align: center;
         }
         
         tr:hover {
-            background-color: #f1f8ff;
+            background-color: #f8f9fa;
+        }
+        
+        .property-img {
+            width: 100px;
+            height: 70px;
+            object-fit: cover;
+            border-radius: 8px;
+            transition: transform 0.3s;
+        }
+        
+        .property-img:hover {
+            transform: scale(1.8);
+            z-index: 10;
+            position: relative;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
         }
         
         .error {
-            color: #d93025;
+            color: #e74c3c;
             text-align: center;
             padding: 20px;
             display: none;
+            background-color: #fadbd8;
+            border-radius: 8px;
+            margin: 20px 0;
         }
         
         footer {
             text-align: center;
-            margin-top: 30px;
-            color: #666;
+            margin-top: 40px;
+            color: #7f8c8d;
             font-size: 14px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+        
+        .data-count {
+            text-align: center;
+            margin: 15px 0;
+            color: #7f8c8d;
+            font-style: italic;
         }
         
         @media (max-width: 768px) {
@@ -136,23 +182,59 @@
                 padding: 15px;
             }
             
+            h1 {
+                font-size: 1.8rem;
+            }
+            
             th, td {
-                padding: 8px 10px;
+                padding: 10px;
                 font-size: 14px;
             }
+            
+            button {
+                padding: 10px 15px;
+                font-size: 14px;
+            }
+            
+            .property-img {
+                width: 60px;
+                height: 50px;
+            }
         }
+        
+        /* Warna untuk baris genap dan ganjil */
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        /* Gaya khusus untuk kolom harga */
+        td:nth-child(3) {
+            font-weight: bold;
+            color: #27ae60;
+        }
+        
+        /* Gaya untuk header kolom */
+        th:nth-child(1) { width: 15%; }
+        th:nth-child(2) { width: 15%; }
+        th:nth-child(3) { width: 20%; }
+        th:nth-child(4) { width: 30%; }
+        th:nth-child(5) { width: 20%; }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>Website Pembaca Spreadsheet</h1>
-            <p class="description">Menampilkan data dari Google Spreadsheet secara real-time</p>
+            <h1><i class="fas fa-home"></i> Data Properti</h1>
+            <p class="description">Menampilkan informasi properti dari Google Spreadsheet secara real-time</p>
         </header>
         
         <div class="controls">
-            <button id="loadData">Muat Data</button>
-            <button id="refreshData">Segarkan Data</button>
+            <button id="loadData">
+                <i class="fas fa-download"></i> Muat Data
+            </button>
+            <button id="refreshData">
+                <i class="fas fa-sync-alt"></i> Segarkan Data
+            </button>
         </div>
         
         <div class="loading">
@@ -162,11 +244,17 @@
         
         <div class="error" id="errorMessage"></div>
         
+        <div class="data-count" id="dataCount"></div>
+        
         <div class="table-container">
             <table id="dataTable">
                 <thead>
                     <tr>
-                        <!-- Header akan diisi oleh JavaScript -->
+                        <th>Type</th>
+                        <th>Harga</th>
+                        <th>Alamat</th>
+                        <th>Foto</th>
+                        <th>Link</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -176,7 +264,7 @@
         </div>
         
         <footer>
-            <p>© 2023 Website Pembaca Spreadsheet | Data diambil dari Google Sheets</p>
+            <p>© 2023 Website Data Properti | Data diambil dari Google Sheets</p>
         </footer>
     </div>
 
@@ -186,8 +274,8 @@
             const refreshButton = document.getElementById('refreshData');
             const loadingElement = document.querySelector('.loading');
             const errorElement = document.getElementById('errorMessage');
-            const tableHead = document.querySelector('#dataTable thead tr');
             const tableBody = document.querySelector('#dataTable tbody');
+            const dataCountElement = document.getElementById('dataCount');
             
             // ID spreadsheet Anda
             const spreadsheetId = '1NadxFspxUmz8sdIpqmwCyjCKGfmMTpFCOYhErnbxZJQ';
@@ -199,7 +287,6 @@
                 errorElement.style.display = 'none';
                 
                 // Bersihkan tabel
-                tableHead.innerHTML = '';
                 tableBody.innerHTML = '';
                 
                 // URL endpoint untuk mengambil data sebagai CSV
@@ -215,34 +302,87 @@
                     .then(csvData => {
                         // Parse data CSV
                         const rows = csvData.split('\n');
-                        const headers = rows[0].split(',').map(header => header.replace(/"/g, '').trim());
                         
-                        // Buat header tabel
-                        headers.forEach(header => {
-                            const th = document.createElement('th');
-                            th.textContent = header;
-                            tableHead.appendChild(th);
-                        });
+                        // Lewati baris header (baris pertama)
+                        const dataRows = rows.slice(1);
                         
                         // Isi data tabel
-                        for (let i = 1; i < rows.length; i++) {
-                            if (rows[i].trim() === '') continue;
+                        dataRows.forEach(row => {
+                            if (row.trim() === '') return;
                             
-                            const cells = rows[i].split(',').map(cell => {
-                                // Menangani nilai yang mungkin mengandung koma dalam tanda kutip
-                                return cell.replace(/^"|"$/g, '').trim();
-                            });
+                            // Split row dengan memperhatikan koma dalam quoted values
+                            const cells = [];
+                            let currentCell = '';
+                            let insideQuotes = false;
                             
-                            const tr = document.createElement('tr');
+                            for (let i = 0; i < row.length; i++) {
+                                const char = row[i];
+                                
+                                if (char === '"') {
+                                    insideQuotes = !insideQuotes;
+                                } else if (char === ',' && !insideQuotes) {
+                                    cells.push(currentCell.trim());
+                                    currentCell = '';
+                                } else {
+                                    currentCell += char;
+                                }
+                            }
+                            cells.push(currentCell.trim());
                             
-                            cells.forEach(cell => {
-                                const td = document.createElement('td');
-                                td.textContent = cell;
-                                tr.appendChild(td);
-                            });
-                            
-                            tableBody.appendChild(tr);
-                        }
+                            // Pastikan kita memiliki cukup kolom
+                            if (cells.length >= 5) {
+                                const tr = document.createElement('tr');
+                                
+                                // Kolom Type
+                                const tdType = document.createElement('td');
+                                tdType.textContent = cells[0].replace(/^"|"$/g, '');
+                                tr.appendChild(tdType);
+                                
+                                // Kolom Harga
+                                const tdPrice = document.createElement('td');
+                                tdPrice.textContent = cells[1].replace(/^"|"$/g, '');
+                                tr.appendChild(tdPrice);
+                                
+                                // Kolom Alamat
+                                const tdAddress = document.createElement('td');
+                                tdAddress.textContent = cells[2].replace(/^"|"$/g, '');
+                                tr.appendChild(tdAddress);
+                                
+                                // Kolom Foto (gambar)
+                                const tdPhoto = document.createElement('td');
+                                const photoUrl = cells[3].replace(/^"|"$/g, '');
+                                if (photoUrl && photoUrl !== 'null' && photoUrl.startsWith('http')) {
+                                    const img = document.createElement('img');
+                                    img.src = photoUrl;
+                                    img.alt = 'Foto Properti';
+                                    img.classList.add('property-img');
+                                    tdPhoto.appendChild(img);
+                                } else {
+                                    tdPhoto.textContent = 'Tidak ada foto';
+                                }
+                                tr.appendChild(tdPhoto);
+                                
+                                // Kolom Link
+                                const tdLink = document.createElement('td');
+                                const linkUrl = cells[4].replace(/^"|"$/g, '');
+                                if (linkUrl && linkUrl !== 'null' && linkUrl.startsWith('http')) {
+                                    const link = document.createElement('a');
+                                    link.href = linkUrl;
+                                    link.target = '_blank';
+                                    link.textContent = 'Lihat Detail';
+                                    link.rel = 'noopener noreferrer';
+                                    tdLink.appendChild(link);
+                                } else {
+                                    tdLink.textContent = 'Tidak ada link';
+                                }
+                                tr.appendChild(tdLink);
+                                
+                                tableBody.appendChild(tr);
+                            }
+                        });
+                        
+                        // Update jumlah data
+                        dataCountElement.textContent = `Menampilkan ${dataRows.filter(row => row.trim() !== '').length} properti`;
                         
                         // Sembunyikan loading
                         loadingElement.style.display = 'none';
