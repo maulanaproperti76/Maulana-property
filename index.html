@@ -700,13 +700,16 @@
         // Generate property cards
         function generatePropertyCards() {
             propertiesContainer.innerHTML = '';
-            
+        
             propertiesData.forEach(property => {
+                // Ambil foto pertama dari array, atau gunakan placeholder jika array kosong
+                const firstPhoto = property.foto && property.foto.length > 0 ? property.foto[0] : 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80';
+        
                 const card = document.createElement('div');
                 card.className = 'property-card';
                 card.innerHTML = `
                     <div class="property-image">
-                        <img src="${property.foto || 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80'}" alt="${property.type || 'Properti'}">
+                        <img src="${firstPhoto}" alt="${property.type || 'Properti'}">
                     </div>
                     <div class="property-details">
                         <div class="property-price">${property.harga || 'N/A'}</div>
@@ -724,11 +727,11 @@
                         </div>
                     </div>
                 `;
-                
+        
                 card.addEventListener('click', () => {
                     showPropertyDetail(property);
                 });
-                
+        
                 propertiesContainer.appendChild(card);
             });
         }
@@ -737,49 +740,26 @@
         function showPropertyDetail(property) {
             currentProperty = property;
             currentImageIndex = 0;
-            
-            // Update detail content
-            detailTitle.textContent = property.type || 'Properti';
-            detailPrice.textContent = property.harga || 'N/A';
-            detailAddress.textContent = property.alamat || 'Alamat tidak tersedia';
-            detailDescription.textContent = property.deskripsi || 'Tidak ada deskripsi tersedia.';
-            mapLink.href = property.link || '#';
-            
-            // Generate features
-            detailFeatures.innerHTML = '';
-            const features = [
-                { icon: "map-marker-alt", text: property.lokasi || 'Lokasi tidak tersedia' },
-                { icon: "expand", text: property.luas || 'Luas tidak tersedia' },
-                { icon: "bed", text: property.kamar || 'Jumlah kamar tidak tersedia' },
-                { icon: "bath", text: property.kamar_mandi || 'Jumlah kamar mandi tidak tersedia' }
-            ];
-            
-            features.forEach(feature => {
-                const featureItem = document.createElement('div');
-                featureItem.className = 'feature-item';
-                featureItem.innerHTML = `
-                    <i class="fas fa-${feature.icon}"></i>
-                    <span>${feature.text}</span>
-                `;
-                detailFeatures.appendChild(featureItem);
-            });
-            
-            // Generate thumbnails
+        
+            // Ambil semua foto dari array, atau gunakan placeholder jika kosong
+            const images = property.foto && property.foto.length > 0 ? property.foto : ['https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80'];
+        
+            // Update main image dan thumbnail
+            mainImage.src = images[currentImageIndex];
+        
             thumbnailsContainer.innerHTML = '';
-            const images = property.foto ? [property.foto] : ['https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80'];
-            
             images.forEach((image, index) => {
                 const thumbnail = document.createElement('img');
                 thumbnail.src = image;
                 thumbnail.alt = `Thumbnail ${index + 1}`;
                 thumbnail.className = 'thumbnail';
                 if (index === 0) thumbnail.classList.add('active');
-                
+        
                 thumbnail.addEventListener('click', () => {
                     currentImageIndex = index;
-                    updateMainImage();
+                    updateMainImage(images); // Teruskan array gambar ke fungsi
                 });
-                
+        
                 thumbnailsContainer.appendChild(thumbnail);
             });
             
@@ -809,32 +789,31 @@
             });
         }
 
-        // Setup event listeners
-        function setupEventListeners() {
-            backToListBtn.addEventListener('click', () => {
-                propertyDetailSection.style.display = 'none';
-                propertyListSection.style.display = 'block';
-            });
-
-            prevBtn.addEventListener('click', () => {
-                const images = currentProperty.foto ? [currentProperty.foto] : ['https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80'];
-                if (currentImageIndex > 0) {
-                    currentImageIndex--;
+        // Perbarui fungsi updateMainImage untuk menerima array gambar
+        function updateMainImage(images) {
+            mainImage.src = images[currentImageIndex];
+        
+            document.querySelectorAll('.thumbnail').forEach((thumb, index) => {
+                if (index === currentImageIndex) {
+                    thumb.classList.add('active');
                 } else {
-                    currentImageIndex = images.length - 1;
+                    thumb.classList.remove('active');
                 }
-                updateMainImage();
             });
-
-            nextBtn.addEventListener('click', () => {
-                const images = currentProperty.foto ? [currentProperty.foto] : ['https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80'];
-                if (currentImageIndex < images.length - 1) {
-                    currentImageIndex++;
-                } else {
-                    currentImageIndex = 0;
-                }
-                updateMainImage();
-            });
+        }
+        
+        // Perbarui event listener untuk tombol next/prev
+        nextBtn.addEventListener('click', () => {
+          const images = currentProperty.foto;
+          currentImageIndex = (currentImageIndex + 1) % images.length;
+          updateMainImage(images);
+        });
+        
+        prevBtn.addEventListener('click', () => {
+          const images = currentProperty.foto;
+          currentImageIndex = (currentImageIndex - 1 + images.length) % images.length;
+          updateMainImage(images);
+        });
 
             // Event listener untuk tombol
             loadButton.addEventListener('click', fetchAndDisplayProperties);
@@ -846,3 +825,4 @@
     </script>
 </body>
 </html>
+
