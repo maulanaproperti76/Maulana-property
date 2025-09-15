@@ -653,36 +653,32 @@
     <script>
         // URL API backend Anda di Vercel
         const BACKEND_API_URL = 'https://foto-backend.vercel.app/api/photos';
+
+        const [propertiesData, setPropertiesData] = useState([]);
+        const [loading, setLoading] = useState(false);
+        const [error, setError] = useState('');
+        const [currentProperty, setCurrentProperty] = useState(null);
+        const [currentImageIndex, setCurrentImageIndex] = useState(0);
         
-        // DOM elements
-        const propertiesContainer = document.querySelector('.properties');
-        const propertyListSection = document.getElementById('properties');
-        const propertyDetailSection = document.getElementById('property-detail');
-        const backToListBtn = document.getElementById('backToList');
-        const mainImage = document.getElementById('main-image');
-        const prevBtn = document.getElementById('prev-btn');
-        const nextBtn = document.getElementById('next-btn');
-        const thumbnailsContainer = document.querySelector('.thumbnails');
-        const detailTitle = document.getElementById('detail-title');
-        const detailPrice = document.getElementById('detail-price');
-        const detailAddress = document.getElementById('detail-address');
-        const detailDescription = document.getElementById('detail-description');
-        const detailFeatures = document.getElementById('detail-features');
-        const mapLink = document.getElementById('map-link');
-        const propertiesLoader = document.getElementById('properties-loader');
-        const errorElement = document.getElementById('errorMessage');
-        const loadButton = document.getElementById('loadData');
-        const refreshButton = document.getElementById('refreshData');
-
-        let currentProperty = null;
-        let currentImageIndex = 0;
-        let propertiesData = [];
-
-        // Initialize the page
-        function init() {
-            setupEventListeners();
-            fetchAndDisplayProperties();
+        useEffect(() => {
+          fetchAndDisplayProperties();
+        }, []);
+        
+        async function fetchAndDisplayProperties() {
+          setLoading(true);
+          setError('');
+          try {
+            const response = await fetch(BACKEND_API_URL);
+            if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+            const data = await response.json();
+            setPropertiesData(data);
+          } catch (err) {
+            setError(err.message);
+          } finally {
+            setLoading(false);
+          }
         }
+
 
         // Format harga menjadi Rp dengan titik
         function formatPrice(price) {
@@ -730,64 +726,89 @@
         }
 
         // Generate property cards
-        function generatePropertyCards() {
-            propertiesContainer.innerHTML = '';
-            
-            propertiesData.forEach(property => {
-                // Struktur data sesuai dengan backend yang sudah dikelompokkan
-                const propertyData = {
-                    type: property.type || 'Properti',
-                    price: formatPrice(property.harga),
-                    address: property.alamat || 'Alamat tidak tersedia',
-                    description: property.deskripsi || 'Tidak ada deskripsi',
-                    bedrooms: property.kamar || '0',
-                    bathrooms: property.kamar_mandi || '0',
-                    maps: property.link || '',
-                    photos: property.foto || [],
-                    date: property.date || ''
-                };
-                
-                const card = document.createElement('div');
-                card.className = 'property-card';
-                
-                // Gunakan foto pertama jika ada, atau gambar default
-                const mainPhoto = propertyData.photos.length > 0 
-                    ? propertyData.photos[0] 
-                    : 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80';
-                
-                card.innerHTML = `
-                    <div class="property-image">
-                        <img src="${mainPhoto}" alt="${propertyData.type}">
+        function PropertyCards({ properties, onSelect }) {
+          return (
+            <div className="properties">
+              {properties.length > 0 ? properties.map((property, i) => {
+                const mainPhoto = property.foto?.[0] 
+                  || 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?...';
+        
+                return (
+                  <div key={i} className="property-card" onClick={() => onSelect(property)}>
+                    <div className="property-image">
+                      <img src={mainPhoto} alt={property.type || 'Properti'} />
                     </div>
-                    <div class="property-details">
-                        <div class="property-price">${propertyData.price}</div>
-                        <h3>${propertyData.type}</h3>
-                        <div class="property-address">${propertyData.address}</div>
-                        <div class="property-features">
-                            <div class="feature">
-                                <i class="fas fa-bed"></i>
-                                <span>${propertyData.bedrooms} KT</span>
-                            </div>
-                            <div class="feature">
-                                <i class="fas fa-bath"></i>
-                                <span>${propertyData.bathrooms} KM</span>
-                            </div>
-                        </div>
+                    <div className="property-details">
+                      <div className="property-price">{formatPrice(property.harga)}</div>
+                      <h3>{property.type || 'Properti'}</h3>
+                      <div className="property-address">{property.alamat || 'Alamat tidak tersedia'}</div>
+                      <div className="property-features">
+                        <div className="feature"><i className="fas fa-bed"></i> {property.kamar || 0} KT</div>
+                        <div className="feature"><i className="fas fa-bath"></i> {property.kamar_mandi || 0} KM</div>
+                      </div>
                     </div>
-                `;
-                
-                card.addEventListener('click', () => {
-                    showPropertyDetail(propertyData);
-                });
-                
-                propertiesContainer.appendChild(card);
-            });
+                  </div>
+                );
+              }) : <div className="no-data">Tidak ada data properti</div>}
+            </div>
+          );
         }
 
+
         // Show property detail
-        function showPropertyDetail(property) {
-            currentProperty = property;
-            currentImageIndex = 0;
+        function PropertyDetail({ property, onBack }) {
+              const [currentImageIndex, setCurrentImageIndex] = useState(0);
+            
+              if (!property) return null;
+            
+              const images = property.foto?.length > 0 
+                ? property.foto 
+                : ['https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?...'];
+            
+              return (
+                <section id="property-detail">
+                  <div className="container">
+                    <button className="back-btn" onClick={onBack}>
+                      <i className="fas fa-arrow-left"></i> Kembali ke Daftar
+                    </button>
+                    <div className="property-detail-content">
+                      <div className="image-gallery">
+                        <img className="main-image" src={images[currentImageIndex]} alt="Property" />
+                        <div className="gallery-controls">
+                          <button className="gallery-btn" onClick={() => setCurrentImageIndex((currentImageIndex - 1 + images.length) % images.length)}>
+                            <i className="fas fa-chevron-left"></i> Sebelumnya
+                          </button>
+                          <button className="gallery-btn" onClick={() => setCurrentImageIndex((currentImageIndex + 1) % images.length)}>
+                            Selanjutnya <i className="fas fa-chevron-right"></i>
+                          </button>
+                        </div>
+                        <div className="thumbnails">
+                          {images.map((img, i) => (
+                            <img
+                              key={i}
+                              src={img}
+                              alt={`Thumb ${i}`}
+                              className={`thumbnail ${i === currentImageIndex ? 'active' : ''}`}
+                              onClick={() => setCurrentImageIndex(i)}
+                            />
+                          ))}
+                        </div>
+                      </div>
+                      <div className="detail-info">
+                        <h2>{property.type || 'Properti'}</h2>
+                        <div className="detail-price">{formatPrice(property.harga)}</div>
+                        <div className="detail-address"><i className="fas fa-map-marker-alt"></i> {property.alamat}</div>
+                        <p className="detail-description">{property.deskripsi}</p>
+                        <a href={property.link || '#'} className="map-link" target="_blank">
+                          <i className="fas fa-map"></i> Lihat di Google Maps
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </section>
+              );
+            }
+
             
             // Update detail content
             detailTitle.textContent = property.type || 'Properti';
@@ -908,3 +929,4 @@
     </script>
 </body>
 </html>
+
