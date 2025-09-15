@@ -668,6 +668,30 @@
             fetchAndDisplayProperties();
         }
 
+        // Setup all event listeners
+        function setupEventListeners() {
+            backToListBtn.addEventListener('click', () => {
+                propertyDetailSection.style.display = 'none';
+                propertyListSection.style.display = 'block';
+                window.scrollTo(0, 0);
+            });
+
+            nextBtn.addEventListener('click', () => {
+                const images = currentProperty.foto;
+                currentImageIndex = (currentImageIndex + 1) % images.length;
+                updateMainImage(images);
+            });
+            
+            prevBtn.addEventListener('click', () => {
+                const images = currentProperty.foto;
+                currentImageIndex = (currentImageIndex - 1 + images.length) % images.length;
+                updateMainImage(images);
+            });
+            
+            loadButton.addEventListener('click', fetchAndDisplayProperties);
+            refreshButton.addEventListener('click', fetchAndDisplayProperties);
+        }
+
         // Fetch properties from API
         async function fetchAndDisplayProperties() {
             // Show loading animation
@@ -681,7 +705,7 @@
                     throw new Error(`HTTP error! Status: ${response.status}`);
                 }
                 const data = await response.json();
-                propertiesData = data; // Mengambil array data properti
+                propertiesData = data;
                 
                 if (propertiesData && propertiesData.length > 0) {
                     generatePropertyCards();
@@ -702,8 +726,7 @@
             propertiesContainer.innerHTML = '';
         
             propertiesData.forEach(property => {
-                // Ambil foto pertama dari array, atau gunakan placeholder jika array kosong
-                const firstPhoto = property.foto && property.foto.length > 0 ? property.foto[0] : 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80';
+                const firstPhoto = property.foto && property.foto.length > 0 ? property.foto[0] : 'https://placehold.co/600x400/CCCCCC/333333?text=Gambar+Tidak+Tersedia';
         
                 const card = document.createElement('div');
                 card.className = 'property-card';
@@ -741,11 +764,33 @@
             currentProperty = property;
             currentImageIndex = 0;
         
-            // Ambil semua foto dari array, atau gunakan placeholder jika kosong
-            const images = property.foto && property.foto.length > 0 ? property.foto : ['https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80'];
+            const images = property.foto && property.foto.length > 0 ? property.foto : ['https://placehold.co/600x400/CCCCCC/333333?text=Gambar+Tidak+Tersedia'];
         
-            // Update main image dan thumbnail
-            mainImage.src = images[currentImageIndex];
+            detailTitle.textContent = property.type || 'Properti';
+            detailPrice.textContent = property.harga || 'N/A';
+            detailAddress.textContent = property.alamat || 'Alamat tidak tersedia';
+            detailDescription.textContent = property.deskripsi || 'Deskripsi tidak tersedia.';
+        
+            detailFeatures.innerHTML = `
+                <div class="feature-item">
+                    <i class="fas fa-bed"></i> <span>Kamar Tidur: ${property.kamar_tidur || 'N/A'}</span>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-bath"></i> <span>Kamar Mandi: ${property.kamar_mandi || 'N/A'}</span>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-expand"></i> <span>Luas: ${property.luas || 'N/A'}</span>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-tag"></i> <span>Tipe: ${property.type || 'N/A'}</span>
+                </div>
+            `;
+        
+            if (property.lokasi) {
+                mapLink.href = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(property.lokasi)}`;
+            } else {
+                mapLink.style.display = 'none';
+            }
         
             thumbnailsContainer.innerHTML = '';
             images.forEach((image, index) => {
@@ -757,42 +802,23 @@
         
                 thumbnail.addEventListener('click', () => {
                     currentImageIndex = index;
-                    updateMainImage(images); // Teruskan array gambar ke fungsi
+                    updateMainImage(images);
                 });
         
                 thumbnailsContainer.appendChild(thumbnail);
             });
-            
-            // Update main image
-            updateMainImage();
-            
-            // Show detail section, hide list
+        
+            updateMainImage(images);
+        
             propertyListSection.style.display = 'none';
             propertyDetailSection.style.display = 'block';
-            
-            // Scroll to top
             window.scrollTo(0, 0);
         }
 
-        // Update main image
-        function updateMainImage() {
-            const images = currentProperty.foto ? [currentProperty.foto] : ['https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80'];
-            mainImage.src = images[currentImageIndex];
-            
-            // Update active thumbnail
-            document.querySelectorAll('.thumbnail').forEach((thumb, index) => {
-                if (index === currentImageIndex) {
-                    thumb.classList.add('active');
-                } else {
-                    thumb.classList.remove('active');
-                }
-            });
-        }
-
-        // Perbarui fungsi updateMainImage untuk menerima array gambar
+        // Update main image and thumbnail
         function updateMainImage(images) {
             mainImage.src = images[currentImageIndex];
-        
+            
             document.querySelectorAll('.thumbnail').forEach((thumb, index) => {
                 if (index === currentImageIndex) {
                     thumb.classList.add('active');
@@ -800,24 +826,6 @@
                     thumb.classList.remove('active');
                 }
             });
-        }
-        
-        // Perbarui event listener untuk tombol next/prev
-        nextBtn.addEventListener('click', () => {
-          const images = currentProperty.foto;
-          currentImageIndex = (currentImageIndex + 1) % images.length;
-          updateMainImage(images);
-        });
-        
-        prevBtn.addEventListener('click', () => {
-          const images = currentProperty.foto;
-          currentImageIndex = (currentImageIndex - 1 + images.length) % images.length;
-          updateMainImage(images);
-        });
-
-            // Event listener untuk tombol
-            loadButton.addEventListener('click', fetchAndDisplayProperties);
-            refreshButton.addEventListener('click', fetchAndDisplayProperties);
         }
 
         // Initialize the page when loaded
@@ -825,4 +833,3 @@
     </script>
 </body>
 </html>
-
