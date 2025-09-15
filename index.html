@@ -375,7 +375,6 @@
 
         .footer-section p {
             margin-bottom: 15px;
-            color: #ddd;
         }
 
         .footer-section a {
@@ -393,11 +392,6 @@
             display: inline-block;
             margin-right: 15px;
             font-size: 1.5rem;
-            color: #ddd;
-        }
-
-        .social-icons a:hover {
-            color: var(--accent);
         }
 
         .copyright {
@@ -405,7 +399,6 @@
             margin-top: 40px;
             padding-top: 20px;
             border-top: 1px solid rgba(255, 255, 255, 0.1);
-            color: #ddd;
         }
 
         /* Loading Animation */
@@ -508,15 +501,6 @@
             
             .detail-features {
                 grid-template-columns: 1fr;
-            }
-            
-            .controls {
-                flex-direction: column;
-                align-items: center;
-            }
-            
-            .controls button {
-                width: 200px;
             }
         }
     </style>
@@ -652,281 +636,169 @@
 
     <script>
         // URL API backend Anda di Vercel
-        const BACKEND_API_URL = 'https://foto-backend.vercel.app/api/photos';
-
-        const [propertiesData, setPropertiesData] = useState([]);
-        const [loading, setLoading] = useState(false);
-        const [error, setError] = useState('');
-        const [currentProperty, setCurrentProperty] = useState(null);
-        const [currentImageIndex, setCurrentImageIndex] = useState(0);
+        <script>
+            const BACKEND_API_URL = 'https://foto-backend.vercel.app/api/photos';
+            
+            const propertiesContainer = document.querySelector('.properties');
+            const propertyListSection = document.getElementById('properties');
+            const propertyDetailSection = document.getElementById('property-detail');
+            const backToListBtn = document.getElementById('backToList');
+            const mainImage = document.getElementById('main-image');
+            const prevBtn = document.getElementById('prev-btn');
+            const nextBtn = document.getElementById('next-btn');
+            const thumbnailsContainer = document.querySelector('.thumbnails');
+            const detailTitle = document.getElementById('detail-title');
+            const detailPrice = document.getElementById('detail-price');
+            const detailAddress = document.getElementById('detail-address');
+            const detailDescription = document.getElementById('detail-description');
+            const detailFeatures = document.getElementById('detail-features');
+            const mapLink = document.getElementById('map-link');
+            const propertiesLoader = document.getElementById('properties-loader');
+            const errorElement = document.getElementById('errorMessage');
+            const loadButton = document.getElementById('loadData');
+            const refreshButton = document.getElementById('refreshData');
         
-        useEffect(() => {
-          fetchAndDisplayProperties();
-        }, []);
+            let currentProperty = null;
+            let currentImageIndex = 0;
+            let propertiesData = [];
+            let currentImages = [];
         
-        async function fetchAndDisplayProperties() {
-          setLoading(true);
-          setError('');
-          try {
-            const response = await fetch(BACKEND_API_URL);
-            if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
-            const data = await response.json();
-            setPropertiesData(data);
-          } catch (err) {
-            setError(err.message);
-          } finally {
-            setLoading(false);
-          }
-        }
-
-
-        // Format harga menjadi Rp dengan titik
-        function formatPrice(price) {
-            if (!price) return 'Harga tidak tersedia';
-            
-            // Jika sudah mengandung "Rp", kembalikan langsung
-            if (price.toString().includes('Rp')) return price.toString();
-            
-            // Konversi ke number dan format dengan titik
-            const numericPrice = parseInt(price.toString().replace(/\D/g, ''));
-            if (isNaN(numericPrice)) return 'Harga tidak valid';
-            
-            return 'Rp ' + numericPrice.toLocaleString('id-ID');
-        }
-
-        // Fetch properties from API
-        async function fetchAndDisplayProperties() {
-            // Show loading animation
-            propertiesLoader.style.display = 'block';
-            errorElement.style.display = 'none';
-            propertiesContainer.innerHTML = '';
-            
-            try {
-                const response = await fetch(BACKEND_API_URL);
-                if (!response.ok) {
-                    throw new Error(`HTTP error! Status: ${response.status}`);
-                }
-                const data = await response.json();
-                propertiesData = data; // Mengambil array data properti
-                
-                console.log('Data dari backend:', propertiesData); // Debug log
-                
-                if (propertiesData && propertiesData.length > 0) {
-                    generatePropertyCards();
-                } else {
-                    propertiesContainer.innerHTML = '<div class="no-data">Tidak ada data properti yang ditemukan.</div>';
-                }
-            } catch (error) {
-                console.error('Error:', error);
-                errorElement.textContent = 'Terjadi kesalahan: ' + error.message;
-                errorElement.style.display = 'block';
-            } finally {
-                propertiesLoader.style.display = 'none';
+            function init() {
+                setupEventListeners();
+                fetchAndDisplayProperties();
             }
-        }
-
-        // Generate property cards
-        function PropertyCards({ properties, onSelect }) {
-          return (
-            <div className="properties">
-              {properties.length > 0 ? properties.map((property, i) => {
-                const mainPhoto = property.foto?.[0] 
-                  || 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?...';
         
-                return (
-                  <div key={i} className="property-card" onClick={() => onSelect(property)}>
-                    <div className="property-image">
-                      <img src={mainPhoto} alt={property.type || 'Properti'} />
-                    </div>
-                    <div className="property-details">
-                      <div className="property-price">{formatPrice(property.harga)}</div>
-                      <h3>{property.type || 'Properti'}</h3>
-                      <div className="property-address">{property.alamat || 'Alamat tidak tersedia'}</div>
-                      <div className="property-features">
-                        <div className="feature"><i className="fas fa-bed"></i> {property.kamar || 0} KT</div>
-                        <div className="feature"><i className="fas fa-bath"></i> {property.kamar_mandi || 0} KM</div>
-                      </div>
-                    </div>
-                  </div>
-                );
-              }) : <div className="no-data">Tidak ada data properti</div>}
-            </div>
-          );
-        }
-
-
-        // Show property detail
-        function PropertyDetail({ property, onBack }) {
-              const [currentImageIndex, setCurrentImageIndex] = useState(0);
-            
-              if (!property) return null;
-            
-              const images = property.foto?.length > 0 
-                ? property.foto 
-                : ['https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?...'];
-            
-              return (
-                <section id="property-detail">
-                  <div className="container">
-                    <button className="back-btn" onClick={onBack}>
-                      <i className="fas fa-arrow-left"></i> Kembali ke Daftar
-                    </button>
-                    <div className="property-detail-content">
-                      <div className="image-gallery">
-                        <img className="main-image" src={images[currentImageIndex]} alt="Property" />
-                        <div className="gallery-controls">
-                          <button className="gallery-btn" onClick={() => setCurrentImageIndex((currentImageIndex - 1 + images.length) % images.length)}>
-                            <i className="fas fa-chevron-left"></i> Sebelumnya
-                          </button>
-                          <button className="gallery-btn" onClick={() => setCurrentImageIndex((currentImageIndex + 1) % images.length)}>
-                            Selanjutnya <i className="fas fa-chevron-right"></i>
-                          </button>
-                        </div>
-                        <div className="thumbnails">
-                          {images.map((img, i) => (
-                            <img
-                              key={i}
-                              src={img}
-                              alt={`Thumb ${i}`}
-                              className={`thumbnail ${i === currentImageIndex ? 'active' : ''}`}
-                              onClick={() => setCurrentImageIndex(i)}
-                            />
-                          ))}
-                        </div>
-                      </div>
-                      <div className="detail-info">
-                        <h2>{property.type || 'Properti'}</h2>
-                        <div className="detail-price">{formatPrice(property.harga)}</div>
-                        <div className="detail-address"><i className="fas fa-map-marker-alt"></i> {property.alamat}</div>
-                        <p className="detail-description">{property.deskripsi}</p>
-                        <a href={property.link || '#'} className="map-link" target="_blank">
-                          <i className="fas fa-map"></i> Lihat di Google Maps
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-                </section>
-              );
-            }
-
-            
-            // Update detail content
-            detailTitle.textContent = property.type || 'Properti';
-            detailPrice.textContent = property.price || 'N/A';
-            detailAddress.textContent = property.address || 'Alamat tidak tersedia';
-            detailDescription.textContent = property.description || 'Tidak ada deskripsi tersedia.';
-            mapLink.href = property.maps || '#';
-            
-            // Generate features
-            detailFeatures.innerHTML = '';
-            const features = [
-                { icon: "bed", text: `${property.bedrooms || '0'} Kamar Tidur` },
-                { icon: "bath", text: `${property.bathrooms || '0'} Kamar Mandi` },
-                { icon: "map-marker-alt", text: property.address || 'Alamat tidak tersedia' },
-                { icon: "info-circle", text: property.type || 'Properti' }
-            ];
-            
-            features.forEach(feature => {
-                const featureItem = document.createElement('div');
-                featureItem.className = 'feature-item';
-                featureItem.innerHTML = `
-                    <i class="fas fa-${feature.icon}"></i>
-                    <span>${feature.text}</span>
-                `;
-                detailFeatures.appendChild(featureItem);
-            });
-            
-            // Generate thumbnails
-            thumbnailsContainer.innerHTML = '';
-            const images = property.photos && property.photos.length > 0 
-                ? property.photos 
-                : ['https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80'];
-            
-            images.forEach((image, index) => {
-                const thumbnail = document.createElement('img');
-                thumbnail.src = image;
-                thumbnail.alt = `Thumbnail ${index + 1}`;
-                thumbnail.className = 'thumbnail';
-                if (index === 0) thumbnail.classList.add('active');
+            async function fetchAndDisplayProperties() {
+                propertiesLoader.style.display = 'block';
+                errorElement.style.display = 'none';
+                propertiesContainer.innerHTML = '';
                 
-                thumbnail.addEventListener('click', () => {
-                    currentImageIndex = index;
-                    updateMainImage();
+                try {
+                    const response = await fetch(BACKEND_API_URL);
+                    if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+                    const data = await response.json();
+                    propertiesData = data;
+                    
+                    if (propertiesData && propertiesData.length > 0) {
+                        generatePropertyCards();
+                    } else {
+                        propertiesContainer.innerHTML = '<div class="no-data">Tidak ada data properti.</div>';
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    errorElement.textContent = 'Terjadi kesalahan: ' + error.message;
+                    errorElement.style.display = 'block';
+                } finally {
+                    propertiesLoader.style.display = 'none';
+                }
+            }
+        
+            function generatePropertyCards() {
+                propertiesContainer.innerHTML = '';
+                
+                propertiesData.forEach(property => {
+                    const card = document.createElement('div');
+                    card.className = 'property-card';
+                    card.innerHTML = `
+                        <div class="property-image">
+                            <img src="${(property.foto && property.foto[0]) || 'https://via.placeholder.com/400x200'}" alt="${property.type || 'Properti'}">
+                        </div>
+                        <div class="property-details">
+                            <div class="property-price">${property.harga || 'N/A'}</div>
+                            <h3>${property.type || 'Properti'}</h3>
+                            <div class="property-address">${property.alamat || 'Alamat tidak tersedia'}</div>
+                            <div class="property-features">
+                                <div class="feature">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    <span>${property.lokasi || 'Lokasi'}</span>
+                                </div>
+                                <div class="feature">
+                                    <i class="fas fa-expand"></i>
+                                    <span>${property.luas || 'Luas'}</span>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    card.addEventListener('click', () => showPropertyDetail(property));
+                    propertiesContainer.appendChild(card);
+                });
+            }
+        
+            function showPropertyDetail(property) {
+                currentProperty = property;
+                currentImageIndex = 0;
+                currentImages = property.foto && property.foto.length > 0 
+                    ? property.foto 
+                    : ['https://via.placeholder.com/600x400'];
+        
+                detailTitle.textContent = property.type || 'Properti';
+                detailPrice.textContent = property.harga || 'N/A';
+                detailAddress.textContent = property.alamat || 'Alamat tidak tersedia';
+                detailDescription.textContent = property.deskripsi || 'Tidak ada deskripsi.';
+                mapLink.href = property.link || '#';
+                
+                detailFeatures.innerHTML = '';
+                const features = [
+                    { icon: "map-marker-alt", text: property.lokasi || 'Lokasi tidak tersedia' },
+                    { icon: "expand", text: property.luas || 'Luas tidak tersedia' },
+                    { icon: "bed", text: property.kamar || 'Jumlah kamar tidak tersedia' },
+                    { icon: "bath", text: property.kamar_mandi || 'Jumlah kamar mandi tidak tersedia' }
+                ];
+                features.forEach(feature => {
+                    const featureItem = document.createElement('div');
+                    featureItem.className = 'feature-item';
+                    featureItem.innerHTML = `<i class="fas fa-${feature.icon}"></i> <span>${feature.text}</span>`;
+                    detailFeatures.appendChild(featureItem);
                 });
                 
-                thumbnailsContainer.appendChild(thumbnail);
-            });
-            
-            // Update main image
-            updateMainImage();
-            
-            // Show detail section, hide list
-            propertyListSection.style.display = 'none';
-            propertyDetailSection.style.display = 'block';
-            
-            // Scroll to top
-            window.scrollTo(0, 0);
-        }
-
-        // Update main image
-        function updateMainImage() {
-            const images = currentProperty.photos && currentProperty.photos.length > 0 
-                ? currentProperty.photos 
-                : ['https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80'];
-            
-            mainImage.src = images[currentImageIndex];
-            
-            // Update active thumbnail
-            document.querySelectorAll('.thumbnail').forEach((thumb, index) => {
-                if (index === currentImageIndex) {
-                    thumb.classList.add('active');
-                } else {
-                    thumb.classList.remove('active');
-                }
-            });
-        }
-
-        // Setup event listeners
-        function setupEventListeners() {
-            backToListBtn.addEventListener('click', () => {
-                propertyDetailSection.style.display = 'none';
-                propertyListSection.style.display = 'block';
-            });
-
-            prevBtn.addEventListener('click', () => {
-                const images = currentProperty.photos && currentProperty.photos.length > 0 
-                    ? currentProperty.photos 
-                    : ['https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80'];
-                
-                if (currentImageIndex > 0) {
-                    currentImageIndex--;
-                } else {
-                    currentImageIndex = images.length - 1;
-                }
+                thumbnailsContainer.innerHTML = '';
+                currentImages.forEach((img, idx) => {
+                    const thumbnail = document.createElement('img');
+                    thumbnail.src = img;
+                    thumbnail.className = 'thumbnail';
+                    if (idx === 0) thumbnail.classList.add('active');
+                    thumbnail.addEventListener('click', () => {
+                        currentImageIndex = idx;
+                        updateMainImage();
+                    });
+                    thumbnailsContainer.appendChild(thumbnail);
+                });
+        
                 updateMainImage();
-            });
+                propertyListSection.style.display = 'none';
+                propertyDetailSection.style.display = 'block';
+                window.scrollTo(0, 0);
+            }
+        
+            function updateMainImage() {
+                mainImage.src = currentImages[currentImageIndex];
+                document.querySelectorAll('.thumbnail').forEach((thumb, idx) => {
+                    thumb.classList.toggle('active', idx === currentImageIndex);
+                });
+            }
+        
+            function setupEventListeners() {
+                backToListBtn.addEventListener('click', () => {
+                    propertyDetailSection.style.display = 'none';
+                    propertyListSection.style.display = 'block';
+                });
+        
+                prevBtn.addEventListener('click', () => {
+                    currentImageIndex = (currentImageIndex - 1 + currentImages.length) % currentImages.length;
+                    updateMainImage();
+                });
+        
+                nextBtn.addEventListener('click', () => {
+                    currentImageIndex = (currentImageIndex + 1) % currentImages.length;
+                    updateMainImage();
+                });
+        
+                loadButton.addEventListener('click', fetchAndDisplayProperties);
+                refreshButton.addEventListener('click', fetchAndDisplayProperties);
+            }
+        
+            window.addEventListener('DOMContentLoaded', init);
+        </script>
 
-            nextBtn.addEventListener('click', () => {
-                const images = currentProperty.photos && currentProperty.photos.length > 0 
-                    ? currentProperty.photos 
-                    : ['https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80'];
-                
-                if (currentImageIndex < images.length - 1) {
-                    currentImageIndex++;
-                } else {
-                    currentImageIndex = 0;
-                }
-                updateMainImage();
-            });
-
-            // Event listener untuk tombol
-            loadButton.addEventListener('click', fetchAndDisplayProperties);
-            refreshButton.addEventListener('click', fetchAndDisplayProperties);
-        }
-
-        // Initialize the page when loaded
-        window.addEventListener('DOMContentLoaded', init);
-    </script>
 </body>
 </html>
-
