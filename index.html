@@ -822,51 +822,50 @@
             // Create modal content
             modalContent.innerHTML = `
                 <div class="modal-slider">
-                    <div class="modal-slider-container" id="modalSlider-${property.id}">
+                    <div class="modal-slider-container" 
+                         id="modalSlider-${property.id}" 
+                         data-current="0" 
+                         style="transform: translateX(0%)">
                         ${property.foto && property.foto.length > 0 ? 
-                            property.foto.map(img => `<img src="${img}" alt="Property ${property.id}" loading="lazy">`).join('') :
-                            `<div class="no-image" style="height: 400px;"><i class="far fa-image"></i> Tidak ada gambar</div>`
+                            property.foto.map(img => 
+                                `<img src="${img}" alt="Property ${property.id}" loading="lazy">`
+                            ).join('') :
+                            `<div class="no-image" style="height: 400px;">
+                                <i class="far fa-image"></i> Tidak ada gambar
+                            </div>`
                         }
                     </div>
+                    
                     ${property.foto && property.foto.length > 1 ? `
-                        <div class="modal-slider-arrow prev" onclick="moveModalSlide('${property.id}', -1)"><i class="fas fa-chevron-left"></i></div>
-                        <div class="modal-slider-arrow next" onclick="moveModalSlide('${property.id}', 1)"><i class="fas fa-chevron-right"></i></div>
+                        <div class="modal-slider-arrow prev" onclick="moveModalSlide('${property.id}', -1)">
+                            <i class="fas fa-chevron-left"></i>
+                        </div>
+                        <div class="modal-slider-arrow next" onclick="moveModalSlide('${property.id}', 1)">
+                            <i class="fas fa-chevron-right"></i>
+                        </div>
                         <div class="modal-slider-nav">
                             ${property.foto.map((_, index) => 
-                                `<div class="modal-slider-dot ${index === 0 ? 'active' : ''}" onclick="showModalSlide('${property.id}', ${index})"></div>`
+                                `<div class="modal-slider-dot ${index === 0 ? 'active' : ''}" 
+                                      onclick="showModalSlide('${property.id}', ${index})"></div>`
                             ).join('')}
                         </div>
                     ` : ''}
                 </div>
+                
                 <div class="modal-details">
-                    <div class="modal-price">${formatPrice(property.harga)}</div>
-                    <div class="modal-type">${property.type || 'Properti'}</div>
-                    <div class="modal-address"><i class="fas fa-map-marker-alt"></i> ${property.alamat || 'Alamat tidak tersedia'}</div>
-                    <div class="modal-description">${property.deskripsi || 'Tidak ada deskripsi'}</div>
-                    <div class="modal-features">
-                        <div class="modal-feature"><i class="fas fa-bed"></i> ${property.kamar || '0'} Kamar Tidur</div>
-                        <div class="modal-feature"><i class="fas fa-bath"></i> ${property.kamar_mandi || '0'} Kamar Mandi</div>
-                    </div>
-                    <div class="modal-actions">
-                        <a href="${property.link}" target="_blank" class="modal-link">
-                            <i class="fas fa-map-marked-alt"></i> Lihat di Google Maps
-                        </a>
-                        <a href="${createWhatsAppLink(property.id, property.type)}" target="_blank" class="modal-whatsapp">
-                            <i class="fab fa-whatsapp"></i> Tanya via WhatsApp
-                        </a>
-                    </div>
+                    <h2>Property ${property.id}</h2>
+                    <p><strong>Luas Tanah:</strong> ${property.luas_tanah} m²</p>
+                    <p><strong>Harga:</strong> Rp ${property.harga.toLocaleString()}</p>
+                    <p><strong>Alamat:</strong> ${property.alamat}</p>
                 </div>
             `;
             
             // Show modal
             modal.style.display = 'block';
-            
-            // Store current property ID for slider functions
             modal.setAttribute('data-current-property', property.id);
-            
-            // Prevent body scrolling when modal is open
             document.body.style.overflow = 'hidden';
         }
+
 
         // Function to move modal slides
         function moveModalSlide(propertyId, direction) {
@@ -971,5 +970,6 @@
     </script>
 </body>
 </html>
+
 
 
