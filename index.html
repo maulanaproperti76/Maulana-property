@@ -3,798 +3,790 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Maulana Property - Temukan Properti Impian Anda</title>
+    <title>Maulana Property</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root {
-            --primary: #004d40;
-            --secondary: #26a69a;
-            --accent: #ff8a65;
-            --light: #e0f2f1;
-            --dark: #212121;
-            --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            --transition: all 0.3s ease;
-        }
-
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-
+        
         body {
-            background-color: #f5f5f5;
-            color: var(--dark);
+            background-color: #f5f7fa;
+            color: #333;
             line-height: 1.6;
-            scroll-behavior: smooth;
         }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-
-        /* Header */
+        
         header {
-            background-color: var(--primary);
-            color: var(--light);
-            padding: 1rem 0;
-            box-shadow: var(--shadow);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-
-        .header-content {
+            background: linear-gradient(135deg, #2c3e50, #4a6491);
+            color: white;
+            padding: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap;
         }
 
-        .logo {
-            font-size: 1.8rem;
-            font-weight: bold;
-            color: var(--light);
-            text-decoration: none;
-        }
-
-        nav ul {
+        header .logo-container {
             display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .logo {
+            font-size: 2.2rem;
+            font-weight: bold;
+        }
+
+        .logo i {
+            font-size: 2.2rem;
+        }
+
+        header nav ul {
+            display: flex;
+            gap: 2rem;
             list-style: none;
+            flex-wrap: wrap;
+            justify-content: center;
         }
 
-        nav ul li {
-            margin-left: 25px;
-        }
-
-        nav ul li a {
-            color: var(--light);
+        header nav a {
+            color: white;
             text-decoration: none;
             font-weight: 500;
-            transition: color 0.3s;
+            transition: color 0.3s ease;
         }
 
-        nav ul li a:hover {
-            color: var(--secondary);
+        header nav a:hover {
+            color: #d1d5db;
         }
-
-        /* Hero Section */
-        .hero {
-            background: linear-gradient(rgba(0, 77, 64, 0.7), rgba(0, 77, 64, 0.8)), url('https://images.unsplash.com/photo-1570129477792-bf39366601e3?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80') no-repeat center center/cover;
-            color: white;
-            text-align: center;
-            padding: 120px 20px;
+        
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
         }
-
-        .hero h1 {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
-        }
-
-        .hero p {
-            font-size: 1.2rem;
-            max-width: 700px;
-            margin: 0 auto 2rem;
-            opacity: 0.9;
-        }
-
-        .btn {
-            display: inline-block;
-            background-color: var(--accent);
-            color: white;
-            padding: 12px 25px;
-            border-radius: 50px;
-            text-decoration: none;
-            font-weight: bold;
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
-
-        .btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(255, 138, 101, 0.4);
-        }
-
-        /* Sections */
-        .section {
-            padding: 80px 0;
-        }
-
-        .section-title {
-            text-align: center;
-            font-size: 2.5rem;
-            margin-bottom: 50px;
-            color: var(--primary);
-            position: relative;
-        }
-        .section-title::after {
-            content: '';
-            display: block;
-            width: 80px;
-            height: 4px;
-            background-color: var(--secondary);
-            margin: 10px auto 0;
-            border-radius: 2px;
-        }
-
-        /* Property Grid */
-        .properties-grid {
+        
+        .property-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 30px;
+            gap: 2rem;
         }
-
+        
         .property-card {
             background: white;
-            border-radius: 10px;
+            border-radius: 12px;
             overflow: hidden;
-            box-shadow: var(--shadow);
-            transition: var(--transition);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.07);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
             cursor: pointer;
-            display: flex;
-            flex-direction: column;
         }
-
+        
         .property-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+            transform: translateY(-5px);
+            box-shadow: 0 12px 20px rgba(0, 0, 0, 0.15);
         }
-
+        
         .property-image {
             height: 220px;
             overflow: hidden;
             position: relative;
         }
-
+        
         .property-image img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: transform 0.5s;
+            transition: transform 0.5s ease;
         }
-
+        
         .property-card:hover .property-image img {
             transform: scale(1.05);
         }
-
+        
+        .property-badge {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: #4a6491;
+            color: white;
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
         .property-details {
-            padding: 20px;
-            flex-grow: 1;
+            padding: 1.5rem;
         }
-
-        .property-details h3 {
-            font-size: 1.4rem;
-            margin-bottom: 5px;
-            color: var(--primary);
-        }
-
-        .property-address {
-            color: #777;
-            font-size: 0.9rem;
-            margin-bottom: 15px;
-        }
-
+        
         .property-price {
-            font-size: 1.8rem;
+            font-size: 1.5rem;
             font-weight: bold;
-            color: var(--accent);
-            margin-bottom: 10px;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
         }
-
+        
+        .property-address {
+            color: #666;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
         .property-features {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-top: 1px solid #eee;
-            padding-top: 15px;
-            margin-top: 15px;
+            gap: 1rem;
+            margin-bottom: 1rem;
         }
-
+        
         .feature {
             display: flex;
             align-items: center;
+            gap: 0.4rem;
+            color: #5a738e;
             font-size: 0.9rem;
-        }
-
-        .feature i {
-            margin-right: 8px;
-            color: var(--secondary);
-        }
-
-        /* About Section */
-        #about-us {
-            background-color: var(--light);
-        }
-
-        .about-content {
-            display: flex;
-            gap: 40px;
-            align-items: center;
-        }
-
-        .about-content img {
-            width: 45%;
-            height: auto;
-            border-radius: 10px;
-            box-shadow: var(--shadow);
-        }
-
-        .about-text {
-            width: 55%;
-        }
-
-        /* Contact Section */
-        #contact {
-            background-color: white;
-        }
-
-        .contact-content {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-        }
-
-        .contact-content p {
-            max-width: 600px;
-            margin-bottom: 30px;
-        }
-
-        .contact-info {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 30px;
-            width: 100%;
-            margin-top: 30px;
-        }
-
-        .contact-item {
-            background-color: var(--light);
-            padding: 25px;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-            text-align: center;
-        }
-
-        .contact-item i {
-            font-size: 2rem;
-            color: var(--primary);
-            margin-bottom: 15px;
-        }
-
-        /* Footer */
-        footer {
-            background-color: var(--dark);
-            color: #bdbdbd;
-            padding: 4rem 0;
-            margin-top: 0;
-            font-size: 0.9rem;
-        }
-
-        .footer-content {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 30px;
-        }
-
-        .footer-section h4 {
-            font-size: 1.2rem;
-            margin-bottom: 15px;
-            color: var(--light);
-        }
-
-        .footer-section p, .footer-section a {
-            color: #9e9e9e;
-            text-decoration: none;
-        }
-
-        .footer-section a:hover {
-            color: var(--secondary);
         }
         
-        .social-icons a {
-            display: inline-block;
-            margin-right: 15px;
-            font-size: 1.5rem;
-            color: var(--light);
-            transition: color 0.3s;
+        .feature i {
+            font-size: 1.1rem;
         }
-        .social-icons a:hover {
-            color: var(--secondary);
-        }
-
-        .copyright {
+        
+        .property-action {
+            margin-top: 1rem;
             text-align: center;
-            padding-top: 30px;
-            margin-top: 30px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
-
-        /* Property Detail Page & Loading */
-        #property-detail, .loader, .error {
-            display: none;
-        }
-
-        #property-detail {
-            padding: 40px 0;
-        }
-
-        .back-btn {
-            background-color: var(--dark);
+        
+        .view-details-btn {
+            background: #4a6491;
             color: white;
             border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
+            padding: 0.6rem 1.2rem;
+            border-radius: 6px;
             cursor: pointer;
-            margin-bottom: 20px;
+            font-weight: 500;
+            transition: background 0.3s;
+        }
+        
+        .view-details-btn:hover {
+            background: #3a547e;
+        }
+        
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            overflow-y: auto;
+            padding: 2rem 1rem;
+        }
+        
+        .modal-content {
+            background: white;
+            max-width: 900px;
+            margin: 0 auto;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            animation: modalFade 0.3s;
+        }
+        
+        @keyframes modalFade {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .close-modal {
+            position: fixed; /* Ubah menjadi fixed agar tidak ikut scroll */
+            top: 20px;
+            right: 20px;
+            color: white;
+            font-size: 2rem;
+            cursor: pointer;
+            z-index: 1001;
+            background: rgba(0, 0, 0, 0.5);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
             display: flex;
             align-items: center;
-            transition: var(--transition);
-        }
-        .back-btn:hover {
-            background-color: #1a252f;
-        }
-        .back-btn i { margin-right: 8px; }
-
-        .property-detail-content {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 30px;
+            justify-content: center;
+            transition: background 0.3s;
         }
 
-        .image-gallery { position: relative; }
-        .main-image {
-            width: 100%;
+        .close-modal:hover {
+            background: rgba(0, 0, 0, 0.7);
+        }
+        
+        .modal-slider {
+            position: relative;
             height: 400px;
-            object-fit: cover;
-            border-radius: 10px;
-            transition: var(--transition);
+            overflow: hidden;
         }
-        .gallery-controls {
+        
+        .modal-slider-container {
             display: flex;
-            justify-content: space-between;
-            margin-top: 15px;
+            transition: transform 0.5s ease;
+            height: 100%;
         }
-        .gallery-btn {
-            background-color: var(--primary);
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-        .gallery-btn:hover {
-            background-color: var(--secondary);
-        }
-        .thumbnails {
-            display: flex;
-            gap: 10px;
-            margin-top: 15px;
-            flex-wrap: wrap;
-        }
-        .thumbnail {
-            width: 70px;
-            height: 70px;
+        
+        .modal-slider-container img {
+            min-width: 100%;
             object-fit: cover;
-            border-radius: 5px;
-            cursor: pointer;
-            opacity: 0.7;
-            transition: var(--transition);
-            border: 2px solid transparent;
+            height: 100%;
         }
-        .thumbnail:hover, .thumbnail.active {
-            opacity: 1;
-            border-color: var(--accent);
+        
+        .modal-slider-nav {
+            position: absolute;
+            bottom: 20px;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+            gap: 8px;
         }
-        .detail-info h2 { color: var(--dark); margin-bottom: 15px; }
-        .detail-price { color: var(--accent); font-size: 1.8rem; font-weight: bold; margin-bottom: 15px; }
-        .detail-address { color: #777; margin-bottom: 20px; display: flex; align-items: center; }
-        .detail-description { margin-bottom: 20px; line-height: 1.8; }
-        .detail-features { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-bottom: 20px; }
-        .feature-item { display: flex; align-items: center; }
-        .feature-item i { margin-right: 10px; color: var(--secondary); }
-        .map-link {
-            display: inline-block;
-            background-color: var(--secondary);
-            color: white;
-            padding: 12px 25px;
-            border-radius: 5px;
-            text-decoration: none;
-            margin-top: 20px;
-            font-weight: bold;
-            transition: var(--transition);
-        }
-        .map-link:hover { background-color: #2980b9; }
-
-        .loader { text-align: center; margin: 30px 0; }
-        .loader .dot {
-            display: inline-block;
+        
+        .modal-slider-dot {
             width: 12px;
             height: 12px;
             border-radius: 50%;
-            background-color: var(--primary);
-            margin: 0 5px;
-            animation: bounce 1.2s infinite ease-in-out;
+            background: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: background 0.3s;
         }
-        .loader .dot:nth-child(2) { animation-delay: 0.2s; }
-        .loader .dot:nth-child(3) { animation-delay: 0.4s; }
-
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-15px); }
+        
+        .modal-slider-dot.active {
+            background: white;
+        }
+        
+        .modal-slider-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.7);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: #2c3e50;
+            font-size: 1.5rem;
+            transition: background 0.2s;
+            z-index: 10;
+        }
+        
+        .modal-slider-arrow:hover {
+            background: rgba(255, 255, 255, 0.9);
+        }
+        
+        .modal-slider-arrow.prev {
+            left: 20px;
+        }
+        
+        .modal-slider-arrow.next {
+            right: 20px;
+        }
+        
+        .modal-details {
+            padding: 2rem;
+        }
+        
+        .modal-price {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+        
+        .modal-type {
+            background: #4a6491;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            display: inline-block;
+            margin-bottom: 1rem;
+        }
+        
+        .modal-address {
+            color: #666;
+            margin-bottom: 1.5rem;
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+        
+        .modal-description {
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+            color: #444;
+        }
+        
+        .modal-features {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .modal-feature {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #5a738e;
+            font-size: 1rem;
+        }
+        
+        .modal-feature i {
+            font-size: 1.3rem;
+        }
+        
+        .modal-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #4a6491;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1.1rem;
+            transition: color 0.2s;
+            padding: 0.8rem 1.5rem;
+            border: 2px solid #4a6491;
+            border-radius: 6px;
+            margin-top: 1rem;
+        }
+        
+        .modal-link:hover {
+            background: #4a6491;
+            color: white;
+        }
+        
+        .no-image {
+            height: 220px;
+            background: #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #777;
+            font-size: 1.2rem;
+        }
+        
+        footer {
+            background: #2c3e50;
+            color: white;
+            padding: 2rem 1rem;
+            margin-top: 3rem;
         }
 
-        .error {
-            color: #d32f2f;
+        .footer-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            text-align: left;
+        }
+
+        .footer-grid h3 {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            color: #fff;
+        }
+
+        .footer-grid p, .footer-grid a {
+            font-size: 0.9rem;
+            color: #d1d5db;
+            text-decoration: none;
+        }
+
+        .footer-grid a:hover {
+            text-decoration: underline;
+        }
+
+        .social-media {
+            margin-top: 1rem;
+            display: flex;
+            gap: 1rem;
+        }
+
+        .social-media a {
+            font-size: 1.5rem;
+            color: white;
+            transition: color 0.3s ease;
+        }
+
+        .social-media a:hover {
+            color: #d1d5db;
+        }
+
+        .footer-copyright {
             text-align: center;
-            padding: 20px;
-            background-color: #ffebee;
-            border-radius: 8px;
-            margin: 20px 0;
-            border: 1px solid #ef9a9a;
+            border-top: 1px solid #4a6491;
+            padding-top: 1rem;
+            margin-top: 2rem;
+            font-size: 0.8rem;
         }
-
-        /* Responsive */
+        
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            font-size: 1.2rem;
+            color: #5a738e;
+        }
+        
         @media (max-width: 768px) {
-            .header-content, .about-content, .property-detail-content {
+            header {
                 flex-direction: column;
+                gap: 1rem;
+            }
+
+            header nav ul {
+                gap: 1rem;
+                justify-content: center;
+            }
+
+            .footer-grid {
                 text-align: center;
             }
-            nav ul { margin-top: 15px; justify-content: center; }
-            nav ul li { margin: 0 10px; }
-            .hero h1 { font-size: 2.5rem; }
-            .about-content img, .about-text { width: 100%; }
-            .detail-features { grid-template-columns: 1fr; }
+
+            .social-media {
+                justify-content: center;
+            }
+
+            .property-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .property-card {
+                max-width: 400px;
+                margin: 0 auto;
+            }
+            
+            .modal-slider {
+                height: 300px;
+            }
+            
+            .modal-features {
+                flex-direction: column;
+                gap: 1rem;
+            }
         }
     </style>
 </head>
 <body>
-
     <header>
-        <div class="container header-content">
-            <a href="#" class="logo">Maulana Property</a>
-            <nav>
-                <ul>
-                    <li><a href="#home">Beranda</a></li>
-                    <li><a href="#properties">Properti</a></li>
-                    <li><a href="#about-us">Tentang Kami</a></li>
-                    <li><a href="#contact">Kontak</a></li>
-                </ul>
-            </nav>
+        <div class="logo-container">
+            <i class="fas fa-home"></i>
+            <span class="logo">Maulana Property</span>
         </div>
+        <nav>
+            <ul>
+                <li><a href="#propertyGrid">Home</a></li>
+                <li><a href="#tentang-kami">Tentang Kami</a></li>
+                <li><a href="#kontak">Kontak</a></li>
+            </ul>
+        </nav>
     </header>
-
-    <section class="hero" id="home">
-        <div class="container">
-            <h1>Temukan Rumah Impian Anda</h1>
-            <p>Kami menyediakan properti terbaik dengan harga kompetitif dan lokasi strategis di seluruh Indonesia.</p>
-            <a href="#properties" class="btn">Jelajahi Properti</a>
-        </div>
-    </section>
-
-    <section id="properties" class="section">
-        <div class="container">
-            <h2 class="section-title">Properti Unggulan</h2>
-            <div class="loader" id="properties-loader">
-                <div class="dot"></div>
-                <div class="dot"></div>
-                <div class="dot"></div>
-            </div>
-            <div class="error" id="errorMessage"></div>
-            <div class="properties-grid">
-                </div>
-        </div>
-    </section>
-
-    <section id="about-us" class="section">
-        <div class="container about-content">
-            <img src="https://images.unsplash.com/photo-1549517045-bc93de075e6b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80" alt="Tentang Maulana Property">
-            <div class="about-text">
-                <h2 class="section-title" style="text-align: left;">Tentang Kami</h2>
-                <p>Maulana Property berkomitmen untuk membantu Anda menemukan properti ideal, baik untuk hunian maupun investasi. Dengan tim profesional dan pengalaman yang luas, kami menyediakan layanan terbaik untuk setiap kebutuhan properti Anda.</p>
-                <p>Kami percaya bahwa setiap properti adalah investasi masa depan. Kami hadir untuk memastikan perjalanan Anda menemukan properti impian berjalan dengan mudah dan aman.</p>
+    
+    <div class="container">
+        <div class="property-grid" id="propertyGrid">
+            <div class="loading">
+                <i class="fas fa-spinner fa-spin"></i> Memuat properti...
             </div>
         </div>
-    </section>
-
-    <section id="contact" class="section">
-        <div class="container contact-content">
-            <h2 class="section-title">Hubungi Kami</h2>
-            <p>Jangan ragu untuk menghubungi kami jika Anda memiliki pertanyaan atau ingin menjadwalkan kunjungan properti. Kami siap membantu Anda.</p>
-            <div class="contact-info">
-                <div class="contact-item">
-                    <i class="fas fa-phone"></i>
-                    <h4>Telepon</h4>
-                    <p>+62 812-3456-7890</p>
-                </div>
-                <div class="contact-item">
-                    <i class="fas fa-envelope"></i>
-                    <h4>Email</h4>
-                    <p>info@maulanaproperty.com</p>
-                </div>
-                <div class="contact-item">
-                    <i class="fas fa-map-marker-alt"></i>
-                    <h4>Alamat</h4>
-                    <p>Jl. Jend. Sudirman No. 10, Jakarta</p>
-                </div>
-            </div>
+    </div>
+    
+    <!-- Modal -->
+    <div class="modal" id="propertyModal">
+        <div class="close-modal" id="closeModal">
+            <i class="fas fa-times"></i>
         </div>
-    </section>
-
-    <section id="property-detail">
-        <div class="container">
-            <button class="back-btn" id="backToList">
-                <i class="fas fa-arrow-left"></i> Kembali ke Daftar
-            </button>
-            <div class="property-detail-content">
-                <div class="image-gallery">
-                    <img id="main-image" class="main-image" src="" alt="Property Image">
-                    <div class="gallery-controls">
-                        <button class="gallery-btn" id="prev-btn"><i class="fas fa-chevron-left"></i> Sebelumnya</button>
-                        <button class="gallery-btn" id="next-btn">Selanjutnya <i class="fas fa-chevron-right"></i></button>
-                    </div>
-                    <div class="thumbnails">
-                        </div>
-                </div>
-                <div class="detail-info">
-                    <h2 id="detail-title"></h2>
-                    <div class="detail-price" id="detail-price"></div>
-                    <div class="detail-address">
-                        <i class="fas fa-map-marker-alt"></i>
-                        <span id="detail-address"></span>
-                    </div>
-                    <p class="detail-description" id="detail-description"></p>
-                    <div class="detail-features" id="detail-features">
-                        </div>
-                    <a href="#" id="map-link" class="map-link" target="_blank">
-                        <i class="fas fa-map"></i> Lihat di Google Maps
-                    </a>
-                </div>
-            </div>
+        <div class="modal-content" id="modalContent">
+            <!-- Content will be inserted by JavaScript -->
         </div>
-    </section>
-
+    </div>
+    
     <footer>
-        <div class="container footer-content">
-            <div class="footer-section">
-                <h4>Maulana Property</h4>
-                <p>Platform terpercaya untuk mencari properti impian Anda.</p>
-                <div class="social-icons">
-                    <a href="#"><i class="fab fa-facebook"></i></a>
-                    <a href="#"><i class="fab fa-instagram"></i></a>
-                    <a href="#"><i class="fab fa-twitter"></i></a>
-                    <a href="#"><i class="fab fa-youtube"></i></a>
+        <div class="footer-grid">
+            <div class="footer-about" id="tentang-kami">
+                <h3>Tentang Kami</h3>
+                <p>Maulana Property adalah agen properti terpercaya yang membantu Anda menemukan rumah impian atau properti investasi terbaik di kawasan ini. Kami berkomitmen untuk memberikan layanan profesional dan transparan.</p>
+            </div>
+            <div class="footer-contact" id="kontak">
+                <h3>Kontak</h3>
+                <p>Jalan Properti Indah No. 123</p>
+                <p>Kota Semarang, 50252</p>
+                <p>Email: info@maulanaproperty.com</p>
+                <p>Telp: (024) 1234 5678</p>
+            </div>
+            <div class="footer-social">
+                <h3>Sosial Media</h3>
+                <div class="social-media">
+                    <a href="https://facebook.com" target="_blank"><i class="fab fa-facebook-f"></i></a>
+                    <a href="https://instagram.com" target="_blank"><i class="fab fa-instagram"></i></a>
+                    <a href="https://twitter.com" target="_blank"><i class="fab fa-twitter"></i></a>
                 </div>
             </div>
-            <div class="footer-section">
-                <h4>Layanan Kami</h4>
-                <p>Jual Beli Properti</p>
-                <p>Sewa Properti</p>
-                <p>Konsultasi Properti</p>
-            </div>
-            <div class="footer-section">
-                <h4>Informasi Kontak</h4>
-                <p><i class="fas fa-map-marker-alt"></i> Jl. Jend. Sudirman No. 10</p>
-                <p>Jakarta, Indonesia</p>
-                <p><i class="fas fa-phone"></i> +62 812-3456-7890</p>
-                <p><i class="fas fa-envelope"></i> info@maulanaproperty.com</p>
-            </div>
-            <div class="footer-section">
-                <h4>Tautan Cepat</h4>
-                <a href="#home">Beranda</a>
-                <a href="#properties">Properti</a>
-                <a href="#about-us">Tentang Kami</a>
-                <a href="#contact">Kontak</a>
-            </div>
         </div>
-        <div class="copyright">
-            <p>&copy; 2023 Maulana Property. All rights reserved.</p>
+        <div class="footer-copyright">
+            <p>&copy; 2025 Maulana Property. Semua hak dilindungi.</p>
+            <p>Didesain dengan <i class="fas fa-heart" style="color: #e74c3c;"></i> untuk properti impian Anda.</p>
         </div>
     </footer>
 
     <script>
-        // URL API backend Anda
-        const BACKEND_API_URL = 'https://foto-backend.vercel.app/api/photos';
-        const DEFAULT_IMAGE = 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80';
-        
-        // DOM elements
-        const propertiesContainer = document.querySelector('.properties-grid');
-        const propertyListSection = document.getElementById('properties');
-        const propertyDetailSection = document.getElementById('property-detail');
-        const backToListBtn = document.getElementById('backToList');
-        const mainImage = document.getElementById('main-image');
-        const prevBtn = document.getElementById('prev-btn');
-        const nextBtn = document.getElementById('next-btn');
-        const thumbnailsContainer = document.querySelector('.thumbnails');
-        const detailTitle = document.getElementById('detail-title');
-        const detailPrice = document.getElementById('detail-price');
-        const detailAddress = document.getElementById('detail-address');
-        const detailDescription = document.getElementById('detail-description');
-        const detailFeatures = document.getElementById('detail-features');
-        const mapLink = document.getElementById('map-link');
-        const propertiesLoader = document.getElementById('properties-loader');
-        const errorElement = document.getElementById('errorMessage');
-
-        let currentProperty = null;
-        let currentImageIndex = 0;
-        let propertiesData = [];
-
-        // Fetch properties from API
-        async function fetchAndDisplayProperties() {
-            propertiesLoader.style.display = 'block';
-            errorElement.style.display = 'none';
-            propertiesContainer.innerHTML = '';
-            
-            try {
-                const response = await fetch(BACKEND_API_URL);
-                if (!response.ok) {
-                    throw new Error(`HTTP error! Status: ${response.status}`);
-                }
-                const data = await response.json();
-                propertiesData = data;
-                
-                if (propertiesData && propertiesData.length > 0) {
-                    generatePropertyCards();
-                } else {
-                    propertiesContainer.innerHTML = '<div class="no-data">Tidak ada data properti yang ditemukan.</div>';
-                }
-            } catch (error) {
-                console.error('Error:', error);
-                errorElement.textContent = 'Terjadi kesalahan saat memuat data: ' + error.message;
-                errorElement.style.display = 'block';
-            } finally {
-                propertiesLoader.style.display = 'none';
+        // Sample data - in production this would come from your backend API
+        const sampleProperties = [
+            {
+                id: "1",
+                type: "Rumah Ekonomi",
+                harga: "Rp366.000.000",
+                alamat: "Jl. Gatot Subrata, Gang Kehici",
+                deskripsi: "Properti ekonomis dengan harga terjangkau, dekat dengan pasar dan SPBU. Cocok untuk keluarga muda atau sebagai investasi pertama. Lingkungan yang nyaman dan akses jalan yang mudah.",
+                kamar: "3",
+                kamar_mandi: "1",
+                link: "https://maps.google.com/?q=jl.gatot.subrata,gang.kehici,ke",
+                foto: [
+                    "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80",
+                    "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80",
+                    "https://images.unsplash.com/photo-1574362848149-11496d93a7c7?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=784&q=80"
+                ]
+            },
+            {
+                id: "2",
+                type: "Rumah Mewah",
+                harga: "Rp76.000.000",
+                alamat: "Jl. Medoho Raya 10, Ai 2 Gang G",
+                deskripsi: "Rumah mewah dua lantai dengan teras luas dan taman yang asri. Desain interior modern dengan finishing berkualitas tinggi. Dilengkapi dengan carport dan sistem keamanan yang baik.",
+                kamar: "2",
+                kamar_mandi: "1",
+                link: "https://maps.google.com/?q=jl.medoho+raya+10",
+                foto: [
+                    "https://images.unsplash.com/photo-1605146769289-440113cc3d00?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80",
+                    "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=853&q=80"
+                ]
+            },
+            {
+                id: "3",
+                type: "Rumah",
+                harga: "Rp34.000.000",
+                alamat: "Jl. Abdul Somad No. 16, RW. 11",
+                deskripsi: "Rumah murah dengan 2 lantai dan teras luas. Lokasi strategis dekat dengan pusat perbelanjaan dan transportasi umum. Sudah termasuk beberapa perabotan dasar.",
+                kamar: "2",
+                kamar_mandi: "1",
+                link: "https://maps.google.com/?q=jl.abdui+somad+no16",
+                foto: [
+                    "https://images.unsplash.com/photo-1600566753052-d04fcf7934c7?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80",
+                    "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80",
+                    "https://images.unsplash.com/photo-1600585154526-990dced4db0d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80"
+                ]
             }
+        ];
+
+        // Function to format price with proper dots
+        function formatPrice(price) {
+            if (!price) return 'Harga tidak tersedia';
+            // Menghilangkan "Rp" dan spasi, lalu membersihkan non-digit
+            const cleanPrice = price.replace(/[^\d]/g, '');
+            // Mengubah ke angka dan memformatnya dengan titik
+            return "Rp" + new Intl.NumberFormat('id-ID').format(cleanPrice);
         }
 
-        // Generate property cards
-        function generatePropertyCards() {
-            propertiesContainer.innerHTML = '';
+        // Function to create property card
+        function createPropertyCard(property) {
+            const card = document.createElement('div');
+            card.className = 'property-card';
+            card.setAttribute('data-id', property.id);
             
-            propertiesData.forEach(property => {
-                const card = document.createElement('div');
-                card.className = 'property-card';
-                const coverImage = (Array.isArray(property.fotos) && property.fotos.length > 0) ? property.fotos[0] : property.foto || DEFAULT_IMAGE;
-
-                card.innerHTML = `
-                    <div class="property-image">
-                        <img src="${coverImage}" alt="${property.type || 'Properti'}">
+            // Use first photo as main image
+            const mainImage = property.foto && property.foto.length > 0 ? property.foto[0] : null;
+            
+            card.innerHTML = `
+                <div class="property-image">
+                    ${mainImage ? 
+                        `<img src="${mainImage}" alt="Property ${property.id}">` : 
+                        `<div class="no-image"><i class="far fa-image"></i> Tidak ada gambar</div>`
+                    }
+                    <div class="property-badge">${property.type || 'Properti'}</div>
+                </div>
+                <div class="property-details">
+                    <div class="property-price">${formatPrice(property.harga)}</div>
+                    <div class="property-address"><i class="fas fa-map-marker-alt"></i> ${property.alamat || 'Alamat tidak tersedia'}</div>
+                    <div class="property-features">
+                        <div class="feature"><i class="fas fa-bed"></i> ${property.kamar || '0'} Kamar</div>
+                        <div class="feature"><i class="fas fa-bath"></i> ${property.kamar_mandi || '0'} Kamar Mandi</div>
                     </div>
-                    <div class="property-details">
-                        <h3>${property.type || 'Properti'}</h3>
-                        <div class="property-address">${property.alamat || 'Alamat tidak tersedia'}</div>
-                        <div class="property-price">${property.harga || 'N/A'}</div>
-                        <div class="property-features">
-                            <div class="feature"><i class="fas fa-expand"></i><span>${property.luas || 'Luas'}</span></div>
-                            <div class="feature"><i class="fas fa-bed"></i><span>${property.kamar || 'N/A'} Kamar</span></div>
+                    <div class="property-action">
+                        <button class="view-details-btn">Lihat Detail</button>
+                    </div>
+                </div>
+            `;
+            
+            // Add click event to show modal
+            card.addEventListener('click', () => {
+                showPropertyModal(property);
+            });
+            
+            return card;
+        }
+
+        // Function to display properties
+        function displayProperties(properties) {
+            const propertyGrid = document.getElementById('propertyGrid');
+            propertyGrid.innerHTML = '';
+            
+            if (properties.length === 0) {
+                propertyGrid.innerHTML = '<div class="loading">Tidak ada properti yang ditemukan</div>';
+                return;
+            }
+            
+            properties.forEach(property => {
+                const card = createPropertyCard(property);
+                propertyGrid.appendChild(card);
+            });
+        }
+
+        // Function to show property modal
+        function showPropertyModal(property) {
+            const modal = document.getElementById('propertyModal');
+            const modalContent = document.getElementById('modalContent');
+            
+            // Create modal content
+            modalContent.innerHTML = `
+                <div class="modal-slider">
+                    <div class="modal-slider-container" id="modalSlider-${property.id}">
+                        ${property.foto && property.foto.length > 0 ? 
+                            property.foto.map(img => `<img src="${img}" alt="Property ${property.id}">`).join('') :
+                            `<div class="no-image" style="height: 400px;"><i class="far fa-image"></i> Tidak ada gambar</div>`
+                        }
+                    </div>
+                    ${property.foto && property.foto.length > 1 ? `
+                        <div class="modal-slider-arrow prev" onclick="moveModalSlide('${property.id}', -1)"><i class="fas fa-chevron-left"></i></div>
+                        <div class="modal-slider-arrow next" onclick="moveModalSlide('${property.id}', 1)"><i class="fas fa-chevron-right"></i></div>
+                        <div class="modal-slider-nav">
+                            ${property.foto.map((_, index) => 
+                                `<div class="modal-slider-dot ${index === 0 ? 'active' : ''}" onclick="showModalSlide('${property.id}', ${index})"></div>`
+                            ).join('')}
                         </div>
+                    ` : ''}
+                </div>
+                <div class="modal-details">
+                    <div class="modal-price">${formatPrice(property.harga)}</div>
+                    <div class="modal-type">${property.type || 'Properti'}</div>
+                    <div class="modal-address"><i class="fas fa-map-marker-alt"></i> ${property.alamat || 'Alamat tidak tersedia'}</div>
+                    <div class="modal-description">${property.deskripsi || 'Tidak ada deskripsi'}</div>
+                    <div class="modal-features">
+                        <div class="modal-feature"><i class="fas fa-bed"></i> ${property.kamar || '0'} Kamar Tidur</div>
+                        <div class="modal-feature"><i class="fas fa-bath"></i> ${property.kamar_mandi || '0'} Kamar Mandi</div>
                     </div>
-                `;
-                
-                card.addEventListener('click', () => {
-                    showPropertyDetail(property);
-                });
-                
-                propertiesContainer.appendChild(card);
+                    <a href="${property.link}" target="_blank" class="modal-link">
+                        <i class="fas fa-map-marked-alt"></i> Lihat di Google Maps
+                    </a>
+                </div>
+            `;
+            
+            // Show modal
+            modal.style.display = 'block';
+            
+            // Store current property ID for slider functions
+            modal.setAttribute('data-current-property', property.id);
+            
+            // Prevent body scrolling when modal is open
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Function to move modal slides
+        function moveModalSlide(propertyId, direction) {
+            const slider = document.getElementById(`modalSlider-${propertyId}`);
+            if (!slider) return;
+            
+            const slides = slider.querySelectorAll('img');
+            const dotsContainer = document.querySelector(`#modalSlider-${propertyId} ~ .modal-slider-nav`);
+            const dots = dotsContainer ? dotsContainer.querySelectorAll('.modal-slider-dot') : [];
+            
+            const currentSlide = parseInt(slider.getAttribute('data-current') || 0);
+            let newSlide = currentSlide + direction;
+            
+            if (newSlide < 0) newSlide = slides.length - 1;
+            if (newSlide >= slides.length) newSlide = 0;
+            
+            slider.style.transform = `translateX(-${newSlide * 100}%)`;
+            slider.setAttribute('data-current', newSlide);
+            
+            // Update dots
+            dots.forEach((dot, index) => {
+                dot.classList.toggle('active', index === newSlide);
             });
         }
 
-        // Show property detail
-        function showPropertyDetail(property) {
-            currentProperty = property;
-            currentImageIndex = 0;
-            
-            const fotosArray = (Array.isArray(property.fotos) && property.fotos.length > 0) ? property.fotos : (property.foto ? [property.foto] : [DEFAULT_IMAGE]);
-            currentProperty.fotos = fotosArray;
+        // Function to show specific modal slide
+        function showModalSlide(propertyId, slideIndex) {
+            const slider = document.getElementById(`modalSlider-${propertyId}`);
+            if (!slider) return;
 
-            detailTitle.textContent = property.type || 'Properti';
-            detailPrice.textContent = property.harga || 'N/A';
-            detailAddress.textContent = property.alamat || 'Alamat tidak tersedia';
-            detailDescription.textContent = property.deskripsi || 'Tidak ada deskripsi tersedia.';
-            mapLink.href = property.link || '#';
-            
-            detailFeatures.innerHTML = '';
-            const features = [
-                { icon: "map-marker-alt", text: property.lokasi || 'Lokasi tidak tersedia' },
-                { icon: "expand", text: property.luas || 'Luas tidak tersedia' },
-                { icon: "bed", text: property.kamar || 'Jumlah kamar tidak tersedia' },
-                { icon: "bath", text: property.kamar_mandi || 'Jumlah kamar mandi tidak tersedia' }
-            ];
-            
-            features.forEach(feature => {
-                const featureItem = document.createElement('div');
-                featureItem.className = 'feature-item';
-                featureItem.innerHTML = `<i class="fas fa-${feature.icon}"></i><span>${feature.text}</span>`;
-                detailFeatures.appendChild(featureItem);
-            });
-            
-            thumbnailsContainer.innerHTML = '';
-            fotosArray.forEach((image, index) => {
-                const thumbnail = document.createElement('img');
-                thumbnail.src = image;
-                thumbnail.alt = `Thumbnail ${index + 1}`;
-                thumbnail.className = 'thumbnail';
-                if (index === 0) thumbnail.classList.add('active');
-                thumbnail.addEventListener('click', () => {
-                    currentImageIndex = index;
-                    updateMainImage();
-                });
-                thumbnailsContainer.appendChild(thumbnail);
-            });
-            
-            updateMainImage();
-            
-            propertyListSection.style.display = 'none';
-            propertyDetailSection.style.display = 'block';
-            window.scrollTo(0, 0);
-        }
+            const dotsContainer = document.querySelector(`#modalSlider-${propertyId} ~ .modal-slider-nav`);
+            const dots = dotsContainer ? dotsContainer.querySelectorAll('.modal-slider-dot') : [];
 
-        // Update main image
-        function updateMainImage() {
-            if (currentProperty && currentProperty.fotos && currentProperty.fotos.length > 0) {
-                mainImage.src = currentProperty.fotos[currentImageIndex];
-            } else {
-                mainImage.src = DEFAULT_IMAGE;
-            }
+            slider.style.transform = `translateX(-${slideIndex * 100}%)`;
+            slider.setAttribute('data-current', slideIndex);
             
-            document.querySelectorAll('.thumbnails .thumbnail').forEach((thumb, index) => {
-                if (index === currentImageIndex) {
-                    thumb.classList.add('active');
-                } else {
-                    thumb.classList.remove('active');
-                }
+            // Update dots
+            dots.forEach((dot, index) => {
+                dot.classList.toggle('active', index === slideIndex);
             });
         }
 
-        // Setup event listeners
-        function setupEventListeners() {
-            backToListBtn.addEventListener('click', () => {
-                propertyDetailSection.style.display = 'none';
-                propertyListSection.style.display = 'block';
+        // Close modal function
+        function setupModalClose() {
+            const modal = document.getElementById('propertyModal');
+            const closeBtn = document.getElementById('closeModal');
+            
+            closeBtn.addEventListener('click', () => {
+                modal.style.display = 'none';
+                document.body.style.overflow = 'auto';
             });
-
-            prevBtn.addEventListener('click', () => {
-                if (currentProperty && currentProperty.fotos) {
-                    currentImageIndex = (currentImageIndex > 0) ? currentImageIndex - 1 : currentProperty.fotos.length - 1;
-                    updateMainImage();
-                }
-            });
-
-            nextBtn.addEventListener('click', () => {
-                if (currentProperty && currentProperty.fotos) {
-                    currentImageIndex = (currentImageIndex < currentProperty.fotos.length - 1) ? currentImageIndex + 1 : 0;
-                    updateMainImage();
+            
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.style.display = 'none';
+                    document.body.style.overflow = 'auto';
                 }
             });
         }
 
         // Initialize the page
-        window.addEventListener('DOMContentLoaded', () => {
-            setupEventListeners();
-            fetchAndDisplayProperties();
+        document.addEventListener('DOMContentLoaded', () => {
+            displayProperties(sampleProperties);
+            setupModalClose();
+            
+            // In a real application, you would fetch data from your backend:
+            /*
+            fetch('/api/properties')
+                .then(response => response.json())
+                .then(data => displayProperties(data))
+                .catch(error => {
+                    console.error('Error fetching properties:', error);
+                    document.getElementById('propertyGrid').innerHTML = 
+                        '<div class="loading">Error loading properties. Please try again later.</div>';
+                });
+            */
         });
     </script>
 </body>
