@@ -248,29 +248,7 @@
             border-radius: 10px;
             transition: var(--transition);
         }
-        
-        /* CSS untuk slider */
-        .image-slider {
-            position: relative;
-            width: 100%;
-            height: 400px;
-            overflow: hidden;
-            border-radius: 10px;
-        }
 
-        .slider-wrapper {
-            display: flex;
-            height: 100%;
-            transition: transform 0.5s ease-in-out;
-        }
-
-        .slider-image {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            flex-shrink: 0;
-        }
-        
         .gallery-controls {
             display: flex;
             justify-content: space-between;
@@ -586,10 +564,7 @@
             </button>
             <div class="property-detail-content">
                 <div class="image-gallery">
-                    <div class="image-slider">
-                        <div class="slider-wrapper">
-                            </div>
-                    </div>
+                    <img id="main-image" class="main-image" src="" alt="Property Image">
                     <div class="gallery-controls">
                         <button class="gallery-btn" id="prev-btn"><i class="fas fa-chevron-left"></i> Sebelumnya</button>
                         <button class="gallery-btn" id="next-btn">Selanjutnya <i class="fas fa-chevron-right"></i></button>
@@ -654,19 +629,17 @@
     <script>
         // URL API backend Anda di Vercel
         const BACKEND_API_URL = 'https://foto-backend.vercel.app/api/photos';
+        const DEFAULT_IMAGE = 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80';
         
         // DOM elements
         const propertiesContainer = document.querySelector('.properties');
         const propertyListSection = document.getElementById('properties');
         const propertyDetailSection = document.getElementById('property-detail');
         const backToListBtn = document.getElementById('backToList');
-        
-        // Elemen baru untuk slide foto
-        const sliderWrapper = document.querySelector('.slider-wrapper');
+        const mainImage = document.getElementById('main-image');
         const prevBtn = document.getElementById('prev-btn');
         const nextBtn = document.getElementById('next-btn');
         const thumbnailsContainer = document.querySelector('.thumbnails');
-
         const detailTitle = document.getElementById('detail-title');
         const detailPrice = document.getElementById('detail-price');
         const detailAddress = document.getElementById('detail-address');
@@ -681,7 +654,6 @@
         let currentProperty = null;
         let currentImageIndex = 0;
         let propertiesData = [];
-        let images = []; // Array untuk menyimpan URL gambar properti yang sedang ditampilkan
 
         // Initialize the page
         function init() {
@@ -702,7 +674,7 @@
                     throw new Error(`HTTP error! Status: ${response.status}`);
                 }
                 const data = await response.json();
-                propertiesData = data; // Mengambil array data properti
+                propertiesData = data;
                 
                 if (propertiesData && propertiesData.length > 0) {
                     generatePropertyCards();
@@ -725,10 +697,9 @@
             propertiesData.forEach(property => {
                 const card = document.createElement('div');
                 card.className = 'property-card';
-                
-                // Gunakan gambar pertama dari array 'foto' atau fallback jika tidak ada
-                const coverImage = (property.foto && property.foto.length > 0) ? property.foto[0] : 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80';
-                
+                // Gunakan foto pertama jika 'fotos' adalah array, atau fallback ke 'foto' string
+                const coverImage = (Array.isArray(property.fotos) && property.fotos.length > 0) ? property.fotos[0] : property.foto || DEFAULT_IMAGE;
+
                 card.innerHTML = `
                     <div class="property-image">
                         <img src="${coverImage}" alt="${property.type || 'Properti'}">
@@ -763,19 +734,17 @@
             currentProperty = property;
             currentImageIndex = 0;
             
-            // Set data properti
+            // Atur daftar foto. Prioritaskan `fotos` (array), lalu fallback ke `foto` (string)
+            const fotosArray = (Array.isArray(property.fotos) && property.fotos.length > 0) ? property.fotos : (property.foto ? [property.foto] : [DEFAULT_IMAGE]);
+            currentProperty.fotos = fotosArray;
+
+            // Update detail content
             detailTitle.textContent = property.type || 'Properti';
             detailPrice.textContent = property.harga || 'N/A';
             detailAddress.textContent = property.alamat || 'Alamat tidak tersedia';
             detailDescription.textContent = property.deskripsi || 'Tidak ada deskripsi tersedia.';
             mapLink.href = property.link || '#';
             
-            // Perbarui array images dengan data dari API
-            images = (property.foto && property.foto.length > 0) ? property.foto : ['https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80'];
-
-            // Panggil fungsi untuk membangun galeri
-            buildGallery();
-
             // Generate features
             detailFeatures.innerHTML = '';
             const features = [
@@ -794,31 +763,10 @@
                 `;
                 detailFeatures.appendChild(featureItem);
             });
-
-            // Tampilkan detail section, sembunyikan list
-            propertyListSection.style.display = 'none';
-            propertyDetailSection.style.display = 'block';
             
-            // Scroll ke atas
-            window.scrollTo(0, 0);
-        }
-
-        // Fungsi untuk membangun galeri (slider dan thumbnails)
-        function buildGallery() {
-            // Hapus konten lama
-            sliderWrapper.innerHTML = '';
+            // Generate thumbnails
             thumbnailsContainer.innerHTML = '';
-
-            // Buat elemen gambar untuk slider dan thumbnail
-            images.forEach((image, index) => {
-                // Buat gambar untuk slider
-                const sliderImage = document.createElement('img');
-                sliderImage.src = image;
-                sliderImage.className = 'slider-image';
-                sliderImage.alt = `Properti Image ${index + 1}`;
-                sliderWrapper.appendChild(sliderImage);
-
-                // Buat thumbnail
+            fotosArray.forEach((image, index) => {
                 const thumbnail = document.createElement('img');
                 thumbnail.src = image;
                 thumbnail.alt = `Thumbnail ${index + 1}`;
@@ -827,24 +775,33 @@
                 
                 thumbnail.addEventListener('click', () => {
                     currentImageIndex = index;
-                    updateGallery();
+                    updateMainImage();
                 });
                 
                 thumbnailsContainer.appendChild(thumbnail);
             });
-
-            // Update galeri ke gambar pertama
-            updateGallery();
+            
+            // Update main image
+            updateMainImage();
+            
+            // Show detail section, hide list
+            propertyListSection.style.display = 'none';
+            propertyDetailSection.style.display = 'block';
+            
+            // Scroll to top
+            window.scrollTo(0, 0);
         }
 
-        // Fungsi untuk memperbarui tampilan galeri (slider dan thumbnail)
-        function updateGallery() {
-            // Geser slider ke gambar yang sesuai
-            const offset = -currentImageIndex * 100;
-            sliderWrapper.style.transform = `translateX(${offset}%)`;
-
-            // Perbarui kelas aktif pada thumbnail
-            document.querySelectorAll('.thumbnail').forEach((thumb, index) => {
+        // Update main image
+        function updateMainImage() {
+            if (currentProperty && currentProperty.fotos && currentProperty.fotos.length > 0) {
+                mainImage.src = currentProperty.fotos[currentImageIndex];
+            } else {
+                mainImage.src = DEFAULT_IMAGE;
+            }
+            
+            // Update active thumbnail
+            document.querySelectorAll('.thumbnails .thumbnail').forEach((thumb, index) => {
                 if (index === currentImageIndex) {
                     thumb.classList.add('active');
                 } else {
@@ -860,18 +817,21 @@
                 propertyListSection.style.display = 'block';
             });
 
-            // Event listener untuk tombol navigasi slide
             prevBtn.addEventListener('click', () => {
-                currentImageIndex = (currentImageIndex > 0) ? currentImageIndex - 1 : images.length - 1;
-                updateGallery();
+                if (currentProperty && currentProperty.fotos) {
+                    currentImageIndex = (currentImageIndex > 0) ? currentImageIndex - 1 : currentProperty.fotos.length - 1;
+                    updateMainImage();
+                }
             });
 
             nextBtn.addEventListener('click', () => {
-                currentImageIndex = (currentImageIndex < images.length - 1) ? currentImageIndex + 1 : 0;
-                updateGallery();
+                if (currentProperty && currentProperty.fotos) {
+                    currentImageIndex = (currentImageIndex < currentProperty.fotos.length - 1) ? currentImageIndex + 1 : 0;
+                    updateMainImage();
+                }
             });
 
-            // Event listener untuk tombol muat dan segarkan data
+            // Event listener untuk tombol
             loadButton.addEventListener('click', fetchAndDisplayProperties);
             refreshButton.addEventListener('click', fetchAndDisplayProperties);
         }
