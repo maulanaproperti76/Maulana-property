@@ -668,6 +668,20 @@
             fetchAndDisplayProperties();
         }
 
+        // Format harga menjadi Rp dengan titik
+        function formatPrice(price) {
+            if (!price) return 'Harga tidak tersedia';
+            
+            // Jika sudah mengandung "Rp", kembalikan langsung
+            if (price.toString().includes('Rp')) return price.toString();
+            
+            // Konversi ke number dan format dengan titik
+            const numericPrice = parseInt(price.toString().replace(/\D/g, ''));
+            if (isNaN(numericPrice)) return 'Harga tidak valid';
+            
+            return 'Rp ' + numericPrice.toLocaleString('id-ID');
+        }
+
         // Fetch properties from API
         async function fetchAndDisplayProperties() {
             // Show loading animation
@@ -702,31 +716,45 @@
             propertiesContainer.innerHTML = '';
             
             propertiesData.forEach(property => {
+                // Pastikan struktur data sesuai dengan spreadsheet
+                const propertyData = {
+                    id: property[0] || '', // Nomor urut
+                    type: property[1] || 'Properti', // Type
+                    price: formatPrice(property[2]), // Harga (diformat)
+                    address: property[3] || 'Alamat tidak tersedia', // Alamat
+                    description: property[4] || 'Tidak ada deskripsi', // Deskripsi
+                    bedrooms: property[5] || '', // Kamar tidur
+                    bathrooms: property[6] || '', // Kamar mandi
+                    maps: property[7] || '', // Link Maps
+                    photo: property[8] || 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80', // Foto
+                    date: property[9] || '' // Tanggal
+                };
+                
                 const card = document.createElement('div');
                 card.className = 'property-card';
                 card.innerHTML = `
                     <div class="property-image">
-                        <img src="${property.foto || 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80'}" alt="${property.type || 'Properti'}">
+                        <img src="${propertyData.photo}" alt="${propertyData.type}">
                     </div>
                     <div class="property-details">
-                        <div class="property-price">${property.harga || 'N/A'}</div>
-                        <h3>${property.type || 'Properti'}</h3>
-                        <div class="property-address">${property.alamat || 'Alamat tidak tersedia'}</div>
+                        <div class="property-price">${propertyData.price}</div>
+                        <h3>${propertyData.type}</h3>
+                        <div class="property-address">${propertyData.address}</div>
                         <div class="property-features">
                             <div class="feature">
-                                <i class="fas fa-map-marker-alt"></i>
-                                <span>${property.lokasi || 'Lokasi'}</span>
+                                <i class="fas fa-bed"></i>
+                                <span>${propertyData.bedrooms || '0'} KT</span>
                             </div>
                             <div class="feature">
-                                <i class="fas fa-expand"></i>
-                                <span>${property.luas || 'Luas'}</span>
+                                <i class="fas fa-bath"></i>
+                                <span>${propertyData.bathrooms || '0'} KM</span>
                             </div>
                         </div>
                     </div>
                 `;
                 
                 card.addEventListener('click', () => {
-                    showPropertyDetail(property);
+                    showPropertyDetail(propertyData);
                 });
                 
                 propertiesContainer.appendChild(card);
@@ -740,18 +768,18 @@
             
             // Update detail content
             detailTitle.textContent = property.type || 'Properti';
-            detailPrice.textContent = property.harga || 'N/A';
-            detailAddress.textContent = property.alamat || 'Alamat tidak tersedia';
-            detailDescription.textContent = property.deskripsi || 'Tidak ada deskripsi tersedia.';
-            mapLink.href = property.link || '#';
+            detailPrice.textContent = property.price || 'N/A';
+            detailAddress.textContent = property.address || 'Alamat tidak tersedia';
+            detailDescription.textContent = property.description || 'Tidak ada deskripsi tersedia.';
+            mapLink.href = property.maps || '#';
             
             // Generate features
             detailFeatures.innerHTML = '';
             const features = [
-                { icon: "map-marker-alt", text: property.lokasi || 'Lokasi tidak tersedia' },
-                { icon: "expand", text: property.luas || 'Luas tidak tersedia' },
-                { icon: "bed", text: property.kamar || 'Jumlah kamar tidak tersedia' },
-                { icon: "bath", text: property.kamar_mandi || 'Jumlah kamar mandi tidak tersedia' }
+                { icon: "bed", text: `${property.bedrooms || '0'} Kamar Tidur` },
+                { icon: "bath", text: `${property.bathrooms || '0'} Kamar Mandi` },
+                { icon: "map-marker-alt", text: property.address || 'Alamat tidak tersedia' },
+                { icon: "calendar", text: `Ditambahkan: ${property.date ? new Date(property.date).toLocaleDateString('id-ID') : 'Tanggal tidak tersedia'}` }
             ];
             
             features.forEach(feature => {
@@ -766,7 +794,7 @@
             
             // Generate thumbnails
             thumbnailsContainer.innerHTML = '';
-            const images = property.foto ? [property.foto] : ['https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80'];
+            const images = property.photo ? [property.photo] : ['https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80'];
             
             images.forEach((image, index) => {
                 const thumbnail = document.createElement('img');
@@ -796,7 +824,7 @@
 
         // Update main image
         function updateMainImage() {
-            const images = currentProperty.foto ? [currentProperty.foto] : ['https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80'];
+            const images = currentProperty.photo ? [currentProperty.photo] : ['https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80'];
             mainImage.src = images[currentImageIndex];
             
             // Update active thumbnail
@@ -817,7 +845,7 @@
             });
 
             prevBtn.addEventListener('click', () => {
-                const images = currentProperty.foto ? [currentProperty.foto] : ['https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80'];
+                const images = currentProperty.photo ? [currentProperty.photo] : ['https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80'];
                 if (currentImageIndex > 0) {
                     currentImageIndex--;
                 } else {
@@ -827,7 +855,7 @@
             });
 
             nextBtn.addEventListener('click', () => {
-                const images = currentProperty.foto ? [currentProperty.foto] : ['https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80'];
+                const images = currentProperty.photo ? [currentProperty.photo] : ['https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80'];
                 if (currentImageIndex < images.length - 1) {
                     currentImageIndex++;
                 } else {
