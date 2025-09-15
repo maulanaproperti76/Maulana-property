@@ -56,6 +56,7 @@
             overflow: hidden;
             box-shadow: 0 6px 15px rgba(0, 0, 0, 0.07);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
         }
         
         .property-card:hover {
@@ -63,87 +64,37 @@
             box-shadow: 0 12px 20px rgba(0, 0, 0, 0.15);
         }
         
-        .image-slider {
-            position: relative;
+        .property-image {
             height: 220px;
             overflow: hidden;
+            position: relative;
         }
         
-        .slider-container {
-            display: flex;
-            transition: transform 0.5s ease;
+        .property-image img {
+            width: 100%;
             height: 100%;
-        }
-        
-        .slider-container img {
-            min-width: 100%;
             object-fit: cover;
-            height: 100%;
+            transition: transform 0.5s ease;
         }
         
-        .slider-nav {
+        .property-card:hover .property-image img {
+            transform: scale(1.05);
+        }
+        
+        .property-badge {
             position: absolute;
-            bottom: 10px;
-            left: 0;
-            right: 0;
-            display: flex;
-            justify-content: center;
-            gap: 6px;
-        }
-        
-        .slider-dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.5);
-            cursor: pointer;
-        }
-        
-        .slider-dot.active {
-            background: white;
-        }
-        
-        .slider-arrow {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            background: rgba(255, 255, 255, 0.7);
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            color: #2c3e50;
-            font-size: 1.2rem;
-            transition: background 0.2s;
-        }
-        
-        .slider-arrow:hover {
-            background: rgba(255, 255, 255, 0.9);
-        }
-        
-        .slider-arrow.prev {
-            left: 10px;
-        }
-        
-        .slider-arrow.next {
-            right: 10px;
-        }
-        
-        .property-details {
-            padding: 1.5rem;
-        }
-        
-        .property-type {
+            top: 15px;
+            left: 15px;
             background: #4a6491;
             color: white;
             padding: 0.4rem 0.8rem;
             border-radius: 20px;
             font-size: 0.8rem;
-            display: inline-block;
-            margin-bottom: 0.8rem;
+            font-weight: 500;
+        }
+        
+        .property-details {
+            padding: 1.5rem;
         }
         
         .property-price {
@@ -157,18 +108,16 @@
             color: #666;
             margin-bottom: 1rem;
             font-size: 0.9rem;
-        }
-        
-        .property-description {
-            margin-bottom: 1.2rem;
-            font-size: 0.95rem;
-            color: #444;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
         }
         
         .property-features {
             display: flex;
             gap: 1rem;
-            margin-bottom: 1.2rem;
+            margin-bottom: 1rem;
         }
         
         .feature {
@@ -183,19 +132,219 @@
             font-size: 1.1rem;
         }
         
-        .property-link {
+        .property-action {
+            margin-top: 1rem;
+            text-align: center;
+        }
+        
+        .view-details-btn {
+            background: #4a6491;
+            color: white;
+            border: none;
+            padding: 0.6rem 1.2rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background 0.3s;
+        }
+        
+        .view-details-btn:hover {
+            background: #3a547e;
+        }
+        
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            overflow-y: auto;
+            padding: 2rem 1rem;
+        }
+        
+        .modal-content {
+            background: white;
+            max-width: 900px;
+            margin: 0 auto;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            animation: modalFade 0.3s;
+        }
+        
+        @keyframes modalFade {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: white;
+            font-size: 2rem;
+            cursor: pointer;
+            z-index: 1001;
+            background: rgba(0, 0, 0, 0.5);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-slider {
+            position: relative;
+            height: 400px;
+            overflow: hidden;
+        }
+        
+        .modal-slider-container {
+            display: flex;
+            transition: transform 0.5s ease;
+            height: 100%;
+        }
+        
+        .modal-slider-container img {
+            min-width: 100%;
+            object-fit: cover;
+            height: 100%;
+        }
+        
+        .modal-slider-nav {
+            position: absolute;
+            bottom: 20px;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .modal-slider-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .modal-slider-dot.active {
+            background: white;
+        }
+        
+        .modal-slider-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.7);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: #2c3e50;
+            font-size: 1.5rem;
+            transition: background 0.2s;
+            z-index: 10;
+        }
+        
+        .modal-slider-arrow:hover {
+            background: rgba(255, 255, 255, 0.9);
+        }
+        
+        .modal-slider-arrow.prev {
+            left: 20px;
+        }
+        
+        .modal-slider-arrow.next {
+            right: 20px;
+        }
+        
+        .modal-details {
+            padding: 2rem;
+        }
+        
+        .modal-price {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+        
+        .modal-type {
+            background: #4a6491;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            display: inline-block;
+            margin-bottom: 1rem;
+        }
+        
+        .modal-address {
+            color: #666;
+            margin-bottom: 1.5rem;
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+        
+        .modal-description {
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+            color: #444;
+        }
+        
+        .modal-features {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .modal-feature {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #5a738e;
+            font-size: 1rem;
+        }
+        
+        .modal-feature i {
+            font-size: 1.3rem;
+        }
+        
+        .modal-link {
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
             color: #4a6491;
             text-decoration: none;
             font-weight: 500;
+            font-size: 1.1rem;
             transition: color 0.2s;
+            padding: 0.8rem 1.5rem;
+            border: 2px solid #4a6491;
+            border-radius: 6px;
+            margin-top: 1rem;
         }
         
-        .property-link:hover {
-            color: #2c3e50;
-            text-decoration: underline;
+        .modal-link:hover {
+            background: #4a6491;
+            color: white;
         }
         
         .no-image {
@@ -232,6 +381,15 @@
                 max-width: 400px;
                 margin: 0 auto;
             }
+            
+            .modal-slider {
+                height: 300px;
+            }
+            
+            .modal-features {
+                flex-direction: column;
+                gap: 1rem;
+            }
         }
     </style>
 </head>
@@ -249,6 +407,16 @@
         </div>
     </div>
     
+    <!-- Modal -->
+    <div class="modal" id="propertyModal">
+        <div class="close-modal" id="closeModal">
+            <i class="fas fa-times"></i>
+        </div>
+        <div class="modal-content" id="modalContent">
+            <!-- Content will be inserted by JavaScript -->
+        </div>
+    </div>
+    
     <footer>
         <p>&copy; 2025 PropertiKu. Semua hak dilindungi.</p>
         <p>Website listing properti dengan data real-time dari spreadsheet.</p>
@@ -262,10 +430,10 @@
                 type: "Ruman iExonomi",
                 harga: "Rp366.000.000",
                 alamat: "jl.gatot.subrata,gang.kehici,ke",
-                deskripsi: "ekonomis, hanga , dekax pasar, spbu",
+                deskripsi: "Properti ekonomis dengan harga terjangkau, dekat dengan pasar dan SPBU. Cocok untuk keluarga muda atau sebagai investasi pertama. Lingkungan yang nyaman dan akses jalan yang mudah.",
                 kamar: "3",
                 kamar_mandi: "1",
-                link: "https://map.s.app.google/ja/",
+                link: "https://maps.google.com/?q=jl.gatot.subrata,gang.kehici,ke",
                 foto: [
                     "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80",
                     "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80",
@@ -277,10 +445,10 @@
                 type: "Ruman iNewah",
                 harga: "Rp76.000.000",
                 alamat: "jl.medoho raya 10, ai 2 gang g",
-                deskripsi: "mewah.2 lantai,,, teras luas, ada tam:",
+                deskripsi: "Rumah mewah dua lantai dengan teras luas dan taman yang asri. Desain interior modern dengan finishing berkualitas tinggi. Dilengkapi dengan carport dan sistem keamanan yang baik.",
                 kamar: "2",
                 kamar_mandi: "1",
-                link: "https://map.s.app.google/ja/",
+                link: "https://maps.google.com/?q=jl.medoho+raya+10",
                 foto: [
                     "https://images.unsplash.com/photo-1605146769289-440113cc3d00?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80",
                     "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=853&q=80"
@@ -291,10 +459,10 @@
                 type: "Ruman",
                 harga: "Rp34.000.000",
                 alamat: "jl.abdui somad no16, n.11 rw",
-                deskripsi: "murah.nih,, 2 lantai,,, teras luas, di",
+                deskripsi: "Rumah murah dengan 2 lantai dan teras luas. Lokasi strategis dekat dengan pusat perbelanjaan dan transportasi umum. Sudah termasuk beberapa perabotan dasar.",
                 kamar: "2",
                 kamar_mandi: "1",
-                link: "https://map.s.app.google/ja/",
+                link: "https://maps.google.com/?q=jl.abdui+somad+no16",
                 foto: [
                     "https://images.unsplash.com/photo-1600566753052-d04fcf7934c7?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80",
                     "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80",
@@ -313,46 +481,36 @@
         function createPropertyCard(property) {
             const card = document.createElement('div');
             card.className = 'property-card';
+            card.setAttribute('data-id', property.id);
             
-            // Create image slider if there are photos
-            let imageSection = '';
-            if (property.foto && property.foto.length > 0) {
-                imageSection = `
-                    <div class="image-slider">
-                        <div class="slider-container" id="slider-${property.id}">
-                            ${property.foto.map(img => `<img src="${img}" alt="Property ${property.id}">`).join('')}
-                        </div>
-                        ${property.foto.length > 1 ? `
-                            <div class="slider-arrow prev" onclick="moveSlide(${property.id}, -1)"><i class="fas fa-chevron-left"></i></div>
-                            <div class="slider-arrow next" onclick="moveSlide(${property.id}, 1)"><i class="fas fa-chevron-right"></i></div>
-                            <div class="slider-nav">
-                                ${property.foto.map((_, index) => 
-                                    `<div class="slider-dot ${index === 0 ? 'active' : ''}" onclick="showSlide(${property.id}, ${index})"></div>`
-                                ).join('')}
-                            </div>
-                        ` : ''}
-                    </div>
-                `;
-            } else {
-                imageSection = `<div class="no-image"><i class="far fa-image"></i> Tidak ada gambar</div>`;
-            }
+            // Use first photo as main image
+            const mainImage = property.foto && property.foto.length > 0 ? property.foto[0] : null;
             
             card.innerHTML = `
-                ${imageSection}
+                <div class="property-image">
+                    ${mainImage ? 
+                        `<img src="${mainImage}" alt="Property ${property.id}">` : 
+                        `<div class="no-image"><i class="far fa-image"></i> Tidak ada gambar</div>`
+                    }
+                    <div class="property-badge">${property.type || 'Properti'}</div>
+                </div>
                 <div class="property-details">
-                    <div class="property-type">${property.type || 'Properti'}</div>
                     <div class="property-price">${formatPrice(property.harga)}</div>
                     <div class="property-address"><i class="fas fa-map-marker-alt"></i> ${property.alamat || 'Alamat tidak tersedia'}</div>
-                    <div class="property-description">${property.deskripsi || 'Tidak ada deskripsi'}</div>
                     <div class="property-features">
                         <div class="feature"><i class="fas fa-bed"></i> ${property.kamar || '0'} Kamar</div>
                         <div class="feature"><i class="fas fa-bath"></i> ${property.kamar_mandi || '0'} Kamar Mandi</div>
                     </div>
-                    <a href="${property.link}" target="_blank" class="property-link">
-                        <i class="fas fa-map-marked-alt"></i> Lihat di Google Maps
-                    </a>
+                    <div class="property-action">
+                        <button class="view-details-btn">Lihat Detail</button>
+                    </div>
                 </div>
             `;
+            
+            // Add click event to show modal
+            card.addEventListener('click', () => {
+                showPropertyModal(property);
+            });
             
             return card;
         }
@@ -373,11 +531,60 @@
             });
         }
 
-        // Function to move slides
-        function moveSlide(propertyId, direction) {
-            const slider = document.getElementById(`slider-${propertyId}`);
+        // Function to show property modal
+        function showPropertyModal(property) {
+            const modal = document.getElementById('propertyModal');
+            const modalContent = document.getElementById('modalContent');
+            
+            // Create modal content
+            modalContent.innerHTML = `
+                <div class="modal-slider">
+                    <div class="modal-slider-container" id="modalSlider-${property.id}">
+                        ${property.foto && property.foto.length > 0 ? 
+                            property.foto.map(img => `<img src="${img}" alt="Property ${property.id}">`).join('') :
+                            `<div class="no-image" style="height: 400px;"><i class="far fa-image"></i> Tidak ada gambar</div>`
+                        }
+                    </div>
+                    ${property.foto && property.foto.length > 1 ? `
+                        <div class="modal-slider-arrow prev" onclick="moveModalSlide(${property.id}, -1)"><i class="fas fa-chevron-left"></i></div>
+                        <div class="modal-slider-arrow next" onclick="moveModalSlide(${property.id}, 1)"><i class="fas fa-chevron-right"></i></div>
+                        <div class="modal-slider-nav">
+                            ${property.foto.map((_, index) => 
+                                `<div class="modal-slider-dot ${index === 0 ? 'active' : ''}" onclick="showModalSlide(${property.id}, ${index})"></div>`
+                            ).join('')}
+                        </div>
+                    ` : ''}
+                </div>
+                <div class="modal-details">
+                    <div class="modal-price">${formatPrice(property.harga)}</div>
+                    <div class="modal-type">${property.type || 'Properti'}</div>
+                    <div class="modal-address"><i class="fas fa-map-marker-alt"></i> ${property.alamat || 'Alamat tidak tersedia'}</div>
+                    <div class="modal-description">${property.deskripsi || 'Tidak ada deskripsi'}</div>
+                    <div class="modal-features">
+                        <div class="modal-feature"><i class="fas fa-bed"></i> ${property.kamar || '0'} Kamar Tidur</div>
+                        <div class="modal-feature"><i class="fas fa-bath"></i> ${property.kamar_mandi || '0'} Kamar Mandi</div>
+                    </div>
+                    <a href="${property.link}" target="_blank" class="modal-link">
+                        <i class="fas fa-map-marked-alt"></i> Lihat di Google Maps
+                    </a>
+                </div>
+            `;
+            
+            // Show modal
+            modal.style.display = 'block';
+            
+            // Store current property ID for slider functions
+            modal.setAttribute('data-current-property', property.id);
+            
+            // Prevent body scrolling when modal is open
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Function to move modal slides
+        function moveModalSlide(propertyId, direction) {
+            const slider = document.getElementById(`modalSlider-${propertyId}`);
             const slides = slider.querySelectorAll('img');
-            const dots = document.querySelectorAll(`#slider-${propertyId} ~ .slider-nav .slider-dot`);
+            const dots = document.querySelectorAll(`#modalSlider-${propertyId} ~ .modal-slider-nav .modal-slider-dot`);
             
             const currentSlide = parseInt(slider.getAttribute('data-current') || 0);
             let newSlide = currentSlide + direction;
@@ -394,10 +601,10 @@
             });
         }
 
-        // Function to show specific slide
-        function showSlide(propertyId, slideIndex) {
-            const slider = document.getElementById(`slider-${propertyId}`);
-            const dots = document.querySelectorAll(`#slider-${propertyId} ~ .slider-nav .slider-dot`);
+        // Function to show specific modal slide
+        function showModalSlide(propertyId, slideIndex) {
+            const slider = document.getElementById(`modalSlider-${propertyId}`);
+            const dots = document.querySelectorAll(`#modalSlider-${propertyId} ~ .modal-slider-nav .modal-slider-dot`);
             
             slider.style.transform = `translateX(-${slideIndex * 100}%)`;
             slider.setAttribute('data-current', slideIndex);
@@ -408,9 +615,28 @@
             });
         }
 
-        // Initialize the page with sample data
+        // Close modal function
+        function setupModalClose() {
+            const modal = document.getElementById('propertyModal');
+            const closeBtn = document.getElementById('closeModal');
+            
+            closeBtn.addEventListener('click', () => {
+                modal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            });
+            
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.style.display = 'none';
+                    document.body.style.overflow = 'auto';
+                }
+            });
+        }
+
+        // Initialize the page
         document.addEventListener('DOMContentLoaded', () => {
             displayProperties(sampleProperties);
+            setupModalClose();
             
             // In a real application, you would fetch data from your backend:
             /*
