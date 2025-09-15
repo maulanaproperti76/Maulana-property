@@ -717,11 +717,23 @@
 
         // Function to format price with proper dots
         function formatPrice(price) {
-            if (!price) return 'Harga tidak tersedia';
+            if (price === null || price === undefined) {
+                return 'Harga tidak tersedia';
+            }
+            // Konversi `price` menjadi string
+            const priceAsString = String(price); 
+            
             // Menghilangkan "Rp" dan spasi, lalu membersihkan non-digit
-            const cleanPrice = price.replace(/[^\d]/g, '');
+            const cleanPrice = priceAsString.replace(/[^\d]/g, '');
+            
             // Mengubah ke angka dan memformatnya dengan titik
-            return "Rp" + new Intl.NumberFormat('id-ID').format(cleanPrice);
+            // Gunakan parseInt atau Number() untuk memastikan konversi yang benar
+            const numericPrice = Number(cleanPrice);
+            if (isNaN(numericPrice)) {
+                return 'Harga tidak valid';
+            }
+        
+            return "Rp" + new Intl.NumberFormat('id-ID').format(numericPrice);
         }
 
         // Function to create WhatsApp link
@@ -959,3 +971,4 @@
     </script>
 </body>
 </html>
+
