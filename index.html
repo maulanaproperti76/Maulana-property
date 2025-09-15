@@ -668,30 +668,6 @@
             fetchAndDisplayProperties();
         }
 
-        // Setup all event listeners
-        function setupEventListeners() {
-            backToListBtn.addEventListener('click', () => {
-                propertyDetailSection.style.display = 'none';
-                propertyListSection.style.display = 'block';
-                window.scrollTo(0, 0);
-            });
-
-            nextBtn.addEventListener('click', () => {
-                const images = currentProperty.foto;
-                currentImageIndex = (currentImageIndex + 1) % images.length;
-                updateMainImage(images);
-            });
-            
-            prevBtn.addEventListener('click', () => {
-                const images = currentProperty.foto;
-                currentImageIndex = (currentImageIndex - 1 + images.length) % images.length;
-                updateMainImage(images);
-            });
-            
-            loadButton.addEventListener('click', fetchAndDisplayProperties);
-            refreshButton.addEventListener('click', fetchAndDisplayProperties);
-        }
-
         // Fetch properties from API
         async function fetchAndDisplayProperties() {
             // Show loading animation
@@ -705,7 +681,7 @@
                     throw new Error(`HTTP error! Status: ${response.status}`);
                 }
                 const data = await response.json();
-                propertiesData = data;
+                propertiesData = data; // Mengambil array data properti
                 
                 if (propertiesData && propertiesData.length > 0) {
                     generatePropertyCards();
@@ -724,15 +700,13 @@
         // Generate property cards
         function generatePropertyCards() {
             propertiesContainer.innerHTML = '';
-        
+            
             propertiesData.forEach(property => {
-                const firstPhoto = property.foto && property.foto.length > 0 ? property.foto[0] : 'https://placehold.co/600x400/CCCCCC/333333?text=Gambar+Tidak+Tersedia';
-        
                 const card = document.createElement('div');
                 card.className = 'property-card';
                 card.innerHTML = `
                     <div class="property-image">
-                        <img src="${firstPhoto}" alt="${property.type || 'Properti'}">
+                        <img src="${property.foto || 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80'}" alt="${property.type || 'Properti'}">
                     </div>
                     <div class="property-details">
                         <div class="property-price">${property.harga || 'N/A'}</div>
@@ -750,11 +724,11 @@
                         </div>
                     </div>
                 `;
-        
+                
                 card.addEventListener('click', () => {
                     showPropertyDetail(property);
                 });
-        
+                
                 propertiesContainer.appendChild(card);
             });
         }
@@ -763,62 +737,69 @@
         function showPropertyDetail(property) {
             currentProperty = property;
             currentImageIndex = 0;
-        
-            const images = property.foto && property.foto.length > 0 ? property.foto : ['https://placehold.co/600x400/CCCCCC/333333?text=Gambar+Tidak+Tersedia'];
-        
+            
+            // Update detail content
             detailTitle.textContent = property.type || 'Properti';
             detailPrice.textContent = property.harga || 'N/A';
             detailAddress.textContent = property.alamat || 'Alamat tidak tersedia';
-            detailDescription.textContent = property.deskripsi || 'Deskripsi tidak tersedia.';
-        
-            detailFeatures.innerHTML = `
-                <div class="feature-item">
-                    <i class="fas fa-bed"></i> <span>Kamar Tidur: ${property.kamar_tidur || 'N/A'}</span>
-                </div>
-                <div class="feature-item">
-                    <i class="fas fa-bath"></i> <span>Kamar Mandi: ${property.kamar_mandi || 'N/A'}</span>
-                </div>
-                <div class="feature-item">
-                    <i class="fas fa-expand"></i> <span>Luas: ${property.luas || 'N/A'}</span>
-                </div>
-                <div class="feature-item">
-                    <i class="fas fa-tag"></i> <span>Tipe: ${property.type || 'N/A'}</span>
-                </div>
-            `;
-        
-            if (property.lokasi) {
-                mapLink.href = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(property.lokasi)}`;
-            } else {
-                mapLink.style.display = 'none';
-            }
-        
+            detailDescription.textContent = property.deskripsi || 'Tidak ada deskripsi tersedia.';
+            mapLink.href = property.link || '#';
+            
+            // Generate features
+            detailFeatures.innerHTML = '';
+            const features = [
+                { icon: "map-marker-alt", text: property.lokasi || 'Lokasi tidak tersedia' },
+                { icon: "expand", text: property.luas || 'Luas tidak tersedia' },
+                { icon: "bed", text: property.kamar || 'Jumlah kamar tidak tersedia' },
+                { icon: "bath", text: property.kamar_mandi || 'Jumlah kamar mandi tidak tersedia' }
+            ];
+            
+            features.forEach(feature => {
+                const featureItem = document.createElement('div');
+                featureItem.className = 'feature-item';
+                featureItem.innerHTML = `
+                    <i class="fas fa-${feature.icon}"></i>
+                    <span>${feature.text}</span>
+                `;
+                detailFeatures.appendChild(featureItem);
+            });
+            
+            // Generate thumbnails
             thumbnailsContainer.innerHTML = '';
+            const images = property.foto ? [property.foto] : ['https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80'];
+            
             images.forEach((image, index) => {
                 const thumbnail = document.createElement('img');
                 thumbnail.src = image;
                 thumbnail.alt = `Thumbnail ${index + 1}`;
                 thumbnail.className = 'thumbnail';
                 if (index === 0) thumbnail.classList.add('active');
-        
+                
                 thumbnail.addEventListener('click', () => {
                     currentImageIndex = index;
-                    updateMainImage(images);
+                    updateMainImage();
                 });
-        
+                
                 thumbnailsContainer.appendChild(thumbnail);
             });
-        
-            updateMainImage(images);
-        
+            
+            // Update main image
+            updateMainImage();
+            
+            // Show detail section, hide list
             propertyListSection.style.display = 'none';
             propertyDetailSection.style.display = 'block';
+            
+            // Scroll to top
             window.scrollTo(0, 0);
         }
 
-        // Update main image and thumbnail
-        function updateMainImage(images) {
+        // Update main image
+        function updateMainImage() {
+            const images = currentProperty.foto ? [currentProperty.foto] : ['https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80'];
             mainImage.src = images[currentImageIndex];
             
+            // Update active thumbnail
             document.querySelectorAll('.thumbnail').forEach((thumb, index) => {
                 if (index === currentImageIndex) {
                     thumb.classList.add('active');
@@ -826,6 +807,38 @@
                     thumb.classList.remove('active');
                 }
             });
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
+            backToListBtn.addEventListener('click', () => {
+                propertyDetailSection.style.display = 'none';
+                propertyListSection.style.display = 'block';
+            });
+
+            prevBtn.addEventListener('click', () => {
+                const images = currentProperty.foto ? [currentProperty.foto] : ['https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80'];
+                if (currentImageIndex > 0) {
+                    currentImageIndex--;
+                } else {
+                    currentImageIndex = images.length - 1;
+                }
+                updateMainImage();
+            });
+
+            nextBtn.addEventListener('click', () => {
+                const images = currentProperty.foto ? [currentProperty.foto] : ['https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80'];
+                if (currentImageIndex < images.length - 1) {
+                    currentImageIndex++;
+                } else {
+                    currentImageIndex = 0;
+                }
+                updateMainImage();
+            });
+
+            // Event listener untuk tombol
+            loadButton.addEventListener('click', fetchAndDisplayProperties);
+            refreshButton.addEventListener('click', fetchAndDisplayProperties);
         }
 
         // Initialize the page when loaded
