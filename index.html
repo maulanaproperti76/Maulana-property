@@ -1,177 +1,202 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>RumahDijual.com - Temukan Rumah Impian Anda</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <title>Daftar Properti</title>
   <style>
-    /* ... semua CSS kamu tetap sama (aku biarkan) ... */
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background: #f9f9f9;
+    }
+    .card {
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      margin: 16px 0;
+      padding: 16px;
+      cursor: pointer;
+    }
+    .card img {
+      width: 100%;
+      max-height: 200px;
+      object-fit: cover;
+      border-radius: 6px;
+    }
+    .card h3 {
+      margin: 8px 0;
+      font-size: 18px;
+    }
+    .card p {
+      margin: 4px 0;
+      color: #555;
+    }
+
+    /* Detail page */
+    .detail {
+      display: none;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+      padding: 16px;
+    }
+    .detail img {
+      width: 100%;
+      max-height: 300px;
+      object-fit: cover;
+      border-radius: 6px;
+    }
+    .photo-nav {
+      display: flex;
+      justify-content: space-between;
+      margin: 10px 0;
+    }
+    .photo-nav button {
+      padding: 6px 12px;
+      border: none;
+      background: #007bff;
+      color: white;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .photo-nav button:disabled {
+      background: #ccc;
+      cursor: default;
+    }
+    .back-btn {
+      margin-top: 10px;
+      padding: 6px 12px;
+      border: none;
+      background: #28a745;
+      color: white;
+      border-radius: 4px;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
-  <!-- Header, Hero, Property List, Property Detail, Footer -->
-  <!-- (biarkan sama persis seperti kode kamu di atas) -->
+
+  <h1>Daftar Properti</h1>
+  <div id="list"></div>
+
+  <div id="detail" class="detail">
+    <h2 id="detail-type"></h2>
+    <img id="detail-photo" src="" alt="Foto Properti"/>
+    <div class="photo-nav">
+      <button id="prev-btn">Prev</button>
+      <button id="next-btn">Next</button>
+    </div>
+    <p><strong>Harga:</strong> <span id="detail-harga"></span></p>
+    <p><strong>Alamat:</strong> <span id="detail-alamat"></span></p>
+    <p><strong>Deskripsi:</strong> <span id="detail-deskripsi"></span></p>
+    <p><strong>KT:</strong> <span id="detail-kt"></span></p>
+    <p><strong>KM:</strong> <span id="detail-km"></span></p>
+    <p><strong>Luas:</strong> <span id="detail-luas"></span></p>
+    <button id="back-btn" class="back-btn">Kembali</button>
+  </div>
 
   <script>
-    const BACKEND_API_URL = 'https://foto-backend.vercel.app/api/photos';
-    
-    const propertiesContainer = document.querySelector('.properties');
-    const propertyListSection = document.getElementById('properties');
-    const propertyDetailSection = document.getElementById('property-detail');
-    const backToListBtn = document.getElementById('backToList');
-    const mainImage = document.getElementById('main-image');
-    const prevBtn = document.getElementById('prev-btn');
-    const nextBtn = document.getElementById('next-btn');
-    const thumbnailsContainer = document.querySelector('.thumbnails');
-    const detailTitle = document.getElementById('detail-title');
-    const detailPrice = document.getElementById('detail-price');
-    const detailAddress = document.getElementById('detail-address');
-    const detailDescription = document.getElementById('detail-description');
-    const detailFeatures = document.getElementById('detail-features');
-    const mapLink = document.getElementById('map-link');
-    const propertiesLoader = document.getElementById('properties-loader');
-    const errorElement = document.getElementById('errorMessage');
-    const loadButton = document.getElementById('loadData');
-    const refreshButton = document.getElementById('refreshData');
+    let properties = [];
+    let currentPhotos = [];
+    let currentIndex = 0;
 
-    let currentProperty = null;
-    let currentImageIndex = 0;
-    let propertiesData = [];
-
-    function init() {
-      setupEventListeners();
-      fetchAndDisplayProperties();
-    }
-
-    async function fetchAndDisplayProperties() {
-      propertiesLoader.style.display = 'block';
-      errorElement.style.display = 'none';
-      propertiesContainer.innerHTML = '';
+    async function loadData() {
       try {
-        const response = await fetch(BACKEND_API_URL);
-        if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
-        const data = await response.json();
-        propertiesData = data;
-        if (propertiesData && propertiesData.length > 0) {
-          generatePropertyCards();
-        } else {
-          propertiesContainer.innerHTML = '<div class="no-data">Tidak ada data properti.</div>';
-        }
-      } catch (error) {
-        errorElement.textContent = 'Terjadi kesalahan: ' + error.message;
-        errorElement.style.display = 'block';
-      } finally {
-        propertiesLoader.style.display = 'none';
+        const res = await fetch('/api/photos');
+        properties = await res.json();
+        console.log("Data properties:", properties);
+        renderList();
+      } catch (err) {
+        console.error("Gagal load data:", err);
       }
     }
 
-    function generatePropertyCards() {
-      propertiesContainer.innerHTML = '';
-      propertiesData.forEach(property => {
+    function renderList() {
+      const list = document.getElementById('list');
+      list.innerHTML = '';
+
+      properties.forEach((p, idx) => {
         const card = document.createElement('div');
-        card.className = 'property-card';
-        const firstFoto = Array.isArray(property.foto) ? property.foto[0] : property.foto;
+        card.className = 'card';
         card.innerHTML = `
-          <div class="property-image">
-            <img src="${firstFoto || 'https://via.placeholder.com/400x300'}" alt="${property.type || 'Properti'}">
-          </div>
-          <div class="property-details">
-            <div class="property-price">${property.harga || 'N/A'}</div>
-            <h3>${property.type || 'Properti'}</h3>
-            <div class="property-address">${property.alamat || 'Alamat tidak tersedia'}</div>
-          </div>
+          <img src="${p.foto && p.foto[0] ? p.foto[0] : ''}" alt="Foto"/>
+          <h3>${p.type || '-'}</h3>
+          <p><strong>Harga:</strong> ${p.harga || '-'}</p>
+          <p><strong>Alamat:</strong> ${p.alamat || '-'}</p>
+          <p><strong>KT:</strong> ${p.kamar || '0'} | <strong>KM:</strong> ${p.kamar_mandi || '0'}</p>
         `;
-        card.addEventListener('click', () => showPropertyDetail(property));
-        propertiesContainer.appendChild(card);
+        card.addEventListener('click', () => showDetail(p));
+        list.appendChild(card);
       });
     }
 
-    function showPropertyDetail(property) {
-      currentProperty = property;
-      currentImageIndex = 0;
+    function showDetail(p) {
+      document.getElementById('list').style.display = 'none';
+      const detail = document.getElementById('detail');
+      detail.style.display = 'block';
 
-      detailTitle.textContent = property.type || 'Properti';
-      detailPrice.textContent = property.harga || 'N/A';
-      detailAddress.textContent = property.alamat || 'Alamat tidak tersedia';
-      detailDescription.textContent = property.deskripsi || 'Tidak ada deskripsi.';
-      mapLink.href = property.link || '#';
+      document.getElementById('detail-type').textContent = p.type || '-';
+      document.getElementById('detail-harga').textContent = p.harga || '-';
+      document.getElementById('detail-alamat').textContent = p.alamat || '-';
+      document.getElementById('detail-deskripsi').textContent = p.deskripsi || '-';
+      document.getElementById('detail-kt').textContent = p.kamar || '0';
+      document.getElementById('detail-km').textContent = p.kamar_mandi || '0';
+      document.getElementById('detail-luas').textContent = p.luas || '-';
 
-      detailFeatures.innerHTML = '';
-      const features = [
-        { icon: "map-marker-alt", text: property.lokasi || 'Lokasi tidak tersedia' },
-        { icon: "expand", text: property.luas || 'Luas tidak tersedia' },
-        { icon: "bed", text: property.kamar || 'Jumlah kamar tidak tersedia' },
-        { icon: "bath", text: property.kamar_mandi || 'Jumlah kamar mandi tidak tersedia' }
-      ];
-      features.forEach(f => {
-        const el = document.createElement('div');
-        el.className = 'feature-item';
-        el.innerHTML = `<i class="fas fa-${f.icon}"></i><span>${f.text}</span>`;
-        detailFeatures.appendChild(el);
-      });
+      currentPhotos = p.foto || [];
+      currentIndex = 0;
+      updatePhoto();
+    }
 
-      thumbnailsContainer.innerHTML = '';
-      const images = Array.isArray(property.foto) && property.foto.length > 0
-        ? property.foto
-        : ['https://via.placeholder.com/600x400'];
+    function updatePhoto() {
+      const img = document.getElementById('detail-photo');
+      if (currentPhotos.length > 0) {
+        img.src = currentPhotos[currentIndex];
+      } else {
+        img.src = '';
+      }
 
-      images.forEach((img, idx) => {
-        const thumb = document.createElement('img');
-        thumb.src = img;
-        thumb.className = 'thumbnail';
-        if (idx === 0) thumb.classList.add('active');
-        thumb.addEventListener('click', () => {
-          currentImageIndex = idx;
-          updateMainImage();
+      // disable prev/next kalau di ujung
+      document.getElementById('prev-btn').disabled = currentIndex === 0;
+      document.getElementById('next-btn').disabled = currentIndex === currentPhotos.length - 1;
+    }
+
+    // Event listeners (cek kalau ada elemen)
+    document.addEventListener('DOMContentLoaded', () => {
+      const prevBtn = document.getElementById('prev-btn');
+      const nextBtn = document.getElementById('next-btn');
+      const backBtn = document.getElementById('back-btn');
+
+      if (prevBtn) {
+        prevBtn.addEventListener('click', () => {
+          if (currentIndex > 0) {
+            currentIndex--;
+            updatePhoto();
+          }
         });
-        thumbnailsContainer.appendChild(thumb);
-      });
+      }
 
-      updateMainImage();
-      propertyListSection.style.display = 'none';
-      propertyDetailSection.style.display = 'block';
-      window.scrollTo(0, 0);
-    }
+      if (nextBtn) {
+        nextBtn.addEventListener('click', () => {
+          if (currentIndex < currentPhotos.length - 1) {
+            currentIndex++;
+            updatePhoto();
+          }
+        });
+      }
 
-    function updateMainImage() {
-      const images = Array.isArray(currentProperty.foto) && currentProperty.foto.length > 0
-        ? currentProperty.foto
-        : ['https://via.placeholder.com/600x400'];
+      if (backBtn) {
+        backBtn.addEventListener('click', () => {
+          document.getElementById('detail').style.display = 'none';
+          document.getElementById('list').style.display = 'block';
+        });
+      }
 
-      mainImage.src = images[currentImageIndex];
-      document.querySelectorAll('.thumbnail').forEach((thumb, i) => {
-        thumb.classList.toggle('active', i === currentImageIndex);
-      });
-    }
-
-    function setupEventListeners() {
-      backToListBtn.addEventListener('click', () => {
-        propertyDetailSection.style.display = 'none';
-        propertyListSection.style.display = 'block';
-      });
-
-      prevBtn.addEventListener('click', () => {
-        const images = Array.isArray(currentProperty.foto) && currentProperty.foto.length > 0
-          ? currentProperty.foto
-          : ['https://via.placeholder.com/600x400'];
-        currentImageIndex = (currentImageIndex - 1 + images.length) % images.length;
-        updateMainImage();
-      });
-
-      nextBtn.addEventListener('click', () => {
-        const images = Array.isArray(currentProperty.foto) && currentProperty.foto.length > 0
-          ? currentProperty.foto
-          : ['https://via.placeholder.com/600x400'];
-        currentImageIndex = (currentImageIndex + 1) % images.length;
-        updateMainImage();
-      });
-
-      loadButton.addEventListener('click', fetchAndDisplayProperties);
-      refreshButton.addEventListener('click', fetchAndDisplayProperties);
-    }
-
-    window.addEventListener('DOMContentLoaded', init);
+      loadData();
+    });
   </script>
+
 </body>
 </html>
