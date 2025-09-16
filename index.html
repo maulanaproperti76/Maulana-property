@@ -692,8 +692,8 @@
             <div class="search-sort">
                 <input type="text" id="searchAddress" placeholder="Cari alamat (misal: Semarang, Kudus, Tembalang)">
                 <select id="sortPrice">
-                    <option value="default">Terbaru</option>
-                    <option value="terlama">Terlama</option>
+                    <option value="default">Terlama</option>
+                    <option value="latest">Terbaru</option>
                     <option value="asc">Termurah → Termahal</option>
                     <option value="desc">Termahal → Termurah</option>
                 </select>
@@ -761,37 +761,26 @@
             displayProperties(filtered);
         });
         
-        // ⬇️ Event listener untuk urutkan properti
+        // ⬇️ Event listener untuk urutkan harga
         document.getElementById("sortPrice").addEventListener("change", (e) => {
             const value = e.target.value;
             let sorted = [...allProperties]; // clone array
-            
-            if (value === "terlama") {
-                // Urutkan dari terlama (berdasarkan ID atau timestamp jika ada)
-                sorted.sort((a, b) => {
-                    // Jika properti memiliki timestamp, gunakan timestamp
-                    if (a.timestamp && b.timestamp) {
-                        return new Date(a.timestamp) - new Date(b.timestamp);
-                    }
-                    // Jika tidak, gunakan ID sebagai fallback (asumsi ID lebih kecil = lebih lama)
-                    return a.id - b.id;
-                });
-            } else if (value === "asc") {
+        
+            if (value === "asc") {
                 sorted.sort((a, b) => a.harga - b.harga);
             } else if (value === "desc") {
                 sorted.sort((a, b) => b.harga - a.harga);
-            } else {
-                // Default: terbaru (kebalikan dari terlama)
-                sorted.sort((a, b) => {
-                    if (a.timestamp && b.timestamp) {
-                        return new Date(b.timestamp) - new Date(a.timestamp);
-                    }
-                    return b.id - a.id;
-                });
+            } else if (value === "latest") {
+                // urutkan ID descending (misal 4,3,2,1)
+                sorted.sort((a, b) => b.id - a.id);
+            } else if (value === "default") {
+                // urutkan ID ascending (misal 1,2,3,4)
+                sorted.sort((a, b) => a.id - b.id);
             }
         
             displayProperties(sorted);
         });
+
 
         // URL API backend Anda
         const BACKEND_API_URL = 'https://foto-backend.vercel.app/api/photos';
@@ -1051,17 +1040,7 @@
                 
                 if (data && data.length > 0) {
                     allProperties = data; // simpan ke variabel global
-                    
-                    // Urutkan default (terbaru)
-                    allProperties.sort((a, b) => {
-                        if (a.timestamp && b.timestamp) {
-                            return new Date(b.timestamp) - new Date(a.timestamp);
-                        }
-                        return b.id - a.id;
-                    });
-                    
                     displayProperties(allProperties);
-                }
                 } else {
                     propertyGrid.innerHTML = '<div class="loading">Tidak ada properti yang ditemukan</div>';
                 }
@@ -1111,5 +1090,3 @@
     </script>
 </body>
 </html>
-
-
