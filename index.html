@@ -1051,7 +1051,17 @@
                 
                 if (data && data.length > 0) {
                     allProperties = data; // simpan ke variabel global
+                    
+                    // Urutkan default (terbaru)
+                    allProperties.sort((a, b) => {
+                        if (a.timestamp && b.timestamp) {
+                            return new Date(b.timestamp) - new Date(a.timestamp);
+                        }
+                        return b.id - a.id;
+                    });
+                    
                     displayProperties(allProperties);
+                }
                 } else {
                     propertyGrid.innerHTML = '<div class="loading">Tidak ada properti yang ditemukan</div>';
                 }
@@ -1101,4 +1111,5 @@
     </script>
 </body>
 </html>
+
 
