@@ -493,10 +493,15 @@
         /* Controls */
         .controls {
             display: flex;
-            justify-content: center;
-            margin-bottom: 20px;
-            gap: 15px;
+            justify-content: space-between;
+            align-items: center;
             flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .search-sort {
+            display: flex;
+            gap: 10px;
         }
 
         .controls button {
@@ -678,6 +683,15 @@
             <button id="refreshData">
                 <i class="fas fa-sync-alt"></i> Segarkan Data
             </button>
+
+            <div class="search-sort">
+                <input type="text" id="searchAddress" placeholder="Cari alamat (misal: Semarang, Kudus, Tembalang)">
+                <select id="sortPrice">
+                    <option value="default">Urutkan Harga</option>
+                    <option value="asc">Termurah → Termahal</option>
+                    <option value="desc">Termahal → Termurah</option>
+                </select>
+            </div>
         </div>
 
         <!-- Error Message -->
@@ -730,6 +744,31 @@
     </footer>
 
     <script>
+        let allProperties = []; // simpan semua properti dari API
+
+        // 🔍 Event listener untuk search alamat
+        document.getElementById("searchAddress").addEventListener("input", (e) => {
+            const keyword = e.target.value.toLowerCase();
+            const filtered = allProperties.filter(p =>
+                p.alamat && p.alamat.toLowerCase().includes(keyword)
+            );
+            displayProperties(filtered);
+        });
+        
+        // ⬇️ Event listener untuk urutkan harga
+        document.getElementById("sortPrice").addEventListener("change", (e) => {
+            const value = e.target.value;
+            let sorted = [...allProperties]; // clone array
+        
+            if (value === "asc") {
+                sorted.sort((a, b) => a.harga - b.harga);
+            } else if (value === "desc") {
+                sorted.sort((a, b) => b.harga - a.harga);
+            }
+        
+            displayProperties(sorted);
+        });
+
         // URL API backend Anda
         const BACKEND_API_URL = 'https://foto-backend.vercel.app/api/photos';
         
@@ -975,7 +1014,7 @@
             
             // Show loading state
             propertyGrid.innerHTML = '<div class="loading"><i class="fas fa-spinner fa-spin"></i> Memuat properti...</div>';
-            errorElement.style.display = 'none';
+            errorElement.innerHTML = ''; // reset error message
             
             try {
                 const response = await fetch(`${BACKEND_API_URL}?_=${Date.now()}`, {
@@ -987,17 +1026,41 @@
                 const data = await response.json();
                 
                 if (data && data.length > 0) {
-                    displayProperties(data);
+                    allProperties = data; // simpan ke variabel global
+                    displayProperties(allProperties);
                 } else {
                     propertyGrid.innerHTML = '<div class="loading">Tidak ada properti yang ditemukan</div>';
                 }
             } catch (error) {
                 console.error('Error fetching properties:', error);
-                errorElement.textContent = 'Gagal memuat properti. Silakan coba lagi.';
-                errorElement.style.display = 'block';
+                errorElement.innerHTML = '⚠️ Gagal memuat properti. Silakan coba lagi.';
                 propertyGrid.innerHTML = '';
             }
+        
+            // 🔍 Event listener untuk search alamat
+            document.getElementById("searchAddress").addEventListener("input", (e) => {
+                const keyword = e.target.value.toLowerCase();
+                const filtered = allProperties.filter(p =>
+                    p.alamat && p.alamat.toLowerCase().includes(keyword)
+                );
+                displayProperties(filtered);
+            });
+            
+            // ⬇️ Event listener untuk urutkan harga
+            document.getElementById("sortPrice").addEventListener("change", (e) => {
+                const value = e.target.value;
+                let sorted = [...allProperties]; // clone array
+            
+                if (value === "asc") {
+                    sorted.sort((a, b) => a.harga - b.harga);
+                } else if (value === "desc") {
+                    sorted.sort((a, b) => b.harga - a.harga);
+                }
+            
+                displayProperties(sorted);
+            });
         }
+
 
         // Initialize the page
         document.addEventListener('DOMContentLoaded', () => {
@@ -1014,6 +1077,7 @@
     </script>
 </body>
 </html>
+
 
 
 
