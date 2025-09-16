@@ -767,29 +767,57 @@
             let sorted = [...allProperties]; // clone array
             
             if (value === "terlama") {
-                // Urutkan dari terlama (berdasarkan ID atau timestamp jika ada)
+                // Urutkan dari terlama (berdasarkan timestamp atau createdAt jika ada)
                 sorted.sort((a, b) => {
-                    // Jika properti memiliki timestamp, gunakan timestamp
+                    // Coba gunakan timestamp jika ada
                     if (a.timestamp && b.timestamp) {
                         return new Date(a.timestamp) - new Date(b.timestamp);
                     }
-                    // Jika tidak, gunakan ID sebagai fallback (asumsi ID lebih kecil = lebih lama)
-                    return a.id - b.id;
+                    // Coba gunakan createdAt jika ada
+                    else if (a.createdAt && b.createdAt) {
+                        return new Date(a.createdAt) - new Date(b.createdAt);
+                    }
+                    // Coba gunakan updatedAt jika ada
+                    else if (a.updatedAt && b.updatedAt) {
+                        return new Date(a.updatedAt) - new Date(b.updatedAt);
+                    }
+                    // Jika tidak ada field waktu, gunakan ID sebagai fallback
+                    else {
+                        // Pastikan ID adalah angka, jika tidak convert dulu
+                        const idA = typeof a.id === 'string' ? parseInt(a.id) || 0 : a.id;
+                        const idB = typeof b.id === 'string' ? parseInt(b.id) || 0 : b.id;
+                        return idA - idB;
+                    }
                 });
             } else if (value === "asc") {
-                sorted.sort((a, b) => a.harga - b.harga);
+                sorted.sort((a, b) => (a.harga || 0) - (b.harga || 0));
             } else if (value === "desc") {
-                sorted.sort((a, b) => b.harga - a.harga);
+                sorted.sort((a, b) => (b.harga || 0) - (a.harga || 0));
             } else {
                 // Default: terbaru (kebalikan dari terlama)
                 sorted.sort((a, b) => {
+                    // Coba gunakan timestamp jika ada
                     if (a.timestamp && b.timestamp) {
                         return new Date(b.timestamp) - new Date(a.timestamp);
                     }
-                    return b.id - a.id;
+                    // Coba gunakan createdAt jika ada
+                    else if (a.createdAt && b.createdAt) {
+                        return new Date(b.createdAt) - new Date(a.createdAt);
+                    }
+                    // Coba gunakan updatedAt jika ada
+                    else if (a.updatedAt && b.updatedAt) {
+                        return new Date(b.updatedAt) - new Date(a.updatedAt);
+                    }
+                    // Jika tidak ada field waktu, gunakan ID sebagai fallback
+                    else {
+                        // Pastikan ID adalah angka, jika tidak convert dulu
+                        const idA = typeof a.id === 'string' ? parseInt(a.id) || 0 : a.id;
+                        const idB = typeof b.id === 'string' ? parseInt(b.id) || 0 : b.id;
+                        return idB - idA;
+                    }
                 });
             }
-            
+        
             displayProperties(sorted);
         });
 
@@ -1053,12 +1081,27 @@
                 if (data && data.length > 0) {
                     allProperties = data; // simpan ke variabel global
                     
-                    // Urutkan default (terbaru)
+                    // Urutkan default (terbaru) dengan logika yang sama seperti di event listener
                     allProperties.sort((a, b) => {
+                        // Coba gunakan timestamp jika ada
                         if (a.timestamp && b.timestamp) {
                             return new Date(b.timestamp) - new Date(a.timestamp);
                         }
-                        return b.id - a.id;
+                        // Coba gunakan createdAt jika ada
+                        else if (a.createdAt && b.createdAt) {
+                            return new Date(b.createdAt) - new Date(a.createdAt);
+                        }
+                        // Coba gunakan updatedAt jika ada
+                        else if (a.updatedAt && b.updatedAt) {
+                            return new Date(b.updatedAt) - new Date(a.updatedAt);
+                        }
+                        // Jika tidak ada field waktu, gunakan ID sebagai fallback
+                        else {
+                            // Pastikan ID adalah angka, jika tidak convert dulu
+                            const idA = typeof a.id === 'string' ? parseInt(a.id) || 0 : a.id;
+                            const idB = typeof b.id === 'string' ? parseInt(b.id) || 0 : b.id;
+                            return idB - idA;
+                        }
                     });
                     
                     displayProperties(allProperties);
@@ -1111,6 +1154,7 @@
     </script>
 </body>
 </html>
+
 
 
 
