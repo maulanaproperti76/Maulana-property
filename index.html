@@ -318,8 +318,12 @@
         
         .modal-slider {
             position: relative;
-            height: 400px;
+            width: 100%;
+            max-width: 500px; /* optional */
+            aspect-ratio: 4 / 5; /* membuat tinggi otomatis sesuai rasio */
+            margin: 0 auto;
             overflow: hidden;
+            border-radius: 12px;
         }
         
         .modal-slider-container {
@@ -329,9 +333,9 @@
         }
         
         .modal-slider-container img {
-            min-width: 100%;
-            object-fit: cover;
+            width: 100%;
             height: 100%;
+            object-fit: cover; /* tetap crop sesuai rasio */
         }
         
         .modal-slider-nav {
@@ -1132,3 +1136,4 @@
     </script>
 </body>
 </html>
+
