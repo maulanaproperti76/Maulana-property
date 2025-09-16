@@ -1114,28 +1114,6 @@
                 propertyGrid.innerHTML = '';
             }
         
-            // 🔍 Event listener untuk search alamat
-            document.getElementById("searchAddress").addEventListener("input", (e) => {
-                const keyword = e.target.value.toLowerCase();
-                const filtered = allProperties.filter(p =>
-                    p.alamat && p.alamat.toLowerCase().includes(keyword)
-                );
-                displayProperties(filtered);
-            });
-            
-            // ⬇️ Event listener untuk urutkan harga
-            document.getElementById("sortPrice").addEventListener("change", (e) => {
-                const value = e.target.value;
-                let sorted = [...allProperties]; // clone array
-            
-                if (value === "asc") {
-                    sorted.sort((a, b) => a.harga - b.harga);
-                } else if (value === "desc") {
-                    sorted.sort((a, b) => b.harga - a.harga);
-                }
-            
-                displayProperties(sorted);
-            });
         }
 
 
