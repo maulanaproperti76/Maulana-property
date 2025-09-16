@@ -231,6 +231,28 @@
         .whatsapp-btn:hover {
             background: #128C7E;
         }
+
+        .property-card.sold {
+            pointer-events: none; /* ga bisa di-klik */
+        }
+        
+        .property-card.sold .property-image img {
+            filter: grayscale(100%) brightness(0.6); /* jadi abu-abu */
+        }
+        
+        .property-card.sold .sold-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0,0,0,0.6);
+            color: white;
+            font-size: 2rem;
+            font-weight: bold;
+            padding: 0.5rem 1.5rem;
+            border-radius: 8px;
+        }
+
         
         /* Modal Styles */
         .modal {
@@ -744,12 +766,16 @@
             const encodedMessage = encodeURIComponent(message);
             return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodedMessage}`;
         }
-
+        
         // Function to create property card
         function createPropertyCard(property) {
             const card = document.createElement('div');
             card.className = 'property-card';
             card.setAttribute('data-id', property.id);
+        
+            if (property.status && property.status.toUpperCase() === "SOLD") {
+                card.classList.add("sold");
+            }
             
             // Use first photo as main image
             const mainImage = property.foto && property.foto.length > 0 ? property.foto[0] : null;
@@ -761,6 +787,8 @@
                         `<div class="no-image"><i class="far fa-image"></i> Tidak ada gambar</div>`
                     }
                     <div class="property-badge">${property.type || 'Properti'}</div>
+                    ${property.status && property.status.toUpperCase() === "SOLD" ? 
+                        `<div class="sold-overlay">SOLD</div>` : ""}
                 </div>
                 <div class="property-details">
                     <div class="property-price">${formatPrice(property.harga)}</div>
@@ -775,28 +803,29 @@
                     </div>
                 </div>
             `;
-            
-            // Add click event to show modal
-            const viewDetailsBtn = card.querySelector('.view-details-btn');
-            viewDetailsBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                showPropertyModal(property);
-            });
-            
-            // Add click event for WhatsApp button
-            const whatsappBtn = card.querySelector('.whatsapp-btn');
-            whatsappBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                window.open(createWhatsAppLink(property.id, property.type), '_blank');
-            });
-            
-            // Add click event to card for showing modal
-            card.addEventListener('click', () => {
-                showPropertyModal(property);
-            });
-            
+        
+            // Kalau status SOLD, skip event klik
+            if (!(property.status && property.status.toUpperCase() === "SOLD")) {
+                const viewDetailsBtn = card.querySelector('.view-details-btn');
+                viewDetailsBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    showPropertyModal(property);
+                });
+        
+                const whatsappBtn = card.querySelector('.whatsapp-btn');
+                whatsappBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    window.open(createWhatsAppLink(property.id, property.type), '_blank');
+                });
+        
+                card.addEventListener('click', () => {
+                    showPropertyModal(property);
+                });
+            }
+        
             return card;
         }
+
 
         // Function to display properties
         function displayProperties(properties) {
@@ -983,5 +1012,6 @@
     </script>
 </body>
 </html>
+
 
 
