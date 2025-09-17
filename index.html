@@ -988,14 +988,14 @@
                 return;
             }
             
-            properties.forEach((property) => {
+            properties.forEach((property, index) => {
                 const card = createPropertyCard(property, index + 1);
                 propertyGrid.appendChild(card);
             });
         }
 
         // Function to show property modal
-        function showPropertyModal(property) {
+        function showPropertyModal(property, nomor) {
             const modal = document.getElementById('propertyModal');
             const modalContent = document.getElementById('modalContent');
 
@@ -1037,7 +1037,7 @@
                 <div class="modal-details">
                     <div class="modal-price">${formatPrice(property.harga)}</div>
                     <div class="modal-type-container">
-                        <span class="modal-number">${index}</span>
+                        <span class="modal-number">${nomor}</span>
                         <span class="modal-type">${property.type || 'Properti'}</span>
                     </div>
                     <div class="modal-address">
@@ -1173,6 +1173,7 @@
     </script>
 </body>
 </html>
+
 
 
 
