@@ -922,7 +922,7 @@
         }
         
         // Function to create property card
-        function createPropertyCard(property) {
+        function createPropertyCard(property, index) {
             const card = document.createElement('div');
             card.className = 'property-card';
             card.setAttribute('data-id', property.id);
@@ -995,32 +995,17 @@
                 return;
             }
             
-            properties.forEach(property => {
+            properties.forEach((property, index) => {
                 const card = createPropertyCard(property, index + 1);
                 propertyGrid.appendChild(card);
             });
         }
 
         // Function to show property modal
-        function showPropertyModal(property) {
+        function showPropertyModal(property, index) {
             const modal = document.getElementById('propertyModal');
             const modalContent = document.getElementById('modalContent');
-            // Tambahkan nomor urut pada modal
-            modalContent.innerHTML = `
-                <div class="modal-slider">
-                    <!-- ... kode slider yang sama -->
-                </div>
-                
-                <div class="modal-details">
-                    <div class="modal-price">${formatPrice(property.harga)}</div>
-                    <div class="modal-type-container">
-                        <span class="modal-number">${index}</span>
-                        <span class="modal-type">${property.type || 'Properti'}</span>
-                    </div>
-                    <!-- ... sisa kode modal -->
-                </div>
-            `;
-            
+           
             // Create modal content
             modalContent.innerHTML = `
                 <div class="modal-slider">
@@ -1046,9 +1031,9 @@
                             <i class="fas fa-chevron-right"></i>
                         </div>
                         <div class="modal-slider-nav">
-                            ${property.foto.map((_, index) => 
-                                `<div class="modal-slider-dot ${index === 0 ? 'active' : ''}" 
-                                      onclick="showModalSlide('${property.id}', ${index})"></div>`
+                            ${property.foto.map((_, idx) => 
+                                `<div class="modal-slider-dot ${idx === 0 ? 'active' : ''}" 
+                                      onclick="showModalSlide('${property.id}', ${idx})"></div>`
                             ).join('')}
                         </div>
                     ` : ''}
@@ -1056,7 +1041,10 @@
                 
                 <div class="modal-details">
                     <div class="modal-price">${formatPrice(property.harga)}</div>
-                    <div class="modal-type">${property.type || 'Properti'}</div>
+                    <div class="modal-type-container">
+                        <span class="modal-number">${index}</span>
+                        <span class="modal-type">${property.type || 'Properti'}</span>
+                    </div>
                     <div class="modal-address">
                         <i class="fas fa-map-marker-alt"></i> ${property.alamat || 'Alamat tidak tersedia'}
                     </div>
@@ -1065,9 +1053,11 @@
                         <div class="modal-feature"><i class="fas fa-bed"></i> ${property.kamar || '0'} Kamar Tidur</div>
                         <div class="modal-feature"><i class="fas fa-bath"></i> ${property.kamar_mandi || '0'} Kamar Mandi</div>
                     </div>
-                    <a href="${property.link}" target="_blank" class="modal-link">
-                        <i class="fas fa-map-marked-alt"></i> Lihat di Google Maps
-                    </a>
+                    ${property.link ? `
+                        <a href="${property.link}" target="_blank" class="modal-link">
+                            <i class="fas fa-map-marked-alt"></i> Lihat di Google Maps
+                        </a>
+                    ` : ''}
                 </div>
             `;
             
@@ -1213,6 +1203,7 @@
     </script>
 </body>
 </html>
+
 
 
 
