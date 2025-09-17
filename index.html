@@ -909,7 +909,7 @@
             }
 
             // Nomor dinamis
-            let nomor;
+            let nomor = property.id;
             if (currentSort === "asc" || currentSort === "desc") {
                 // Kalau urut harga → kasih nomor acak
                 nomor = Math.floor(Math.random() * 9000) + 1000; // contoh: 4 digit random
@@ -1187,6 +1187,7 @@
     </script>
 </body>
 </html>
+
 
 
 
