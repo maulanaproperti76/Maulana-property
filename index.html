@@ -32,21 +32,23 @@
         header {
             background: linear-gradient(135deg, #2c3e50, #4a6491);
             color: white;
-            padding: 1.5rem;
+            padding: 1rem 1.5rem; /* Kurangi padding atas-bawah */
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             display: flex;
             justify-content: space-between;
             align-items: center;
-            flex-wrap: wrap;
+            flex-wrap: nowrap; /* Ubah dari wrap ke nowrap */
             position: sticky;
             top: 0;
             z-index: 100;
+            gap: 1rem;
         }
 
         header .logo-container {
             display: flex;
             align-items: center;
             gap: 10px;
+            flex-shrink: 0; /* Tambahkan ini */
         }
         .logo-img {
             width: 40px;
@@ -57,6 +59,7 @@
         .logo {
             font-size: 2.2rem;
             font-weight: bold;
+            white-space: nowrap; /* Tambahkan ini */
         }
 
         .logo i {
@@ -124,6 +127,9 @@
             box-shadow: 0 6px 15px rgba(0, 0, 0, 0.07);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             cursor: pointer;
+            min-height: 380px; /* Tambahkan minimum height */
+            display: flex;
+            flex-direction: column;
         }
         
         .property-card:hover {
@@ -146,6 +152,7 @@
             height: 100% !important;
             object-fit: cover !important;
             transition: transform 0.5s ease;
+            flex-shrink: 0;
         }
 
         .no-image {
@@ -189,6 +196,9 @@
         
         .property-details {
             padding: 1rem;
+            flex-grow: 1; /* Biarkan detail mengisi sisa space */
+            display: flex;
+            flex-direction: column;
         }
         
         .property-price {
@@ -227,7 +237,7 @@
         }
         
         .property-action {
-            margin-top: 1rem;
+            margin-top: auto; /* Dorong tombol ke bawah */
             text-align: center;
             display: flex;
             gap: 10px;
@@ -645,13 +655,35 @@
         
         @media (max-width: 768px) {
             header {
-                flex-direction: column;
-                gap: 1rem;
+                flex-direction: row; /* Tetap horizontal, bukan column */
+                padding: 0.8rem 1rem; /* Kurangi padding lagi */
+                gap: 0.5rem
+            }
+
+            header .logo-container {
+                flex-shrink: 0; /* Prevent logo dari mengecil */
             }
 
             header nav ul {
-                gap: 1rem;
-                justify-content: center;
+                gap: 0.8rem; /* Kurangi gap antara menu */
+                flex-wrap: nowrap; /* Pastikan menu tidak wrap */
+                overflow-x: auto; /* Tambahkan scroll horizontal jika perlu */
+                -webkit-overflow-scrolling: touch;
+                padding-bottom: 2px;
+            }
+
+            header nav a {
+                font-size: 0.9rem; /* Perkecil font menu */
+                white-space: nowrap; /* Pastikan teks menu tidak wrap */
+            }
+
+            .logo {
+                font-size: 1.5rem; /* Perkecil sedikit logo */
+                white-space: nowrap; /* Pastikan teks tidak wrap */
+            }
+
+            .logo-img {
+                width: 30px; /* Perkecil logo image */
             }
 
             .footer-grid {
@@ -664,6 +696,7 @@
 
             .property-grid {
                 grid-template-columns: 1fr;
+                gap: 1.5rem;
             }
 
             .property-image {
@@ -679,6 +712,7 @@
             .property-card {
                 max-width: 100%;
                 margin: 0 auto;
+                height: auto; /* Biarkan tinggi mengikuti konten */
             }
             
             .modal-slider {
@@ -704,6 +738,21 @@
             
             .hero p {
                 font-size: 1rem;
+            }
+        @media (max-width: 480px) {
+            .logo {
+                font-size: 1.2rem;
+                max-width: 150px; /* Batasi lebar maksimum */
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+            
+            header nav ul {
+                gap: 0.5rem;
+            }
+            
+            header nav a {
+                font-size: 0.8rem;
             }
         }
     </style>
@@ -1185,6 +1234,7 @@
     </script>
 </body>
 </html>
+
 
 
 
