@@ -927,7 +927,7 @@
                         `<img src="${mainImage}" alt="Property ${property.id}" loading="lazy">` : 
                         `<div class="no-image"><i class="far fa-image"></i> Tidak ada gambar</div>`
                     }
-                    <div class="property-number">${index}</div>
+                    <div class="property-number">${nomor}</div>
                     <div class="property-badge">${property.type || 'Properti'}</div>
                     ${property.status && property.status.toUpperCase() === "SOLD" ? 
                         `<div class="sold-overlay">SOLD</div>` : ""}
@@ -1187,6 +1187,7 @@
     </script>
 </body>
 </html>
+
 
 
 
