@@ -921,7 +921,7 @@
             return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodedMessage}`;
         }
         
-        // Function to create property card
+        // Function to create property card - terima parameter index
         function createPropertyCard(property, index) {
             const card = document.createElement('div');
             card.className = 'property-card';
@@ -958,9 +958,6 @@
                     </div>
                 </div>
             `;
-            // ... kode event listener yang sama
-            return card;
-        }
         
             // Kalau status SOLD, skip event klik
             if (!(property.status && property.status.toUpperCase() === "SOLD")) {
@@ -1203,6 +1200,7 @@
     </script>
 </body>
 </html>
+
 
 
 
