@@ -135,13 +135,28 @@
             height: 180px;
             overflow: hidden;
             position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f0f0f0; /* Background fallback */
         }
         
         .property-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
+            width: 100% !important;
+            height: 100% !important;
+            object-fit: cover !important;
             transition: transform 0.5s ease;
+        }
+
+        .no-image {
+            height: 180px;
+            background: #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #777;
+            font-size: 1.2rem;
+            width: 100%;
         }
         
         .property-card:hover .property-image img {
@@ -652,7 +667,13 @@
             }
 
             .property-image {
-                height: 150px; /* Lebih kecil di mobile */
+                height: 160px !important; /* Force height di mobile */
+                min-height: 160px;
+            }
+
+            .no-image {
+                height: 160px !important;
+                min-height: 160px;
             }
             
             .property-card {
@@ -1164,5 +1185,6 @@
     </script>
 </body>
 </html>
+
 
 
