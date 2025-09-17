@@ -48,6 +48,11 @@
             align-items: center;
             gap: 10px;
         }
+        .logo-img {
+            width: 40px;
+            height: auto;
+            border-radius: 7px;
+        }
         
         .logo {
             font-size: 2.2rem;
@@ -656,7 +661,7 @@
 <body>
     <header>
         <div class="logo-container">
-            <i class="fas fa-home"></i>
+            <img src="images/Logo.png" alt="Logo Maulana Property" class="logo-img">
             <span class="logo">Maulana Property</span>
         </div>
         <nav>
@@ -687,7 +692,8 @@
             <div class="search-sort">
                 <input type="text" id="searchAddress" placeholder="Cari alamat (misal: Semarang, Kudus, Tembalang)">
                 <select id="sortPrice">
-                    <option value="default">Urutkan Harga</option>
+                    <option value="default">Terbaru</option>
+                    <option value="terlama">Terlama</option>
                     <option value="asc">Termurah → Termahal</option>
                     <option value="desc">Termahal → Termurah</option>
                 </select>
@@ -719,20 +725,20 @@
         <div class="footer-grid">
             <div class="footer-about" id="tentang-kami">
                 <h3>Tentang Kami</h3>
-                <p>Maulana Property adalah agen properti terpercaya yang membantu Anda menemukan rumah impian atau properti investasi terbaik di kawasan ini. Kami berkomitmen untuk memberikan layanan profesional dan transparan.</p>
+                <p>Maulana Property adalah agen properti terpercaya yang membantu Anda menemukan rumah premium impian atau properti investasi terbaik di kawasan ini. Kami berkomitmen untuk memberikan layanan profesional dan transparan.</p>
             </div>
             <div class="footer-contact" id="kontak">
                 <h3>Kontak</h3>
-                <p>Jalan Properti Indah No. 123</p>
+                <p>Tembalang</p>
                 <p>Kota Semarang, 50252</p>
-                <p>Email: info@maulanaproperty.com</p>
-                <p>Telp: (024) 1234 5678</p>
+                <p>Email: Maulanaproperti76@gmail.com</p>
+                <p>Telp: +62 817-7287-5352</p>
             </div>
             <div class="footer-social">
                 <h3>Sosial Media</h3>
                 <div class="social-media">
                     <a href="https://facebook.com" target="_blank"><i class="fab fa-facebook-f"></i></a>
-                    <a href="https://instagram.com" target="_blank"><i class="fab fa-instagram"></i></a>
+                    <a href="https://www.instagram.com/rumahpremiumsemarang/?igsh=djhiMXRnYWQwNGty" target="_blank"><i class="fab fa-instagram"></i></a>
                     <a href="https://twitter.com" target="_blank"><i class="fab fa-twitter"></i></a>
                 </div>
             </div>
@@ -759,15 +765,62 @@
         document.getElementById("sortPrice").addEventListener("change", (e) => {
             const value = e.target.value;
             let sorted = [...allProperties]; // clone array
-        
-            if (value === "asc") {
-                sorted.sort((a, b) => a.harga - b.harga);
+            
+            if (value === "terlama") {
+                // Urutkan dari terlama (berdasarkan timestamp atau createdAt jika ada)
+                sorted.sort((a, b) => {
+                    // Coba gunakan timestamp jika ada
+                    if (a.timestamp && b.timestamp) {
+                        return new Date(a.timestamp) - new Date(b.timestamp);
+                    }
+                    // Coba gunakan createdAt jika ada
+                    else if (a.createdAt && b.createdAt) {
+                        return new Date(a.createdAt) - new Date(b.createdAt);
+                    }
+                    // Coba gunakan updatedAt jika ada
+                    else if (a.updatedAt && b.updatedAt) {
+                        return new Date(a.updatedAt) - new Date(b.updatedAt);
+                    }
+                    // Jika tidak ada field waktu, gunakan ID sebagai fallback
+                    else {
+                        // Pastikan ID adalah angka, jika tidak convert dulu
+                        const idA = typeof a.id === 'string' ? parseInt(a.id) || 0 : a.id;
+                        const idB = typeof b.id === 'string' ? parseInt(b.id) || 0 : b.id;
+                        return idA - idB;
+                    }
+                });
+            } else if (value === "asc") {
+                sorted.sort((a, b) => (a.harga || 0) - (b.harga || 0));
             } else if (value === "desc") {
-                sorted.sort((a, b) => b.harga - a.harga);
+                sorted.sort((a, b) => (b.harga || 0) - (a.harga || 0));
+            } else {
+                // Default: terbaru (kebalikan dari terlama)
+                sorted.sort((a, b) => {
+                    // Coba gunakan timestamp jika ada
+                    if (a.timestamp && b.timestamp) {
+                        return new Date(b.timestamp) - new Date(a.timestamp);
+                    }
+                    // Coba gunakan createdAt jika ada
+                    else if (a.createdAt && b.createdAt) {
+                        return new Date(b.createdAt) - new Date(a.createdAt);
+                    }
+                    // Coba gunakan updatedAt jika ada
+                    else if (a.updatedAt && b.updatedAt) {
+                        return new Date(b.updatedAt) - new Date(a.updatedAt);
+                    }
+                    // Jika tidak ada field waktu, gunakan ID sebagai fallback
+                    else {
+                        // Pastikan ID adalah angka, jika tidak convert dulu
+                        const idA = typeof a.id === 'string' ? parseInt(a.id) || 0 : a.id;
+                        const idB = typeof b.id === 'string' ? parseInt(b.id) || 0 : b.id;
+                        return idB - idA;
+                    }
+                });
             }
         
             displayProperties(sorted);
         });
+
 
         // URL API backend Anda
         const BACKEND_API_URL = 'https://foto-backend.vercel.app/api/photos';
@@ -1027,6 +1080,30 @@
                 
                 if (data && data.length > 0) {
                     allProperties = data; // simpan ke variabel global
+                    
+                    // Urutkan default (terbaru) dengan logika yang sama seperti di event listener
+                    allProperties.sort((a, b) => {
+                        // Coba gunakan timestamp jika ada
+                        if (a.timestamp && b.timestamp) {
+                            return new Date(b.timestamp) - new Date(a.timestamp);
+                        }
+                        // Coba gunakan createdAt jika ada
+                        else if (a.createdAt && b.createdAt) {
+                            return new Date(b.createdAt) - new Date(a.createdAt);
+                        }
+                        // Coba gunakan updatedAt jika ada
+                        else if (a.updatedAt && b.updatedAt) {
+                            return new Date(b.updatedAt) - new Date(a.updatedAt);
+                        }
+                        // Jika tidak ada field waktu, gunakan ID sebagai fallback
+                        else {
+                            // Pastikan ID adalah angka, jika tidak convert dulu
+                            const idA = typeof a.id === 'string' ? parseInt(a.id) || 0 : a.id;
+                            const idB = typeof b.id === 'string' ? parseInt(b.id) || 0 : b.id;
+                            return idB - idA;
+                        }
+                    });
+                    
                     displayProperties(allProperties);
                 } else {
                     propertyGrid.innerHTML = '<div class="loading">Tidak ada properti yang ditemukan</div>';
@@ -1037,28 +1114,6 @@
                 propertyGrid.innerHTML = '';
             }
         
-            // 🔍 Event listener untuk search alamat
-            document.getElementById("searchAddress").addEventListener("input", (e) => {
-                const keyword = e.target.value.toLowerCase();
-                const filtered = allProperties.filter(p =>
-                    p.alamat && p.alamat.toLowerCase().includes(keyword)
-                );
-                displayProperties(filtered);
-            });
-            
-            // ⬇️ Event listener untuk urutkan harga
-            document.getElementById("sortPrice").addEventListener("change", (e) => {
-                const value = e.target.value;
-                let sorted = [...allProperties]; // clone array
-            
-                if (value === "asc") {
-                    sorted.sort((a, b) => a.harga - b.harga);
-                } else if (value === "desc") {
-                    sorted.sort((a, b) => b.harga - a.harga);
-                }
-            
-                displayProperties(sorted);
-            });
         }
 
 
