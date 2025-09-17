@@ -899,7 +899,7 @@
         }
         
         // Function to create property card - terima parameter index
-        function createPropertyCard(property, index) {
+        function createPropertyCard(property) {
             const card = document.createElement('div');
             card.className = 'property-card';
             card.setAttribute('data-id', property.id);
@@ -907,17 +907,10 @@
             if (property.status && property.status.toUpperCase() === "SOLD") {
                 card.classList.add("sold");
             }
-
-            // Nomor dinamis
-            let nomor = property.id;
-            if (currentSort === "asc" || currentSort === "desc") {
-                // Kalau urut harga → kasih nomor acak
-                nomor = Math.floor(Math.random() * 9000) + 1000; // contoh: 4 digit random
-            } else {
-                // Kalau terbaru/terlama → urut sesuai index
-                nomor = index;
-            }
-            
+        
+            // Nomor rumah tetap (tidak berubah meski di-sort)
+            let nomor = property.lockedNumber;
+        
             // Use first photo as main image
             const mainImage = property.foto && property.foto.length > 0 ? property.foto[0] : null;
             
@@ -951,17 +944,17 @@
                 const viewDetailsBtn = card.querySelector('.view-details-btn');
                 viewDetailsBtn.addEventListener('click', (e) => {
                     e.stopPropagation();
-                    showPropertyModal(property, index);
+                    showPropertyModal(property, nomor);
                 });
         
                 const whatsappBtn = card.querySelector('.whatsapp-btn');
                 whatsappBtn.addEventListener('click', (e) => {
                     e.stopPropagation();
-                    window.open(createWhatsAppLink(property.id, property.type), '_blank');
+                    window.open(createWhatsAppLink(nomor, property.type), '_blank');
                 });
         
                 card.addEventListener('click', () => {
-                    showPropertyModal(property, index);
+                    showPropertyModal(property, nomor);
                 });
             }
         
@@ -1187,6 +1180,7 @@
     </script>
 </body>
 </html>
+
 
 
 
