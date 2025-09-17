@@ -130,6 +130,36 @@
             transform: translateY(-5px);
             box-shadow: 0 12px 20px rgba(0, 0, 0, 0.15);
         }
+
+        .property-number {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: var(--accent);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1rem;
+            z-index: 2;
+        }
+        
+        .property-badge {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: #4a6491;
+            color: white;
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            z-index: 2;
+        }
         
         .property-image {
             height: 180px;
@@ -882,6 +912,7 @@
                         `<img src="${mainImage}" alt="Property ${property.id}" loading="lazy">` : 
                         `<div class="no-image"><i class="far fa-image"></i> Tidak ada gambar</div>`
                     }
+                    <div class="property-number">${index}</div>
                     <div class="property-badge">${property.type || 'Properti'}</div>
                     ${property.status && property.status.toUpperCase() === "SOLD" ? 
                         `<div class="sold-overlay">SOLD</div>` : ""}
@@ -899,6 +930,9 @@
                     </div>
                 </div>
             `;
+            // ... kode event listener yang sama
+            return card;
+        }
         
             // Kalau status SOLD, skip event klik
             if (!(property.status && property.status.toUpperCase() === "SOLD")) {
@@ -934,7 +968,7 @@
             }
             
             properties.forEach(property => {
-                const card = createPropertyCard(property);
+                const card = createPropertyCard(property, index + 1);
                 propertyGrid.appendChild(card);
             });
         }
@@ -943,6 +977,21 @@
         function showPropertyModal(property) {
             const modal = document.getElementById('propertyModal');
             const modalContent = document.getElementById('modalContent');
+            // Tambahkan nomor urut pada modal
+            modalContent.innerHTML = `
+                <div class="modal-slider">
+                    <!-- ... kode slider yang sama -->
+                </div>
+                
+                <div class="modal-details">
+                    <div class="modal-price">${formatPrice(property.harga)}</div>
+                    <div class="modal-type-container">
+                        <span class="modal-number">${index}</span>
+                        <span class="modal-type">${property.type || 'Properti'}</span>
+                    </div>
+                    <!-- ... sisa kode modal -->
+                </div>
+            `;
             
             // Create modal content
             modalContent.innerHTML = `
@@ -1136,4 +1185,5 @@
     </script>
 </body>
 </html>
+
 
