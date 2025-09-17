@@ -655,35 +655,51 @@
         
         @media (max-width: 768px) {
             header {
-                flex-direction: row; /* Tetap horizontal, bukan column */
-                padding: 0.8rem 1rem; /* Kurangi padding lagi */
-                gap: 0.5rem
+                flex-direction: column; /* Tetap vertical */
+                padding: 1rem;
+                gap: 0.5rem;
             }
 
             header .logo-container {
-                flex-shrink: 0; /* Prevent logo dari mengecil */
+                width: 100%;
+                justify-content: center;
+            }
+
+            header nav {
+                width: 100%;
             }
 
             header nav ul {
-                gap: 0.8rem; /* Kurangi gap antara menu */
-                flex-wrap: nowrap; /* Pastikan menu tidak wrap */
-                overflow-x: auto; /* Tambahkan scroll horizontal jika perlu */
+                gap: 1rem;
+                background: rgba(255, 255, 255, 0.1);
+                border-radius: 8px;
+                flex-wrap: nowrap;
+                justify-content: center; /* Pusatkan menu */
+                overflow-x: auto;
                 -webkit-overflow-scrolling: touch;
-                padding-bottom: 2px;
+                padding: 0.5rem 0;
             }
 
             header nav a {
-                font-size: 0.9rem; /* Perkecil font menu */
-                white-space: nowrap; /* Pastikan teks menu tidak wrap */
+                font-size: 1rem;
+                background: rgba(255, 255, 255, 0.2);
+                border-radius: 6px;
+                transition: background 0.3s ease;
+                white-space: nowrap;
+                padding: 0.5rem 0.8rem;
+            }
+
+            header nav a:hover {
+                background: rgba(255, 255, 255, 0.3);
             }
 
             .logo {
-                font-size: 1.5rem; /* Perkecil sedikit logo */
-                white-space: nowrap; /* Pastikan teks tidak wrap */
+                font-size: 1.8rem; /* Ukuran yang pas untuk mobile */
+                white-space: nowrap;
             }
 
             .logo-img {
-                width: 30px; /* Perkecil logo image */
+                width: 35px; /* Perkecil logo image */
             }
 
             .footer-grid {
@@ -740,19 +756,24 @@
                 font-size: 1rem;
             }
         @media (max-width: 480px) {
+            header {
+                padding: 0.8rem;
+            }
             .logo {
-                font-size: 1.2rem;
-                max-width: 150px; /* Batasi lebar maksimum */
+                font-size: 1.5rem;
+                max-width: none; /* Batasi lebar maksimum */
                 overflow: hidden;
                 text-overflow: ellipsis;
             }
             
             header nav ul {
                 gap: 0.5rem;
+                justify-content: space-around;
             }
             
             header nav a {
-                font-size: 0.8rem;
+                font-size: 0.9rem;
+                padding: 0.4rem 0.6rem;
             }
         }
     </style>
@@ -1234,6 +1255,7 @@
     </script>
 </body>
 </html>
+
 
 
 
