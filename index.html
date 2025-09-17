@@ -822,40 +822,57 @@
             );
             displayProperties(filtered);
         });
+
+        // ----- helper: assign lockedNumber berdasarkan 'terlama' (oldest-first) -----
+        function assignLockedNumbersFromOldest(data) {
+            // clone and sort by createdAt ascending (oldest first). fallback by id.
+            const sortedOldest = data.slice().sort((a, b) => {
+                if (a.createdAt && b.createdAt) {
+                    return new Date(a.createdAt) - new Date(b.createdAt);
+                }
+                return (a.id || 0) - (b.id || 0);
+            });
+        
+            // beri lockedNumber (1,2,3...) sesuai urutan terlama
+            return sortedOldest.map((p, i) => ({
+                ...p,
+                lockedNumber: i + 1
+            }));
+        }
+        
+        // ----- helper: kembalikan array yang sudah disort sesuai mode (tanpa merubah allProperties) -----
+        function getSortedProperties(mode) {
+            const arr = allProperties.slice(); // clone supaya allProperties tetap terjaga
+        
+            if (mode === "terlama") {
+                arr.sort((a, b) => {
+                    if (a.createdAt && b.createdAt) {
+                        return new Date(a.createdAt) - new Date(b.createdAt);
+                    }
+                    return (a.id || 0) - (b.id || 0);
+                });
+            } else if (mode === "asc") {
+                arr.sort((a, b) => (a.harga || 0) - (b.harga || 0));
+            } else if (mode === "desc") {
+                arr.sort((a, b) => (b.harga || 0) - (a.harga || 0));
+            } else { // default -> terbaru (newest first)
+                arr.sort((a, b) => {
+                    if (a.createdAt && b.createdAt) {
+                        return new Date(b.createdAt) - new Date(a.createdAt);
+                    }
+                    return (b.id || 0) - (a.id || 0);
+                });
+            }
+        
+            return arr;
+        }
         
         // ⬇️ Event listener untuk urutkan harga
         let currentSort = "default";
         
         document.getElementById("sortPrice").addEventListener("change", (e) => {
-            const value = e.target.value;
-            currentSort = value;
-            let sorted = [...allProperties]; // clone array
-        
-            if (value === "terlama") {
-                // Urutkan dari yang paling lama dibuat
-                sorted.sort((a, b) => {
-                    if (a.createdAt && b.createdAt) {
-                        return new Date(a.createdAt) - new Date(b.createdAt);
-                    } else {
-                        // fallback pakai id
-                        return (a.id || 0) - (b.id || 0);
-                    }
-                });
-            } else if (value === "asc") {
-                sorted.sort((a, b) => (a.harga || 0) - (b.harga || 0));
-            } else if (value === "desc") {
-                sorted.sort((a, b) => (b.harga || 0) - (a.harga || 0));
-            } else {
-                // Default: terbaru (paling baru di atas)
-                sorted.sort((a, b) => {
-                    if (a.createdAt && b.createdAt) {
-                        return new Date(b.createdAt) - new Date(a.createdAt);
-                    } else {
-                        return (b.id || 0) - (a.id || 0);
-                    }
-                });
-            }
-        
+            currentSort = e.target.value;
+            const sorted = getSortedProperties(currentSort);
             displayProperties(sorted);
         });
 
@@ -899,7 +916,7 @@
         }
         
         // Function to create property card - terima parameter index
-        function createPropertyCard(property, nomor) {
+        function createPropertyCard(property) {
             const card = document.createElement('div');
             card.className = 'property-card';
             card.setAttribute('data-id', property.id);
@@ -907,6 +924,8 @@
             if (property.status && property.status.toUpperCase() === "SOLD") {
                 card.classList.add("sold");
             }
+
+            const nomor = property.lockedNumber || '-';
         
             // Use first photo as main image
             const mainImage = property.foto && property.foto.length > 0 ? property.foto[0] : null;
@@ -964,22 +983,24 @@
             const propertyGrid = document.getElementById('propertyGrid');
             propertyGrid.innerHTML = '';
             
-            if (properties.length === 0) {
+            if (!properties || properties.length === 0) {
                 propertyGrid.innerHTML = '<div class="loading">Tidak ada properti yang ditemukan</div>';
                 return;
             }
             
-            properties.forEach((property, index) => {
+            properties.forEach((property) => {
                 const card = createPropertyCard(property, index + 1);
                 propertyGrid.appendChild(card);
             });
         }
 
         // Function to show property modal
-        function showPropertyModal(property, index) {
+        function showPropertyModal(property) {
             const modal = document.getElementById('propertyModal');
             const modalContent = document.getElementById('modalContent');
-           
+
+            const nomor = property.lockedNumber || '-';
+            
             // Create modal content
             modalContent.innerHTML = `
                 <div class="modal-slider">
@@ -1112,53 +1133,28 @@
             
             // Show loading state
             propertyGrid.innerHTML = '<div class="loading"><i class="fas fa-spinner fa-spin"></i> Memuat properti...</div>';
-            errorElement.innerHTML = ''; // reset error message
-            
+            errorElement.innerHTML = '';
+        
             try {
-                const response = await fetch(`${BACKEND_API_URL}?_=${Date.now()}`, {
-                    cache: "no-store"
-                });
-                if (!response.ok) {
-                    throw new Error(`HTTP error! Status: ${response.status}`);
-                }
+                const response = await fetch(`${BACKEND_API_URL}?_=${Date.now()}`, { cache: "no-store" });
+                if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
                 const data = await response.json();
-                
+        
                 if (data && data.length > 0) {
-                    allProperties = data; // simpan ke variabel global
-                    
-                    // Urutkan default (terbaru) dengan logika yang sama seperti di event listener
-                    allProperties.sort((a, b) => {
-                        // Coba gunakan timestamp jika ada
-                        if (a.timestamp && b.timestamp) {
-                            return new Date(b.timestamp) - new Date(a.timestamp);
-                        }
-                        // Coba gunakan createdAt jika ada
-                        else if (a.createdAt && b.createdAt) {
-                            return new Date(b.createdAt) - new Date(a.createdAt);
-                        }
-                        // Coba gunakan updatedAt jika ada
-                        else if (a.updatedAt && b.updatedAt) {
-                            return new Date(b.updatedAt) - new Date(a.updatedAt);
-                        }
-                        // Jika tidak ada field waktu, gunakan ID sebagai fallback
-                        else {
-                            // Pastikan ID adalah angka, jika tidak convert dulu
-                            const idA = typeof a.id === 'string' ? parseInt(a.id) || 0 : a.id;
-                            const idB = typeof b.id === 'string' ? parseInt(b.id) || 0 : b.id;
-                            return idB - idA;
-                        }
-                    });
-                    
-                    displayProperties(allProperties);
+                    // assign lockedNumber berdasarkan terlama (oldest-first)
+                    allProperties = assignLockedNumbersFromOldest(data);
+        
+                    // tampilkan sesuai sorter saat ini (default = 'default' => terbaru)
+                    const toDisplay = getSortedProperties(currentSort);
+                    displayProperties(toDisplay);
                 } else {
                     propertyGrid.innerHTML = '<div class="loading">Tidak ada properti yang ditemukan</div>';
                 }
-            } catch (error) {
-                console.error('Error fetching properties:', error);
+            } catch (err) {
+                console.error('Error fetching properties:', err);
                 errorElement.innerHTML = '⚠️ Gagal memuat properti. Silakan coba lagi.';
                 propertyGrid.innerHTML = '';
             }
-        
         }
 
 
@@ -1177,6 +1173,7 @@
     </script>
 </body>
 </html>
+
 
 
 
