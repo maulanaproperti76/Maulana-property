@@ -824,32 +824,28 @@
         });
         
         // ⬇️ Event listener untuk urutkan harga
+        let currentSort = "default";
+        
         document.getElementById("sortPrice").addEventListener("change", (e) => {
             const value = e.target.value;
+            currentSort = value;
             let sorted = [...allProperties]; // clone array
             
             if (value === "terlama") {
                 // Urutkan dari terlama (berdasarkan timestamp atau createdAt jika ada)
                 sorted.sort((a, b) => {
                     // Coba gunakan timestamp jika ada
-                    if (a.timestamp && b.timestamp) {
-                        return new Date(a.timestamp) - new Date(b.timestamp);
+                    if (value === "terlama") {
+                        sorted.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+                    } else if (value === "asc") {
+                        sorted.sort((a, b) => (a.harga || 0) - (b.harga || 0));
+                    } else if (value === "desc") {
+                        sorted.sort((a, b) => (b.harga || 0) - (a.harga || 0));
+                    } else {
+                        sorted.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
                     }
-                    // Coba gunakan createdAt jika ada
-                    else if (a.createdAt && b.createdAt) {
-                        return new Date(a.createdAt) - new Date(b.createdAt);
-                    }
-                    // Coba gunakan updatedAt jika ada
-                    else if (a.updatedAt && b.updatedAt) {
-                        return new Date(a.updatedAt) - new Date(b.updatedAt);
-                    }
-                    // Jika tidak ada field waktu, gunakan ID sebagai fallback
-                    else {
-                        // Pastikan ID adalah angka, jika tidak convert dulu
-                        const idA = typeof a.id === 'string' ? parseInt(a.id) || 0 : a.id;
-                        const idB = typeof b.id === 'string' ? parseInt(b.id) || 0 : b.id;
-                        return idA - idB;
-                    }
+                
+                    displayProperties(sorted);
                 });
             } else if (value === "asc") {
                 sorted.sort((a, b) => (a.harga || 0) - (b.harga || 0));
@@ -929,6 +925,16 @@
         
             if (property.status && property.status.toUpperCase() === "SOLD") {
                 card.classList.add("sold");
+            }
+
+            // Nomor dinamis
+            let nomor;
+            if (currentSort === "asc" || currentSort === "desc") {
+                // Kalau urut harga → kasih nomor acak
+                nomor = Math.floor(Math.random() * 9000) + 1000; // contoh: 4 digit random
+            } else {
+                // Kalau terbaru/terlama → urut sesuai index
+                nomor = index;
             }
             
             // Use first photo as main image
@@ -1200,6 +1206,7 @@
     </script>
 </body>
 </html>
+
 
 
 
