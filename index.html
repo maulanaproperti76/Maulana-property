@@ -1059,6 +1059,7 @@
     </footer>
 
     <script>
+        let isModalOpen = false;
         let allProperties = []; // simpan semua properti dari API
         let touchStartX = 0;
         let touchEndX = 0;
@@ -1272,6 +1273,19 @@
         function showPropertyModal(property) {
             const modal = document.getElementById('propertyModal');
             const modalContent = document.getElementById('modalContent');
+
+            // Show modal
+            modal.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+            
+            // Add to browser history
+            window.history.pushState({ modal: true }, '');
+            
+            // Set flag
+            isModalOpen = true;
+            
+            // Add swipe functionality for mobile
+            handleSwipeGesture(property.id);
             
             // Create modal content
             modalContent.innerHTML = `
@@ -1416,17 +1430,27 @@
             const modal = document.getElementById('propertyModal');
             const closeBtn = document.getElementById('closeModal');
             
-            closeBtn.addEventListener('click', () => {
-                modal.style.display = 'none';
-                document.body.style.overflow = 'auto';
-            });
+            closeBtn.addEventListener('click', closeModal);
             
             modal.addEventListener('click', (e) => {
                 if (e.target === modal) {
-                    modal.style.display = 'none';
-                    document.body.style.overflow = 'auto';
+                    closeModal();
                 }
             });
+        }
+
+        // New function to handle modal closing
+        function closeModal() {
+            const modal = document.getElementById('propertyModal');
+            modal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+            
+            // Remove the history state we added
+            if (isModalOpen) {
+                window.history.back();
+            }
+            
+            isModalOpen = false;
         }
 
         // Fetch properties from API
@@ -1485,6 +1509,22 @@
         
         }
 
+        // Hanya satu event listener untuk popstate
+        window.addEventListener('popstate', (e) => {
+            const modal = document.getElementById('propertyModal');
+            
+            // Cek jika modal terbuka
+            if (modal.style.display === 'block' || isModalOpen) {
+                closeModal();
+                
+                // Jika ini state modal kita, jangan biarkan navigasi sebenarnya
+                if (e.state && e.state.modal) {
+                    // Tambahkan state kosong untuk menjaga user tetap di halaman yang sama
+                    window.history.pushState({}, '');
+                }
+            }
+        });
+
 
         // Initialize the page
         document.addEventListener('DOMContentLoaded', () => {
@@ -1501,6 +1541,7 @@
     </script>
 </body>
 </html>
+
 
 
 
