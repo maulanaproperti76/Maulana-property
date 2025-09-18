@@ -368,20 +368,34 @@
         
         .modal-slider {
             position: relative;
-            height: 400px;
+            height: 0;
+            padding-bottom: 125%; /* 5:4 ratio (4:5 inverted) */
             overflow: hidden;
+            background-color: #f0f0f0; /* Warna background untuk area kosong */
         }
         
         .modal-slider-container {
             display: flex;
             transition: transform 0.5s ease;
             height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
         }
         
         .modal-slider-container img {
-            min-width: 100%;
-            object-fit: cover;
-            height: 100%;
+            -webkit-user-drag: none;
+            -khtml-user-drag: none;
+            -moz-user-drag: none;
+            -o-user-drag: none;
+            user-drag: none;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
         }
         
         .modal-slider-nav {
@@ -652,7 +666,13 @@
             font-size: 1.2rem;
             color: #e74c3c;
         }
-        
+        @media (min-width: 769px) {
+            .modal-slider {
+                height: 500px;
+                padding-bottom: 0;
+            }
+        }
+
         @media (max-width: 768px) {
             header {
                 flex-direction: column; /* Tetap vertical */
@@ -732,7 +752,15 @@
             }
             
             .modal-slider {
-                height: 250px;
+                padding-bottom: 125%; /* 5:4 ratio */
+            }
+
+            .modal-slider-arrow {
+                transform: translateY(-50%) scale(0.8);
+            }
+            
+            .modal-slider-nav {
+                bottom: 10px;
             }
             
             .modal-features {
@@ -920,6 +948,8 @@
 
     <script>
         let allProperties = []; // simpan semua properti dari API
+        let touchStartX = 0;
+        let touchEndX = 0;
 
         // 🔍 Event listener untuk search alamat
         document.getElementById("searchAddress").addEventListener("input", (e) => {
@@ -1121,7 +1151,7 @@
                             property.foto.map(img => 
                                 `<img src="${img}" alt="Property ${property.id}">`
                             ).join('') :
-                            `<div class="no-image" style="height: 400px;">
+                            `<div class="no-image" style="height: 100%; display: flex; align-items: center; justify-content: center;">
                                 <i class="far fa-image"></i> Tidak ada gambar
                             </div>`
                         }
@@ -1170,6 +1200,9 @@
             
             // Prevent body scrolling when modal is open
             document.body.style.overflow = 'hidden';
+
+            // Add swipe functionality for mobile
+            handleSwipeGesture(property.id);
         }
 
 
@@ -1214,6 +1247,40 @@
             });
         }
 
+        // Function to handle touch events for swipe
+        function handleSwipeGesture(propertyId) {
+            const slider = document.getElementById(`modalSlider-${propertyId}`);
+            if (!slider) return;
+        
+            // Remove existing event listeners to avoid duplicates
+            slider.ontouchstart = null;
+            slider.ontouchend = null;
+        
+            // Touch start event
+            slider.addEventListener('touchstart', (e) => {
+                touchStartX = e.changedTouches[0].screenX;
+            }, { passive: true });
+        
+            // Touch end event
+            slider.addEventListener('touchend', (e) => {
+                touchEndX = e.changedTouches[0].screenX;
+                handleSwipe(propertyId);
+            }, { passive: true });
+        }
+        
+        // Function to determine swipe direction
+        function handleSwipe(propertyId) {
+            const minSwipeDistance = 50; // Minimum distance to consider as a swipe
+            
+            if (touchStartX - touchEndX > minSwipeDistance) {
+                // Swipe left - next slide
+                moveModalSlide(propertyId, 1);
+            } else if (touchEndX - touchStartX > minSwipeDistance) {
+                // Swipe right - previous slide
+                moveModalSlide(propertyId, -1);
+            }
+        }
+        
         // Close modal function
         function setupModalClose() {
             const modal = document.getElementById('propertyModal');
@@ -1304,6 +1371,7 @@
     </script>
 </body>
 </html>
+
 
 
 
