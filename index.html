@@ -1092,20 +1092,23 @@
             return "Rp" + new Intl.NumberFormat('id-ID').format(numericPrice);
         }
 
-        // Function to format description with better formatting
+        // Function to format description - only format if specific patterns exist
         function formatDescription(description) {
             if (!description) return 'Tidak ada deskripsi';
             
-            // Add the emoji and header
             let formatted = `📝 <strong>Deskripsi:</strong> `;
             
-            // Process the description
-            formatted += description
-                .replace(/SPESIFIKASI/g, '<br><strong>SPESIFIKASI</strong>')
-                .replace(/FASILITAS PERUMAHAN/g, '<br><strong>FASILITAS PERUMAHAN</strong>')
-                .replace(/———————————/g, '<hr class="desc-separator">')
-                .replace(/•/g, '<br>•')
-                .replace(/(\d+ Menit ke)/g, '<br>$1');
+            // Only apply special formatting if the old structured patterns exist
+            if (description.includes('SPESIFIKASI') || description.includes('———————————')) {
+                formatted += description
+                    .replace(/SPESIFIKASI —+/g, '<br><strong>SPESIFIKASI</strong><hr class="desc-separator">')
+                    .replace(/FASILITAS PERUMAHAN —+/g, '<br><strong>FASILITAS PERUMAHAN</strong><hr class="desc-separator">')
+                    .replace(/•/g, '<br>•')
+                    .replace(/(\d+ Menit ke)/g, '<br>$1');
+            } else {
+                // For natural descriptions, just use as is
+                formatted += description;
+            }
             
             return formatted;
         }
@@ -1429,4 +1432,5 @@
     </script>
 </body>
 </html>
+
 
