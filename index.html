@@ -1277,6 +1277,11 @@
             // Show modal
             modal.style.display = 'block';
             document.body.style.overflow = 'hidden';
+
+            // Add to browser history - HANYA jika modal belum terbuka
+            if (!isModalOpen) {
+                window.history.pushState({ modal: true }, '');
+            }
             
             // Add to browser history
             window.history.pushState({ modal: true }, '');
@@ -1445,12 +1450,12 @@
             modal.style.display = 'none';
             document.body.style.overflow = 'auto';
             
-            // Remove the history state we added
-            if (isModalOpen) {
+            isModalOpen = false;
+
+            // Kembalikan history state tanpa men-trigger popstate lagi
+            if (window.history.state && window.history.state.modal) {
                 window.history.back();
             }
-            
-            isModalOpen = false;
         }
 
         // Fetch properties from API
@@ -1511,16 +1516,16 @@
 
         // Hanya satu event listener untuk popstate
         window.addEventListener('popstate', (e) => {
-            const modal = document.getElementById('propertyModal');
-            
-            // Cek jika modal terbuka
-            if (modal.style.display === 'block' || isModalOpen) {
+            // Jika modal sedang terbuka, tutup modal
+            if (isModalOpen) {
                 closeModal();
                 
-                // Jika ini state modal kita, jangan biarkan navigasi sebenarnya
+                // Jika ini state modal kita, tambahkan state kembali
                 if (e.state && e.state.modal) {
-                    // Tambahkan state kosong untuk menjaga user tetap di halaman yang sama
-                    window.history.pushState({}, '');
+                    // Delay sedikit untuk menghindari loop
+                    setTimeout(() => {
+                        window.history.pushState({}, '');
+                    }, 10);
                 }
             }
         });
@@ -1541,6 +1546,7 @@
     </script>
 </body>
 </html>
+
 
 
 
