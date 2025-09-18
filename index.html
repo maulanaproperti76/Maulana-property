@@ -503,11 +503,23 @@
             font-size: 1rem;
             line-height: 1.5;
         }
+
+        .desc-separator {
+            border: none;
+            border-top: 1px solid #ddd;
+            margin: 10px 0;
+        }
         
         .modal-description {
             margin-bottom: 1.5rem;
             line-height: 1.6;
             color: #444;
+            white-space: pre-line;
+        }
+
+        .modal-description strong {
+            color: #2c3e50;
+            font-weight: 600;
         }
         
         .modal-features {
@@ -1080,6 +1092,24 @@
             return "Rp" + new Intl.NumberFormat('id-ID').format(numericPrice);
         }
 
+        // Function to format description with better formatting
+        function formatDescription(description) {
+            if (!description) return 'Tidak ada deskripsi';
+            
+            // Add the emoji and header
+            let formatted = `📝 <strong>Deskripsi:</strong> `;
+            
+            // Process the description
+            formatted += description
+                .replace(/SPESIFIKASI/g, '<br><strong>SPESIFIKASI</strong>')
+                .replace(/FASILITAS PERUMAHAN/g, '<br><strong>FASILITAS PERUMAHAN</strong>')
+                .replace(/———————————/g, '<hr class="desc-separator">')
+                .replace(/•/g, '<br>•')
+                .replace(/(\d+ Menit ke)/g, '<br>$1');
+            
+            return formatted;
+        }
+
         // Function to create WhatsApp link
         function createWhatsAppLink(propertyId, propertyType) {
             const message = WHATSAPP_MESSAGE
@@ -1210,7 +1240,7 @@
                     <div class="modal-address">
                         <i class="fas fa-map-marker-alt"></i> ${property.alamat || 'Alamat tidak tersedia'}
                     </div>
-                    <div class="modal-description">${property.deskripsi || 'Tidak ada deskripsi'}</div>
+                    <div class="modal-description">${formatDescription(property.deskripsi) || 'Tidak ada deskripsi'}</div>
                     <div class="modal-features">
                         <div class="modal-feature"><i class="fas fa-bed"></i> ${property.kamar || '0'} Kamar Tidur</div>
                         <div class="modal-feature"><i class="fas fa-bath"></i> ${property.kamar_mandi || '0'} Kamar Mandi</div>
@@ -1399,3 +1429,4 @@
     </script>
 </body>
 </html>
+
