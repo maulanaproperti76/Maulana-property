@@ -383,6 +383,31 @@
             left: 0;
             width: 100%;
         }
+
+        .modal-slider-container .slide {
+            min-width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-slider-container .slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            -webkit-user-drag: none;
+            -khtml-user-drag: none;
+            -moz-user-drag: none;
+            -o-user-drag: none;
+            user-drag: none;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
         
         .modal-slider-container img {
             -webkit-user-drag: none;
@@ -670,6 +695,12 @@
             .modal-slider {
                 height: 500px;
                 padding-bottom: 0;
+            }
+            
+            /* Pastikan gambar terlihat dengan baik di desktop */
+            .modal-slider-container .slide img {
+                max-height: 500px;
+                object-fit: contain;
             }
         }
 
@@ -1145,33 +1176,31 @@
                 <div class="modal-slider">
                     <div class="modal-slider-container" 
                          id="modalSlider-${property.id}" 
-                         data-current="0" 
-                         style="transform: translateX(0%)">
+                         data-current="0">
                         ${property.foto && property.foto.length > 0 ? 
                             property.foto.map(img => 
-                                `<img src="${img}" alt="Property ${property.id}">`
+                                `<div class="slide"><img src="${img}" alt="Property ${property.id}"></div>`
                             ).join('') :
-                            `<div class="no-image" style="height: 100%; display: flex; align-items: center; justify-content: center;">
+                            `<div class="slide no-image" style="display: flex; align-items: center; justify-content: center;">
                                 <i class="far fa-image"></i> Tidak ada gambar
                             </div>`
                         }
                     </div>
                     
                     ${property.foto && property.foto.length > 1 ? `
-                        <div class="modal-slider-arrow prev" onclick="moveModalSlide('${property.id}', -1)">
-                            <i class="fas fa-chevron-left"></i>
-                        </div>
-                        <div class="modal-slider-arrow next" onclick="moveModalSlide('${property.id}', 1)">
-                            <i class="fas fa-chevron-right"></i>
-                        </div>
-                        <div class="modal-slider-nav">
-                            ${property.foto.map((_, index) => 
-                                `<div class="modal-slider-dot ${index === 0 ? 'active' : ''}" 
-                                      onclick="showModalSlide('${property.id}', ${index})"></div>`
-                            ).join('')}
-                        </div>
-                    ` : ''}
-                <!-- Tambahkan nomer rumah di modal -->
+                    <div class="modal-slider-arrow prev" onclick="moveModalSlide('${property.id}', -1)">
+                        <i class="fas fa-chevron-left"></i>
+                    </div>
+                    <div class="modal-slider-arrow next" onclick="moveModalSlide('${property.id}', 1)">
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                    <div class="modal-slider-nav">
+                        ${property.foto.map((_, index) => 
+                            `<div class="modal-slider-dot ${index === 0 ? 'active' : ''}" 
+                                  onclick="showModalSlide('${property.id}', ${index})"></div>`
+                        ).join('')}
+                    </div>
+                ` : ''}
                 <div class="modal-property-number">#${property.id}</div>
             </div>
                 
@@ -1205,13 +1234,12 @@
             handleSwipeGesture(property.id);
         }
 
-
         // Function to move modal slides
         function moveModalSlide(propertyId, direction) {
             const slider = document.getElementById(`modalSlider-${propertyId}`);
             if (!slider) return;
             
-            const slides = slider.querySelectorAll('img');
+            const slides = slider.querySelectorAll('.slide');
             const dotsContainer = document.querySelector(`#modalSlider-${propertyId} ~ .modal-slider-nav`);
             const dots = dotsContainer ? dotsContainer.querySelectorAll('.modal-slider-dot') : [];
             
@@ -1234,10 +1262,10 @@
         function showModalSlide(propertyId, slideIndex) {
             const slider = document.getElementById(`modalSlider-${propertyId}`);
             if (!slider) return;
-
+        
             const dotsContainer = document.querySelector(`#modalSlider-${propertyId} ~ .modal-slider-nav`);
             const dots = dotsContainer ? dotsContainer.querySelectorAll('.modal-slider-dot') : [];
-
+        
             slider.style.transform = `translateX(-${slideIndex * 100}%)`;
             slider.setAttribute('data-current', slideIndex);
             
@@ -1371,10 +1399,3 @@
     </script>
 </body>
 </html>
-
-
-
-
-
-
-
