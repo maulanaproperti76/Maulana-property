@@ -1200,26 +1200,24 @@
             const encodedMessage = encodeURIComponent(message);
             return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodedMessage}`;
         }
-        
+    
         // Function to create property card
         function createPropertyCard(property) {
             const card = document.createElement('div');
             card.className = 'property-card';
             card.setAttribute('data-id', property.id);
-        
+            
             if (property.status && property.status.toUpperCase() === "SOLD") {
                 card.classList.add("sold");
             }
             
             // Use first photo as main image
-            const mainImage = property.foto && property.foto.length > 0 ? property.foto[0] : null;
-
-            // --- PERUBAHAN DIMULAI DI SINI ---
+            let mainImage = property.foto && property.foto.length > 0 ? property.foto[0] : null;
+        
             // Cek dan ekstrak URL dari rumus =IMAGE()
             if (mainImage && mainImage.startsWith('=IMAGE("') && mainImage.endsWith('")')) {
                 mainImage = mainImage.substring(8, mainImage.length - 2);
             }
-            // --- PERUBAHAN SELESAI DI SINI --
             
             card.innerHTML = `
                 <div class="property-image">
@@ -1245,7 +1243,7 @@
                     </div>
                 </div>
             `;
-        
+            
             // Kalau status SOLD, skip event klik
             if (!(property.status && property.status.toUpperCase() === "SOLD")) {
                 const viewDetailsBtn = card.querySelector('.view-details-btn');
@@ -1253,19 +1251,37 @@
                     e.stopPropagation();
                     showPropertyModal(property);
                 });
-        
+            
                 const whatsappBtn = card.querySelector('.whatsapp-btn');
                 whatsappBtn.addEventListener('click', (e) => {
                     e.stopPropagation();
                     window.open(createWhatsAppLink(property.id, property.type), '_blank');
                 });
-        
+            
                 card.addEventListener('click', () => {
                     showPropertyModal(property);
                 });
             }
-        
+            
             return card;
+        }
+        
+        
+        // Function to create photo gallery for the modal
+        function createPhotoGallery(photos) {
+            if (!photos || photos.length === 0) {
+                return `<div class="modal-no-image"><i class="far fa-image"></i> Tidak ada gambar</div>`;
+            }
+        
+            const galleryHTML = photos.map(photoUrl => {
+                // Cek dan ekstrak URL dari rumus =IMAGE()
+                if (photoUrl && photoUrl.startsWith('=IMAGE("') && photoUrl.endsWith('")')) {
+                    photoUrl = photoUrl.substring(8, photoUrl.length - 2);
+                }
+                return `<img src="${photoUrl}" alt="Properti" loading="lazy">`;
+            }).join('');
+        
+            return `<div class="modal-gallery-container">${galleryHTML}</div>`;
         }
 
 
@@ -1562,6 +1578,7 @@
     </script>
 </body>
 </html>
+
 
 
 
