@@ -1213,6 +1213,13 @@
             
             // Use first photo as main image
             const mainImage = property.foto && property.foto.length > 0 ? property.foto[0] : null;
+
+            // --- PERUBAHAN DIMULAI DI SINI ---
+            // Cek dan ekstrak URL dari rumus =IMAGE()
+            if (mainImage && mainImage.startsWith('=IMAGE("') && mainImage.endsWith('")')) {
+                mainImage = mainImage.substring(8, mainImage.length - 2);
+            }
+            // --- PERUBAHAN SELESAI DI SINI --
             
             card.innerHTML = `
                 <div class="property-image">
@@ -1555,6 +1562,7 @@
     </script>
 </body>
 </html>
+
 
 
 
