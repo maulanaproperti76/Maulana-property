@@ -1305,33 +1305,33 @@
         function showPropertyModal(property) {
             const modal = document.getElementById('propertyModal');
             const modalContent = document.getElementById('modalContent');
-        
+
             // Show modal
             modal.style.display = 'block';
             document.body.style.overflow = 'hidden';
-        
+
             // Add to browser history - HANYA jika modal belum terbuka
             if (!isModalOpen) {
                 window.history.pushState({ modal: true }, '');
             }
             
-            // Balikkan urutan array foto di sini
-            const photosToDisplay = property.foto ? property.foto.slice().reverse() : [];
-        
+            // Add to browser history
+            window.history.pushState({ modal: true }, '');
+            
             // Set flag
             isModalOpen = true;
-        
+            
             // Add swipe functionality for mobile
             handleSwipeGesture(property.id);
-        
+            
             // Create modal content
             modalContent.innerHTML = `
                 <div class="modal-slider">
-                    <div class="modal-slider-container"
-                         id="modalSlider-${property.id}"
+                    <div class="modal-slider-container" 
+                         id="modalSlider-${property.id}" 
                          data-current="0">
-                        ${photosToDisplay && photosToDisplay.length > 0 ?
-                            photosToDisplay.map(img =>
+                        ${property.foto && property.foto.length > 0 ? 
+                            property.foto.map(img => 
                                 `<div class="slide"><img src="${img}" alt="Property ${property.id}"></div>`
                             ).join('') :
                             `<div class="slide no-image" style="display: flex; align-items: center; justify-content: center;">
@@ -1339,8 +1339,8 @@
                             </div>`
                         }
                     </div>
-        
-                    ${photosToDisplay && photosToDisplay.length > 1 ? `
+                    
+                    ${property.foto && property.foto.length > 1 ? `
                     <div class="modal-slider-arrow prev" onclick="moveModalSlide('${property.id}', -1)">
                         <i class="fas fa-chevron-left"></i>
                     </div>
@@ -1348,15 +1348,15 @@
                         <i class="fas fa-chevron-right"></i>
                     </div>
                     <div class="modal-slider-nav">
-                        ${photosToDisplay.map((_, index) =>
-                            `<div class="modal-slider-dot ${index === 0 ? 'active' : ''}"
-                                 onclick="showModalSlide('${property.id}', ${index})"></div>`
+                        ${property.foto.map((_, index) => 
+                            `<div class="modal-slider-dot ${index === 0 ? 'active' : ''}" 
+                                  onclick="showModalSlide('${property.id}', ${index})"></div>`
                         ).join('')}
                     </div>
-                    ` : ''}
-                    <div class="modal-property-number">#${property.id}</div>
-                </div>
-        
+                ` : ''}
+                <div class="modal-property-number">#${property.id}</div>
+            </div>
+                
                 <div class="modal-details">
                     <div class="modal-price">${formatPrice(property.harga)}</div>
                     <div class="modal-type">${property.type || 'Properti'}</div>
@@ -1373,7 +1373,6 @@
                     </a>
                 </div>
             `;
-        }
             
             // Show modal
             modal.style.display = 'block';
@@ -1579,6 +1578,7 @@
     </script>
 </body>
 </html>
+
 
 
 
