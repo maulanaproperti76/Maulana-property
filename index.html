@@ -1314,6 +1314,9 @@
             if (!isModalOpen) {
                 window.history.pushState({ modal: true }, '');
             }
+
+            // Balikkan urutan array foto di sini
+            const photosToDisplay = property.foto ? property.foto.slice().reverse() : [];
             
             // Add to browser history
             window.history.pushState({ modal: true }, '');
@@ -1340,7 +1343,7 @@
                         }
                     </div>
                     
-                    ${property.foto && property.foto.length > 1 ? `
+                    ${photosToDisplay && photosToDisplay.length > 1 ? `
                     <div class="modal-slider-arrow prev" onclick="moveModalSlide('${property.id}', -1)">
                         <i class="fas fa-chevron-left"></i>
                     </div>
@@ -1348,7 +1351,7 @@
                         <i class="fas fa-chevron-right"></i>
                     </div>
                     <div class="modal-slider-nav">
-                        ${property.foto.map((_, index) => 
+                        ${photosToDisplay.map((_, index) =>
                             `<div class="modal-slider-dot ${index === 0 ? 'active' : ''}" 
                                   onclick="showModalSlide('${property.id}', ${index})"></div>`
                         ).join('')}
@@ -1578,6 +1581,7 @@
     </script>
 </body>
 </html>
+
 
 
 
