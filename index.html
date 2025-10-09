@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <title>Jual Properti di Semarang | Rumah, Tanah, Apartemen | Maulana Properti</title>
-    <meta name="description" content="Temukan properti idaman di Semarang. Kami menyediakan pilihan rumah, tanah, apartemen, dan ruko dengan harga terbaik. Hubungi kami sekarang!">
+    <title>Rumah Mewah - Jual Beli Properti</title>
+    <meta name="description" content="Website jual beli rumah mewah dari Maulana Properti.">
     <meta name="robots" content="index, follow">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -886,6 +886,9 @@
             .hero p {
                 font-size: 1rem;
             }
+
+        }
+        
         @media (max-width: 480px) {
             header {
                 padding: 0.8rem;
@@ -1315,9 +1318,6 @@
                 window.history.pushState({ modal: true }, '');
             }
             
-            // Add to browser history
-            window.history.pushState({ modal: true }, '');
-            
             // Set flag
             isModalOpen = true;
             
@@ -1373,6 +1373,18 @@
                     </a>
                 </div>
             `;
+            
+            // Show modal
+            modal.style.display = 'block';
+            
+            // Store current property ID for slider functions
+            modal.setAttribute('data-current-property', property.id);
+            
+            // Prevent body scrolling when modal is open
+            document.body.style.overflow = 'hidden';
+
+            // Add swipe functionality for mobile
+            handleSwipeGesture(property.id);
         }
 
         // Function to move modal slides
@@ -1566,22 +1578,3 @@
     </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
