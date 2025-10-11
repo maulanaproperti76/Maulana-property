@@ -518,7 +518,7 @@
             margin-bottom: 0.5rem;
             line-height: 1.4;
             color: #444;
-            white-space: pre-line;
+            white-space: normal;
             max-height: 300px; /* Batasi tinggi maksimum */
             overflow-y: auto; /* Tambahkan scroll jika perlu */
             padding-right: 5px; /* Ruang untuk scrollbar */
@@ -1185,6 +1185,10 @@
         // Function to format description - only format if specific patterns exist
         function formatDescription(description) {
             if (!description) return 'Tidak ada deskripsi';
+
+            const cleanDesc = description
+                .replace(/•\s*\n\s*/g, '• ') // Hapus line break setelah •
+                .replace(/\n\s*\n/g, '\n'); 
             
             let formatted = `📝 <strong>Deskripsi:</strong> `;
             
@@ -1193,6 +1197,7 @@
                 formatted += description
                     .replace(/SPESIFIKASI —+/g, '<br><strong>SPESIFIKASI</strong><hr class="desc-separator">')
                     .replace(/FASILITAS PERUMAHAN —+/g, '<br><strong>FASILITAS PERUMAHAN</strong><hr class="desc-separator">')
+                    .replace(/SELLING POINT : —+/g, '<br><strong>SELLING POINT</strong><hr class="desc-separator">')
                     .replace(/•/g, '<br>•')
                     .replace(/(\d+ Menit ke)/g, '<br>$1');
             } else {
@@ -1586,6 +1591,7 @@
     </script>
 </body>
 </html>
+
 
 
 
