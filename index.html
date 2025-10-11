@@ -1194,6 +1194,8 @@
             const normalizedDesc = description
                 .replace(/\r\n/g, '\n')
                 .replace(/\r/g, '\n')
+                .replace(/•\s*\n\s*(\d+ Menit ke)/g, '• $1')  // Untuk pattern "•" diikuti angka
+                .replace(/•\s*\n\s*([A-Za-z])/g, '• $1')
                 .replace(/\s*———————————\s*/g, '\n———————————\n')
                 .replace(/(\n)SPESIFIKASI\s*:/g, '$1———————————\nSPESIFIKASI:\n———————————')
                 .replace(/(\n)FASILITAS\s*:/g, '$1———————————\nFASILITAS:\n———————————')
@@ -1602,6 +1604,7 @@
     </script>
 </body>
 </html>
+
 
 
 
