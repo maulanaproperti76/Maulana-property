@@ -518,7 +518,7 @@
             margin-bottom: 0.5rem;
             line-height: 1.4;
             color: #444;
-            white-space: normal;
+            white-space: pre-line;
             max-height: 300px; /* Batasi tinggi maksimum */
             overflow-y: auto; /* Tambahkan scroll jika perlu */
             padding-right: 5px; /* Ruang untuk scrollbar */
@@ -526,6 +526,9 @@
             overflow-wrap: break-word;
             hyphens: auto;
             font-size: 16px;
+            -webkit-line-break: strict;
+            line-break: strict;
+            word-wrap: break-word;
         }
 
         .modal-description br {
@@ -867,6 +870,8 @@
                 line-height: 1.4;
                 max-height: 200px;
                 padding: 5px;
+                white-space: pre-line !important;
+                line-height: 1.4 !important;
             }
 
             .modal-details {
@@ -1186,15 +1191,21 @@
         function formatDescription(description) {
             if (!description) return 'Tidak ada deskripsi';
 
-            const cleanDesc = description
-                .replace(/•\s*\n\s*/g, '• ') // Hapus line break setelah •
-                .replace(/\n\s*\n/g, '\n'); 
+            const normalizedDesc = description
+                .replace(/\r\n/g, '\n')
+                .replace(/\r/g, '\n')
+                .replace(/\s*———————————\s*/g, '\n———————————\n')
+                .replace(/(\n)SPESIFIKASI\s*:/g, '$1———————————\nSPESIFIKASI:\n———————————')
+                .replace(/(\n)FASILITAS\s*:/g, '$1———————————\nFASILITAS:\n———————————')
+                .replace(/(\n)SELLING POINT\s*:/g, '$1———————————\nSELLING POINT:\n———————————')
+                .replace(/\n\s*\n/g, '\n\n')
+                .trim(); 
             
             let formatted = `📝 <strong>Deskripsi:</strong> `;
             
             // Only apply special formatting if the old structured patterns exist
-            if (description.includes('SPESIFIKASI') || description.includes('———————————')) {
-                formatted += description
+            if (normalizedDesc.includes('SPESIFIKASI') || normalizedDesc.includes('———————————')) {
+                formatted += normalizedDesc
                     .replace(/SPESIFIKASI —+/g, '<br><strong>SPESIFIKASI</strong><hr class="desc-separator">')
                     .replace(/FASILITAS PERUMAHAN —+/g, '<br><strong>FASILITAS PERUMAHAN</strong><hr class="desc-separator">')
                     .replace(/SELLING POINT : —+/g, '<br><strong>SELLING POINT</strong><hr class="desc-separator">')
@@ -1202,7 +1213,7 @@
                     .replace(/(\d+ Menit ke)/g, '<br>$1');
             } else {
                 // For natural descriptions, just use as is
-                formatted += description;
+                formatted += normalizedDesc;
             }
             
             return formatted;
@@ -1591,6 +1602,7 @@
     </script>
 </body>
 </html>
+
 
 
 
