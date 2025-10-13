@@ -1182,12 +1182,6 @@
               .trim();
           }
         
-          // Kalau hanya angka, baru diformat
-          const numeric = Number(str.replace(/[^\d]/g, ""));
-          if (!isNaN(numeric) && numeric > 0) {
-            return "Rp " + new Intl.NumberFormat("id-ID").format(numeric);
-          }
-        
           // Fallback: tampilkan apa adanya
           return str;
         }
@@ -1610,6 +1604,7 @@
     </script>
 </body>
 </html>
+
 
 
 
