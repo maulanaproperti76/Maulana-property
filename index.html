@@ -1305,6 +1305,38 @@
             return formatted;
         }
 
+        // 🔹 FUNCTION: Dapatkan URL gambar yang optimal
+        function getOptimalImageUrl(driveUrl) {
+            const fileId = extractFileIdFromDriveUrl(driveUrl);
+            if (!fileId) return driveUrl;
+        
+            // Prioritaskan Googleusercontent (lebih aman, tidak expose Drive info)
+            return `https://lh3.googleusercontent.com/d/${fileId}`;
+        }
+        
+        // 🔹 FUNCTION: Extract file ID dari URL Google Drive
+        function extractFileIdFromDriveUrl(url) {
+            if (!url) return null;
+            
+            // Untuk format: https://drive.google.com/thumbnail?id=XXXXX
+            const thumbnailMatch = url.match(/[?&]id=([^&]+)/);
+            if (thumbnailMatch) return thumbnailMatch[1];
+            
+            // Untuk format: https://drive.google.com/file/d/XXXXX/view
+            const fileMatch = url.match(/\/d\/([^\/]+)/);
+            if (fileMatch) return fileMatch[1];
+            
+            // Untuk format: https://drive.google.com/uc?id=XXXXX
+            const ucMatch = url.match(/\/uc\?id=([^&]+)/);
+            if (ucMatch) return ucMatch[1];
+            
+            // Untuk format Googleusercontent
+            const googleUserMatch = url.match(/\/d\/([^\/]+)/);
+            if (googleUserMatch) return googleUserMatch[1];
+            
+            return null;
+        }
+
         // Function to create WhatsApp link
         function createWhatsAppLink(propertyId, propertyType) {
             const message = WHATSAPP_MESSAGE
@@ -1327,10 +1359,8 @@
             // Use first photo as main image
             let mainImage = property.foto && property.foto.length > 0 ? property.foto[0] : null;
         
-            // Cek dan ekstrak URL dari rumus =IMAGE()
-            if (mainImage && mainImage.startsWith('=IMAGE("') && mainImage.endsWith('")')) {
-                mainImage = mainImage.substring(8, mainImage.length - 2);
-            }
+            // 🔹 GUNAKAN OPTIMAL IMAGE URL
+            const imageUrl = mainImage ? getOptimalImageUrl(mainImage) : null;
         
             // Tentukan tampilan harga berdasarkan ada/tidaknya promo
             let priceHTML = '';
@@ -1353,8 +1383,8 @@
             
             card.innerHTML = `
                 <div class="property-image">
-                    ${mainImage ? 
-                        `<img src="${mainImage}" alt="Property ${property.id}" loading="lazy">` : 
+                    ${imageUrl ? 
+                        `<img src="${imageUrl}" alt="Property ${property.id}" loading="lazy" onerror="this.onerror=null; this.src='https://drive.google.com/thumbnail?id=${extractFileIdFromDriveUrl(mainImage)}&sz=w1000'">` : 
                         `<div class="no-image"><i class="far fa-image"></i> Tidak ada gambar</div>`
                     }
                     <div class="property-badge">${property.type || 'Properti'}</div>
@@ -1363,7 +1393,7 @@
                         `<div class="sold-overlay">SOLD</div>` : ""}
                 </div>
                 <div class="property-details">
-                    ${priceHTML} <!-- GUNAKAN priceHTML di sini, bukan kode lama -->
+                    ${priceHTML}
                     <div class="property-address"><i class="fas fa-map-marker-alt"></i> ${property.alamat || 'Alamat tidak tersedia'}</div>
                     <div class="property-features">
                         <div class="feature"><i class="fas fa-bed"></i> ${property.kamar || '0'} Kamar</div>
@@ -1438,10 +1468,6 @@
             const modal = document.getElementById('propertyModal');
             const modalContent = document.getElementById('modalContent');
 
-            // Show modal
-            modal.style.display = 'block';
-            document.body.style.overflow = 'hidden';
-
             // Add to browser history - HANYA jika modal belum terbuka
             if (!isModalOpen) {
                 window.history.pushState({ modal: true }, '');
@@ -1449,9 +1475,6 @@
             
             // Set flag
             isModalOpen = true;
-            
-            // Add swipe functionality for mobile
-            handleSwipeGesture(property.id);
 
             // Tentukan tampilan harga untuk modal
             let modalPriceHTML = '';
@@ -1479,9 +1502,16 @@
                          id="modalSlider-${property.id}" 
                          data-current="0">
                         ${property.foto && property.foto.length > 0 ? 
-                            property.foto.map(img => 
-                                `<div class="slide"><img src="${img}" alt="Property ${property.id}"></div>`
-                            ).join('') :
+                            property.foto.map(img => {
+                                const slideImageUrl = getOptimalImageUrl(img);
+                                return `
+                                    <div class="slide">
+                                        <img src="${slideImageUrl}" 
+                                             alt="Property ${property.id}" 
+                                             onerror="this.onerror=null; this.src='https://drive.google.com/thumbnail?id=${extractFileIdFromDriveUrl(img)}&sz=w1000'">
+                                    </div>
+                                `;
+                            }).join('') :
                             `<div class="slide no-image" style="display: flex; align-items: center; justify-content: center;">
                                 <i class="far fa-image"></i> Tidak ada gambar
                             </div>`
@@ -1501,9 +1531,9 @@
                                   onclick="showModalSlide('${property.id}', ${index})"></div>`
                         ).join('')}
                     </div>
-                ` : ''}
-                <div class="modal-property-number">#${property.id}</div>
-            </div>
+                    ` : ''}
+                    <div class="modal-property-number">#${property.id}</div>
+                </div>
                 
                 <div class="modal-details">
                     ${modalPriceHTML}
@@ -1720,4 +1750,5 @@
     </script>
 </body>
 </html>
+
 
