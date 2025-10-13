@@ -212,6 +212,33 @@
             color: #2c3e50;
             margin-bottom: 0.5rem;
         }
+
+        /* Tambahkan di CSS section */
+        .property-price-promo {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            margin-bottom: 0.5rem;
+        }
+        
+        .original-price {
+            text-decoration: line-through;
+            color: #999;
+            font-size: 0.9rem;
+            font-weight: normal;
+        }
+        
+        .promo-price {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #e74c3c;
+        }
+        
+        .normal-price {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #2c3e50;
+        }
         
         .property-address {
             color: #666;
@@ -490,6 +517,33 @@
             font-weight: bold;
             color: #2c3e50;
             margin-bottom: 0.5rem;
+        }
+
+        /* Untuk modal juga */
+        .modal-price-promo {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            margin-bottom: 0.5rem;
+        }
+        
+        .modal-original-price {
+            text-decoration: line-through;
+            color: #999;
+            font-size: 1.2rem;
+            font-weight: normal;
+        }
+        
+        .modal-promo-price {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #e74c3c;
+        }
+        
+        .modal-normal-price {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #2c3e50;
         }
         
         .modal-type {
@@ -1288,6 +1342,25 @@
             if (mainImage && mainImage.startsWith('=IMAGE("') && mainImage.endsWith('")')) {
                 mainImage = mainImage.substring(8, mainImage.length - 2);
             }
+        
+            // Tentukan tampilan harga berdasarkan ada/tidaknya promo
+            let priceHTML = '';
+            if (property.harga_asli && property.harga_promo) {
+                // Ada promo - tampilkan harga asli tercoret dan harga promo
+                priceHTML = `
+                    <div class="property-price-promo">
+                        <div class="original-price">${property.harga_asli}</div>
+                        <div class="promo-price">${property.harga_promo} (Nego)</div>
+                    </div>
+                `;
+            } else {
+                // Harga normal
+                priceHTML = `
+                    <div class="property-price normal-price">
+                        ${property.harga_display || ('Rp ' + new Intl.NumberFormat('id-ID').format(property.harga))}
+                    </div>
+                `;
+            }
             
             card.innerHTML = `
                 <div class="property-image">
@@ -1301,7 +1374,7 @@
                         `<div class="sold-overlay">SOLD</div>` : ""}
                 </div>
                 <div class="property-details">
-                    <div class="property-price">${property.harga_display || ('Rp ' + new Intl.NumberFormat('id-ID').format(property.harga))}</p>
+                    ${priceHTML} <!-- GUNAKAN priceHTML di sini, bukan kode lama -->
                     <div class="property-address"><i class="fas fa-map-marker-alt"></i> ${property.alamat || 'Alamat tidak tersedia'}</div>
                     <div class="property-features">
                         <div class="feature"><i class="fas fa-bed"></i> ${property.kamar || '0'} Kamar</div>
@@ -1390,6 +1463,25 @@
             
             // Add swipe functionality for mobile
             handleSwipeGesture(property.id);
+
+            // Tentukan tampilan harga untuk modal
+            let modalPriceHTML = '';
+            if (property.harga_asli && property.harga_promo) {
+                // Ada promo - tampilkan harga asli tercoret dan harga promo
+                modalPriceHTML = `
+                    <div class="modal-price-promo">
+                        <div class="modal-original-price">${property.harga_asli}</div>
+                        <div class="modal-promo-price">${property.harga_promo} (Nego)</div>
+                    </div>
+                `;
+            } else {
+                // Harga normal
+                modalPriceHTML = `
+                    <div class="modal-price normal-price">
+                        ${property.harga_display || ('Rp ' + new Intl.NumberFormat('id-ID').format(property.harga))}
+                    </div>
+                `;
+            }
             
             // Create modal content
             modalContent.innerHTML = `
@@ -1425,7 +1517,7 @@
             </div>
                 
                 <div class="modal-details">
-                    <div class="modal-price">${property.harga_display || ('Rp ' + new Intl.NumberFormat('id-ID').format(property.harga))}</p>
+                    ${modalPriceHTML}
                     <div class="modal-type">${property.type || 'Properti'}</div>
                     <div class="modal-address">
                         <i class="fas fa-map-marker-alt"></i> ${property.alamat || 'Alamat tidak tersedia'}
@@ -1645,6 +1737,7 @@
     </script>
 </body>
 </html>
+
 
 
 
