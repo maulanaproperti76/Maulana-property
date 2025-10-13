@@ -1168,45 +1168,30 @@
 
         // Function to format price with proper dots
         function formatPrice(price) {
-            if (price === null || price === undefined) {
-                return 'Harga tidak tersedia';
-            }
+          if (price === null || price === undefined) return "Harga tidak tersedia";
+          
+          const str = String(price).trim();
         
-            let priceStr = String(price).trim();
+          // Kalau string sudah mengandung Rp atau Nego → biarkan tampil apa adanya
+          if (/rp/i.test(str) || /nego/i.test(str)) {
+            // Bersihkan duplikat spasi dan samakan kapitalisasi
+            return str
+              .replace(/\s+/g, " ")
+              .replace(/\(?\s*nego\s*\)?/gi, "(Nego)")
+              .replace(/rp/gi, "Rp")
+              .trim();
+          }
         
-            // Normalisasi spasi dan huruf
-            priceStr = priceStr.replace(/\s+/g, ' ');
-            const hasRp = /rp/i.test(priceStr);
-            const hasNego = /\(?\s*nego\s*\)?/i.test(priceStr);
+          // Kalau hanya angka, baru diformat
+          const numeric = Number(str.replace(/[^\d]/g, ""));
+          if (!isNaN(numeric) && numeric > 0) {
+            return "Rp " + new Intl.NumberFormat("id-ID").format(numeric);
+          }
         
-            // Jika sudah mengandung "Rp" dan/atau "(Nego)", tampilkan apa adanya
-            if (hasRp && hasNego) {
-                // Pastikan tidak ada duplikat "(Nego)"
-                priceStr = priceStr.replace(/\(?\s*nego\s*\)?/gi, '(Nego)');
-                return priceStr;
-            }
-        
-            // Jika hanya mengandung "Rp", tapi belum ada "(Nego)"
-            if (hasRp && !hasNego) {
-                return priceStr;
-            }
-        
-            // Jika hanya mengandung "(Nego)" tanpa "Rp"
-            if (!hasRp && hasNego) {
-                const numericPart = priceStr.replace(/[^\d]/g, '');
-                const formatted = new Intl.NumberFormat('id-ID').format(Number(numericPart));
-                return 'Rp ' + formatted + ' (Nego)';
-            }
-        
-            // Jika murni angka saja
-            const numeric = Number(priceStr.replace(/[^\d]/g, ''));
-            if (!isNaN(numeric) && numeric > 0) {
-                return 'Rp ' + new Intl.NumberFormat('id-ID').format(numeric);
-            }
-        
-            // Fallback: tampilkan apa adanya
-            return priceStr;
+          // Fallback: tampilkan apa adanya
+          return str;
         }
+
 
         // Function to format description - only format if specific patterns exist
         function formatDescription(description) {
@@ -1625,6 +1610,7 @@
     </script>
 </body>
 </html>
+
 
 
 
