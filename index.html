@@ -1638,43 +1638,6 @@
             }
         }
 
-        // 🔹 FUNCTION TEST - tambahkan di bagian paling bawah script, sebelum penutup </script>
-        function testImageUrls() {
-            console.log('🧪 Testing image URLs...');
-            
-            const testFileId = '1kvSaaDseZAuYOPDaQ_041_MyuMgcpK6f'; // ganti dengan file ID Anda
-            
-            const testUrls = [
-                `https://drive.google.com/thumbnail?id=${testFileId}&sz=w1000`,  // Format yang sekarang
-                `https://drive.google.com/uc?id=${testFileId}`,                 // Direct download
-                `https://lh3.googleusercontent.com/d/${testFileId}`,            // Googleusercontent
-                // Hapus proxy dulu: `/api/proxy-image?id=${testFileId}`,
-            ];
-            
-            console.log('📸 Testing URLs for file ID:', testFileId);
-            
-            testUrls.forEach((url, index) => {
-                const img = new Image();
-                img.onload = () => console.log(`✅ [${index + 1}] WORKING: ${url}`);
-                img.onerror = () => console.log(`❌ [${index + 1}] FAILED: ${url}`);
-                img.src = url;
-            });
-        }
-
-        // Function untuk test permission (jalankan di console)
-        async function testDrivePermission() {
-            const testFileId = '1kvSaaDseZAuYOPDaQ_041_MyuMgcpK6f';
-            const testUrl = `https://www.googleapis.com/drive/v3/files/${testFileId}?fields=id,name,webViewLink,webContentLink&key=YOUR_API_KEY`;
-            
-            try {
-                const response = await fetch(testUrl);
-                const data = await response.json();
-                console.log('🔐 Drive File Info:', data);
-            } catch (error) {
-                console.log('❌ Cannot access file info:', error);
-            }
-        }
-
         // Fetch properties from API
         async function fetchAndDisplayProperties() {
             const propertyGrid = document.getElementById('propertyGrid');
@@ -1750,11 +1713,6 @@
             // 🔹 RESET FILTER SAAT REFRESH
             document.getElementById("searchAddress").value = "";
             document.getElementById("sortPrice").value = "default";
-
-            // 🔹 TEST IMAGE URLs - panggil ini dulu
-            setTimeout(() => {
-                testImageUrls();
-            }, 2000)
             
             // Load data initially
             fetchAndDisplayProperties();
