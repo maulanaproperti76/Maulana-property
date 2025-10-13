@@ -1638,6 +1638,49 @@
             }
         }
 
+        // 🔹 FUNCTION TEST - tambahkan di bagian paling bawah script, sebelum penutup </script>
+        function testImageUrls() {
+            console.log('🧪 Testing image URLs...');
+            
+            // Ganti YOUR_FILE_ID dengan file ID dari salah satu gambar properti Anda
+            const testFileId = '1kvSaaDseZAuYOPDaQ_041_MyuMgcpK6f'; // contoh file ID dari img src Anda
+            
+            const testUrls = [
+                `https://drive.google.com/thumbnail?id=${testFileId}&sz=w1000`,  // Format thumbnail
+                `/api/proxy-image?id=${testFileId}`,                            // Proxy (pastikan backend sudah ada)
+                `https://drive.google.com/uc?id=${testFileId}`,                 // Direct download
+                `https://lh3.googleusercontent.com/d/${testFileId}`,            // Googleusercontent
+            ];
+            
+            console.log('📸 Testing URLs for file ID:', testFileId);
+            
+            testUrls.forEach((url, index) => {
+                const img = new Image();
+                img.onload = () => console.log(`✅ [${index + 1}] WORKING: ${url}`);
+                img.onerror = () => console.log(`❌ [${index + 1}] FAILED: ${url}`);
+                img.src = url;
+            });
+        }
+        
+        // 🔹 FUNCTION: Extract file ID dari URL Google Drive
+        function extractFileIdFromDriveUrl(url) {
+            if (!url) return null;
+            
+            // Untuk format: https://drive.google.com/thumbnail?id=XXXXX
+            const thumbnailMatch = url.match(/[?&]id=([^&]+)/);
+            if (thumbnailMatch) return thumbnailMatch[1];
+            
+            // Untuk format: https://drive.google.com/file/d/XXXXX/view
+            const fileMatch = url.match(/\/d\/([^\/]+)/);
+            if (fileMatch) return fileMatch[1];
+            
+            // Untuk format: https://drive.google.com/uc?id=XXXXX
+            const ucMatch = url.match(/\/uc\?id=([^&]+)/);
+            if (ucMatch) return ucMatch[1];
+            
+            return null;
+        }
+
         // Fetch properties from API
         async function fetchAndDisplayProperties() {
             const propertyGrid = document.getElementById('propertyGrid');
@@ -1713,6 +1756,11 @@
             // 🔹 RESET FILTER SAAT REFRESH
             document.getElementById("searchAddress").value = "";
             document.getElementById("sortPrice").value = "default";
+
+            // 🔹 TEST IMAGE URLs - panggil ini dulu
+            setTimeout(() => {
+                testImageUrls();
+            }, 2000);
             
             // Load data initially
             fetchAndDisplayProperties();
@@ -1720,27 +1768,3 @@
     </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
