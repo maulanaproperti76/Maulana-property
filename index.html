@@ -1662,27 +1662,12 @@
                 if (data && data.length > 0) {
                     allProperties = data; // simpan ke variabel global
                     
-                    // 🔹 URUTKAN DEFAULT MENGGUNAKAN harga_numerik atau timestamp
+                    // 🔹 PERBAIKAN: URUTKAN DEFAULT "TERBARU" DENGAN KONSISTEN
                     allProperties.sort((a, b) => {
-                        // Prioritaskan harga_numerik untuk sorting yang konsisten
-                        if (a.harga_numerik && b.harga_numerik) {
-                            return b.harga_numerik - a.harga_numerik; // termahal dulu
-                        }
-                        // Fallback ke timestamp/createAt
-                        else if (a.timestamp && b.timestamp) {
-                            return new Date(b.timestamp) - new Date(a.timestamp);
-                        }
-                        else if (a.createdAt && b.createdAt) {
-                            return new Date(b.createdAt) - new Date(a.createdAt);
-                        }
-                        else if (a.updatedAt && b.updatedAt) {
-                            return new Date(b.updatedAt) - new Date(a.updatedAt);
-                        }
-                        else {
-                            const idA = typeof a.id === 'string' ? parseInt(a.id) || 0 : a.id;
-                            const idB = typeof b.id === 'string' ? parseInt(b.id) || 0 : b.id;
-                            return idB - idA;
-                        }
+                        // Prioritaskan ID numerik (asumsi ID lebih besar = lebih baru)
+                        const idA = parseInt(a.id) || 0;
+                        const idB = parseInt(b.id) || 0;
+                        return idB - idA; // ID besar dulu = terbaru
                     });
                     
                     displayProperties(allProperties);
@@ -1722,6 +1707,11 @@
             // Add event listeners to control buttons
             document.getElementById('loadData').addEventListener('click', fetchAndDisplayProperties);
             document.getElementById('refreshData').addEventListener('click', fetchAndDisplayProperties);
+                // 🔹 RESET FILTER SAAT REFRESH
+                document.getElementById("searchAddress").value = "";
+                document.getElementById("sortPrice").value = "default";
+                fetchAndDisplayProperties();
+            });
             
             // Load data initially
             fetchAndDisplayProperties();
@@ -1729,6 +1719,7 @@
     </script>
 </body>
 </html>
+
 
 
 
