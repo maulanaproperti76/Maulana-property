@@ -1135,6 +1135,14 @@
         document.getElementById("sortPrice").addEventListener("change", (e) => {
             const value = e.target.value;
             let sorted = [...allProperties]; // clone array
+
+            // 🔹 Helper untuk konversi harga string ke angka
+            const toNumber = (val) => {
+                if (!val) return -1;
+                if (typeof val === "number") return val;
+                // hapus semua selain angka
+                return Number(String(val).replace(/[^\d]/g, "")) || -1;
+            };
             
             if (value === "terlama") {
                 // Urutkan dari terlama (berdasarkan timestamp atau createdAt jika ada)
@@ -1637,6 +1645,7 @@
     </script>
 </body>
 </html>
+
 
 
 
