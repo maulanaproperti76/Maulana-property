@@ -1171,21 +1171,29 @@
             if (price === null || price === undefined) {
                 return 'Harga tidak tersedia';
             }
-            // Konversi `price` menjadi string
-            const priceAsString = String(price); 
-            
-            // Menghilangkan "Rp" dan spasi, lalu membersihkan non-digit
-            const cleanPrice = priceAsString.replace(/[^\d]/g, '');
-            
-            // Mengubah ke angka dan memformatnya dengan titik
-            // Gunakan parseInt atau Number() untuk memastikan konversi yang benar
-            const numericPrice = Number(cleanPrice);
-            if (isNaN(numericPrice)) {
-                return 'Harga tidak valid';
+        
+            // Konversi ke string agar bisa diproses aman
+            const priceAsString = String(price);
+        
+            // Jika sudah mengandung kata 'Nego', 'nego', atau simbol Rp, jangan ubah formatnya
+            if (priceAsString.toLowerCase().includes('nego')) {
+                // Pastikan tetap menampilkan Rp di depan jika belum ada
+                if (!priceAsString.toLowerCase().includes('rp')) {
+                    return 'Rp ' + priceAsString;
+                }
+                return priceAsString;
             }
         
-            return "Rp" + new Intl.NumberFormat('id-ID').format(numericPrice);
+            // Hapus karakter non-digit hanya untuk angka murni
+            const cleanPrice = priceAsString.replace(/[^\d]/g, '');
+            const numericPrice = Number(cleanPrice);
+            if (isNaN(numericPrice)) {
+                return priceAsString; // biarkan tampil apa adanya
+            }
+        
+            return "Rp " + new Intl.NumberFormat('id-ID').format(numericPrice);
         }
+
 
         // Function to format description - only format if specific patterns exist
         function formatDescription(description) {
@@ -1604,6 +1612,7 @@
     </script>
 </body>
 </html>
+
 
 
 
