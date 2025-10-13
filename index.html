@@ -1662,26 +1662,12 @@
                 if (data && data.length > 0) {
                     allProperties = data; // simpan ke variabel global
                     
-                    // Alternatif: jika backend punya field timestamp/createdAt
+                    // 🔹 PERBAIKAN: URUTKAN DEFAULT "TERBARU" DENGAN KONSISTEN
                     allProperties.sort((a, b) => {
-                        // Coba gunakan timestamp terlebih dahulu
-                        if (a.timestamp && b.timestamp) {
-                            return new Date(b.timestamp) - new Date(a.timestamp);
-                        }
-                        // Fallback ke createdAt
-                        else if (a.createdAt && b.createdAt) {
-                            return new Date(b.createdAt) - new Date(a.createdAt);
-                        }
-                        // Fallback ke updatedAt
-                        else if (a.updatedAt && b.updatedAt) {
-                            return new Date(b.updatedAt) - new Date(a.updatedAt);
-                        }
-                        // Final fallback: ID numerik
-                        else {
-                            const idA = parseInt(a.id) || 0;
-                            const idB = parseInt(b.id) || 0;
-                            return idB - idA;
-                        }
+                        // Prioritaskan ID numerik (asumsi ID lebih besar = lebih baru)
+                        const idA = parseInt(a.id) || 0;
+                        const idB = parseInt(b.id) || 0;
+                        return idB - idA; // ID besar dulu = terbaru
                     });
                     
                     displayProperties(allProperties);
@@ -1736,6 +1722,7 @@
     </script>
 </body>
 </html>
+
 
 
 
