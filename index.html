@@ -105,6 +105,7 @@
             padding: 100px 20px;
             margin-bottom: 40px;
             border-radius: 12px;
+            height: 70vh; 
         }
 
         .hero h1 {
@@ -812,6 +813,29 @@
 
             .logo-img {
                 width: 35px; /* Perkecil logo image */
+            }
+
+            .hero {
+                height: 50vh; /* tampil lebih ringkas di HP */
+            }
+
+            /* --- Responsive Filter Control --- */
+            .filter-container {
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              width: 100%;
+              padding: 0.5rem;
+              box-sizing: border-box;
+            }
+            
+            .filter-container select {
+              width: 70%;              /* batasi lebar supaya nggak kepanjangan */
+              max-width: 250px;        /* pastikan nggak nabrak tepi */
+              font-size: 0.9rem;       /* sedikit lebih kecil dari desktop */
+              padding: 0.4rem 0.6rem;  /* kurangi padding biar proporsional */
+              border-radius: 6px;
+              text-align: center;
             }
 
             .footer-grid {
@@ -1604,6 +1628,7 @@
     </script>
 </body>
 </html>
+
 
 
 
