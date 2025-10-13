@@ -819,24 +819,33 @@
                 height: 50vh; /* tampil lebih ringkas di HP */
             }
 
-            /* --- Responsive Filter Control --- */
-            .filter-container {
-              display: flex;
-              justify-content: center;
-              align-items: center;
-              width: 100%;
-              padding: 0.5rem;
-              box-sizing: border-box;
+            /* --- Perbaikan tampilan filter di HP --- */
+            .search-sort {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                justify-content: center;
+                gap: 0.5rem;
+                width: 100%;
+                padding: 0 0.5rem;
+                box-sizing: border-box;
             }
             
-            .filter-container select {
-              width: 70%;              /* batasi lebar supaya nggak kepanjangan */
-              max-width: 250px;        /* pastikan nggak nabrak tepi */
-              font-size: 0.9rem;       /* sedikit lebih kecil dari desktop */
-              padding: 0.4rem 0.6rem;  /* kurangi padding biar proporsional */
-              border-radius: 6px;
-              text-align: center;
+            .search-sort input {
+                flex: 1;                /* biar input melebar otomatis */
+                min-width: 60%;         /* batasi agar tidak sempit */
+                font-size: 0.9rem;
+                padding: 0.4rem 0.6rem;
             }
+            
+            .search-sort select {
+                width: 35%;             /* sebelumnya terlalu lebar, jadi diperkecil */
+                font-size: 0.9rem;
+                padding: 0.4rem 0.6rem;
+                border-radius: 6px;
+                margin-right: 4px;
+            }
+
 
             .footer-grid {
                 text-align: center;
@@ -1628,6 +1637,7 @@
     </script>
 </body>
 </html>
+
 
 
 
