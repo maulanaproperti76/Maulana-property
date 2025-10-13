@@ -1104,9 +1104,6 @@
         <!-- Controls -->
         <div class="controls">
             <button id="loadData">
-                <i class="fas fa-download"></i> Muat Data Properti
-            </button>
-            <button id="refreshData">
                 <i class="fas fa-sync-alt"></i> Segarkan Data
             </button>
 
@@ -1669,15 +1666,19 @@
                         const idB = parseInt(b.id) || 0;
                         return idB - idA; // ID besar dulu = terbaru
                     });
-                    
+
+                    console.log('🔄 Displaying properties...');
                     displayProperties(allProperties);
                     // 🔹 RESET SELECT BOX KE "TERBARU"
                     document.getElementById("sortPrice").value = "default";
+                    console.log('✅ Data loaded successfully');
                     
                 } else {
+                    console.log('ℹ️ No properties found');
                     propertyGrid.innerHTML = '<div class="loading">Tidak ada properti yang ditemukan</div>';
                 }
             } catch (error) {
+                console.error('❌ Error fetching properties:', error);
                 console.error('Error fetching properties:', error);
                 errorElement.innerHTML = '⚠️ Gagal memuat properti. Silakan coba lagi.';
                 propertyGrid.innerHTML = '';
@@ -1713,8 +1714,6 @@
                 // 🔹 RESET FILTER SAAT REFRESH
                 document.getElementById("searchAddress").value = "";
                 document.getElementById("sortPrice").value = "default";
-                fetchAndDisplayProperties();
-            });
             
             // Load data initially
             fetchAndDisplayProperties();
@@ -1722,6 +1721,7 @@
     </script>
 </body>
 </html>
+
 
 
 
