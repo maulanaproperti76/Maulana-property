@@ -1642,14 +1642,13 @@
         function testImageUrls() {
             console.log('🧪 Testing image URLs...');
             
-            // Ganti YOUR_FILE_ID dengan file ID dari salah satu gambar properti Anda
-            const testFileId = '1kvSaaDseZAuYOPDaQ_041_MyuMgcpK6f'; // contoh file ID dari img src Anda
+            const testFileId = '1kvSaaDseZAuYOPDaQ_041_MyuMgcpK6f'; // ganti dengan file ID Anda
             
             const testUrls = [
-                `https://drive.google.com/thumbnail?id=${testFileId}&sz=w1000`,  // Format thumbnail
-                `/api/proxy-image?id=${testFileId}`,                            // Proxy (pastikan backend sudah ada)
+                `https://drive.google.com/thumbnail?id=${testFileId}&sz=w1000`,  // Format yang sekarang
                 `https://drive.google.com/uc?id=${testFileId}`,                 // Direct download
                 `https://lh3.googleusercontent.com/d/${testFileId}`,            // Googleusercontent
+                // Hapus proxy dulu: `/api/proxy-image?id=${testFileId}`,
             ];
             
             console.log('📸 Testing URLs for file ID:', testFileId);
@@ -1661,24 +1660,19 @@
                 img.src = url;
             });
         }
-        
-        // 🔹 FUNCTION: Extract file ID dari URL Google Drive
-        function extractFileIdFromDriveUrl(url) {
-            if (!url) return null;
+
+        // Function untuk test permission (jalankan di console)
+        async function testDrivePermission() {
+            const testFileId = '1kvSaaDseZAuYOPDaQ_041_MyuMgcpK6f';
+            const testUrl = `https://www.googleapis.com/drive/v3/files/${testFileId}?fields=id,name,webViewLink,webContentLink&key=YOUR_API_KEY`;
             
-            // Untuk format: https://drive.google.com/thumbnail?id=XXXXX
-            const thumbnailMatch = url.match(/[?&]id=([^&]+)/);
-            if (thumbnailMatch) return thumbnailMatch[1];
-            
-            // Untuk format: https://drive.google.com/file/d/XXXXX/view
-            const fileMatch = url.match(/\/d\/([^\/]+)/);
-            if (fileMatch) return fileMatch[1];
-            
-            // Untuk format: https://drive.google.com/uc?id=XXXXX
-            const ucMatch = url.match(/\/uc\?id=([^&]+)/);
-            if (ucMatch) return ucMatch[1];
-            
-            return null;
+            try {
+                const response = await fetch(testUrl);
+                const data = await response.json();
+                console.log('🔐 Drive File Info:', data);
+            } catch (error) {
+                console.log('❌ Cannot access file info:', error);
+            }
         }
 
         // Fetch properties from API
@@ -1760,7 +1754,7 @@
             // 🔹 TEST IMAGE URLs - panggil ini dulu
             setTimeout(() => {
                 testImageUrls();
-            }, 2000);
+            }, 2000)
             
             // Load data initially
             fetchAndDisplayProperties();
@@ -1768,3 +1762,4 @@
     </script>
 </body>
 </html>
+
