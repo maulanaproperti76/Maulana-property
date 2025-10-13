@@ -1185,19 +1185,11 @@
             displayProperties(filtered);
         });
         
-        // ⬇️ Event listener untuk urutkan harga
+        // ⬇️ Event listener untuk urutkan harga - UPDATE
         document.getElementById("sortPrice").addEventListener("change", (e) => {
             const value = e.target.value;
             let sorted = [...allProperties]; // clone array
-
-            // 🔹 Helper untuk konversi harga string ke angka
-            const toNumber = (val) => {
-                if (!val) return -1;
-                if (typeof val === "number") return val;
-                // hapus semua selain angka
-                return Number(String(val).replace(/[^\d]/g, "")) || -1;
-            };
-            
+        
             if (value === "terlama") {
                 // Urutkan dari terlama (berdasarkan timestamp atau createdAt jika ada)
                 sorted.sort((a, b) => {
@@ -1215,16 +1207,17 @@
                     }
                     // Jika tidak ada field waktu, gunakan ID sebagai fallback
                     else {
-                        // Pastikan ID adalah angka, jika tidak convert dulu
                         const idA = typeof a.id === 'string' ? parseInt(a.id) || 0 : a.id;
                         const idB = typeof b.id === 'string' ? parseInt(b.id) || 0 : b.id;
                         return idA - idB;
                     }
                 });
             } else if (value === "asc") {
-                sorted.sort((a, b) => (a.harga || 0) - (b.harga || 0));
+                // 🔹 GUNAKAN harga_numerik UNTUK SORTING TERMURAH -> TERMAHAL
+                sorted.sort((a, b) => (a.harga_numerik || 0) - (b.harga_numerik || 0));
             } else if (value === "desc") {
-                sorted.sort((a, b) => (b.harga || 0) - (a.harga || 0));
+                // 🔹 GUNAKAN harga_numerik UNTUK SORTING TERMAHAL -> TERMURAH
+                sorted.sort((a, b) => (b.harga_numerik || 0) - (a.harga_numerik || 0));
             } else {
                 // Default: terbaru (kebalikan dari terlama)
                 sorted.sort((a, b) => {
@@ -1242,7 +1235,6 @@
                     }
                     // Jika tidak ada field waktu, gunakan ID sebagai fallback
                     else {
-                        // Pastikan ID adalah angka, jika tidak convert dulu
                         const idA = typeof a.id === 'string' ? parseInt(a.id) || 0 : a.id;
                         const idB = typeof b.id === 'string' ? parseInt(b.id) || 0 : b.id;
                         return idB - idA;
@@ -1670,23 +1662,23 @@
                 if (data && data.length > 0) {
                     allProperties = data; // simpan ke variabel global
                     
-                    // Urutkan default (terbaru) dengan logika yang sama seperti di event listener
+                    // 🔹 URUTKAN DEFAULT MENGGUNAKAN harga_numerik atau timestamp
                     allProperties.sort((a, b) => {
-                        // Coba gunakan timestamp jika ada
-                        if (a.timestamp && b.timestamp) {
+                        // Prioritaskan harga_numerik untuk sorting yang konsisten
+                        if (a.harga_numerik && b.harga_numerik) {
+                            return b.harga_numerik - a.harga_numerik; // termahal dulu
+                        }
+                        // Fallback ke timestamp/createAt
+                        else if (a.timestamp && b.timestamp) {
                             return new Date(b.timestamp) - new Date(a.timestamp);
                         }
-                        // Coba gunakan createdAt jika ada
                         else if (a.createdAt && b.createdAt) {
                             return new Date(b.createdAt) - new Date(a.createdAt);
                         }
-                        // Coba gunakan updatedAt jika ada
                         else if (a.updatedAt && b.updatedAt) {
                             return new Date(b.updatedAt) - new Date(a.updatedAt);
                         }
-                        // Jika tidak ada field waktu, gunakan ID sebagai fallback
                         else {
-                            // Pastikan ID adalah angka, jika tidak convert dulu
                             const idA = typeof a.id === 'string' ? parseInt(a.id) || 0 : a.id;
                             const idB = typeof b.id === 'string' ? parseInt(b.id) || 0 : b.id;
                             return idB - idA;
@@ -1737,6 +1729,7 @@
     </script>
 </body>
 </html>
+
 
 
 
