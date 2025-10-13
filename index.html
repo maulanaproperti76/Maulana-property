@@ -1301,7 +1301,7 @@
                         `<div class="sold-overlay">SOLD</div>` : ""}
                 </div>
                 <div class="property-details">
-                    <div class="property-price">${property.harga}</div>
+                    <div class="property-price">${property.harga_display || ('Rp ' + new Intl.NumberFormat('id-ID').format(property.harga))}</p>
                     <div class="property-address"><i class="fas fa-map-marker-alt"></i> ${property.alamat || 'Alamat tidak tersedia'}</div>
                     <div class="property-features">
                         <div class="feature"><i class="fas fa-bed"></i> ${property.kamar || '0'} Kamar</div>
@@ -1425,7 +1425,7 @@
             </div>
                 
                 <div class="modal-details">
-                    <div class="modal-price">${property.harga}</div>
+                    <div class="modal-price">${property.harga_display || ('Rp ' + new Intl.NumberFormat('id-ID').format(property.harga))}</p>
                     <div class="modal-type">${property.type || 'Properti'}</div>
                     <div class="modal-address">
                         <i class="fas fa-map-marker-alt"></i> ${property.alamat || 'Alamat tidak tersedia'}
@@ -1645,6 +1645,7 @@
     </script>
 </body>
 </html>
+
 
 
 
