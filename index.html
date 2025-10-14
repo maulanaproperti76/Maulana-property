@@ -1584,6 +1584,7 @@
 
             // Tentukan tampilan harga untuk modal
             let modalPriceHTML = '';
+            console.log("DEBUG harga_promo:", property.harga_promo);
             if (property.harga_asli && property.harga_promo) {
               const hasNego = /\bnego\b/i.test(property.harga_promo || '');
               modalPriceHTML = `
@@ -1874,6 +1875,7 @@
     </script>
 </body>
 </html>
+
 
 
 
