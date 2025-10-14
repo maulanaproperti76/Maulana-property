@@ -213,7 +213,6 @@
             margin-bottom: 0.5rem;
         }
 
-        /* Tambahkan di CSS section */
         .property-price-promo {
             display: flex;
             flex-direction: column;
@@ -274,9 +273,21 @@
         }
 
         .feature span {
-          display: inline-block;
-          min-width: 50px;         /* biar urut sejajar antar item */
-          text-align: left;
+            display: inline-block;
+            min-width: 50px;         /* biar urut sejajar antar item */
+            text-align: left;
+        }
+
+        /* Khusus item LT & LB */
+        .property-features .feature.luas {
+            font-size: 0.8rem;          /* kecilkan teks LT LB */
+            line-height: 1;
+        }
+        
+        .property-features .feature.luas i {
+            font-size: 0.85rem;         /* kecilkan ikon LT LB */
+            margin-right: 4px;
+            color: #4a6491;
         }
         
         .property-action {
@@ -1414,11 +1425,11 @@
                         <div class="feature"><i class="fas fa-bath"></i> ${property.kamar_mandi || '0'} KM</div>
 
                         ${luas.LT ? `
-                            <div class="modal-feature"><i class="fas fa-ruler-combined"></i> LT: ${luas.LT} m²</div>
+                            <div class="feature luas"><i class="fas fa-ruler-combined"></i> LT: ${luas.LT} m²</div>
                         ` : ''}
                         
                         ${luas.LB ? `
-                            <div class="modal-feature"><i class="fas fa-home"></i> LB: ${luas.LB} m²</div>
+                            <div class="feature luas"><i class="fas fa-home"></i> LB: ${luas.LB} m²</div>
                         ` : ''}
                     </div>
                     <div class="property-action">
@@ -1576,11 +1587,11 @@
                         <div class="modal-feature"><i class="fas fa-bath"></i> ${property.kamar_mandi || '0'} KM</div>
 
                         ${luas.LT ? `
-                            <div class="modal-feature"><i class="fas fa-ruler-combined"></i> LT: ${luas.LT} m²</div>
+                            <div class="feature luas"><i class="fas fa-ruler-combined"></i> LT: ${luas.LT} m²</div>
                         ` : ''}
                         
                         ${luas.LB ? `
-                            <div class="modal-feature"><i class="fas fa-home"></i> LB: ${luas.LB} m²</div>
+                            <div class="feature luas"><i class="fas fa-home"></i> LB: ${luas.LB} m²</div>
                         ` : ''}
                     </div>
                 
@@ -1795,6 +1806,7 @@
     </script>
 </body>
 </html>
+
 
 
 
