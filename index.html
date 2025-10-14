@@ -672,6 +672,18 @@
           color: #4a6491; /* warna khas Maulana Property */
           margin-right: 4px;
         }
+
+        .modal-feature.sertifikat {
+          font-size: 0.85rem;
+          color: #444;
+        }
+        
+        .modal-feature.sertifikat i {
+          font-size: 0.9rem;
+          color: #4a6491;
+          margin-right: 4px;
+        }
+
         
         .modal-actions {
             display: flex;
@@ -1459,16 +1471,16 @@
                         <div class="feature"><i class="fas fa-bath"></i> ${property.kamar_mandi || '0'} KM</div>
 
                         ${luas.LT ? `
-                            <div class="feature luas"><i class="fas fa-ruler-combined"></i> LT: ${luas.LT} m²</div>
+                            <div class="feature luas"><i class="fas fa-ruler-combined"></i> LT: ${info.LT} m²</div>
                         ` : ''}
                         
                         ${luas.LB ? `
-                            <div class="feature luas"><i class="fas fa-home"></i> LB: ${luas.LB} m²</div>
+                            <div class="feature luas"><i class="fas fa-home"></i> LB: ${info.LB} m²</div>
                         ` : ''}
 
                         ${property.Sertifikat && property.Sertifikat.trim() !== "" ? `
                           <div class="feature sertifikat">
-                            <i class="fas fa-file-contract"></i> ${property.Sertifikat}
+                            <i class="fas fa-file-contract"></i> ${info.Sertifikat}
                           </div>
                         ` : ''}
 
@@ -1537,22 +1549,26 @@
             });
         }
 
-        function extractLuasFromDescription(description) {
+        function extractInfoFromDescription(description) {
             const result = { LT: null, LB: null };
             if (!description) return result;
         
             // Cari pola seperti "LT: 259" atau "LT 259 m²"
             const ltMatch = description.match(/LT\s*[:\-]?\s*(\d+(?:[\.,]\d+)?)\s*m/i);
             const lbMatch = description.match(/LB\s*[:\-]?\s*(\d+(?:[\.,]\d+)?)\s*m/i);
+
+            const sertifikatMatch = description.match(/\b(SHM|HM|HGB|AJB|PPJB)\b/i);
         
             if (ltMatch) result.LT = ltMatch[1];
             if (lbMatch) result.LB = lbMatch[1];
+            if (sertifikatMatch) result.Sertifikat = sertifikatMatch[1].toUpperCase();
+            
             return result;
         }
 
         // Function to show property modal
         function showPropertyModal(property) {
-            const luas = extractLuasFromDescription(property.deskripsi || '');
+            const info = extractInfoFromDescription(property.deskripsi || '');
             const modal = document.getElementById('propertyModal');
             const modalContent = document.getElementById('modalContent');
 
@@ -1628,16 +1644,16 @@
                         <div class="modal-feature"><i class="fas fa-bath"></i> ${property.kamar_mandi || '0'} KM</div>
 
                         ${luas.LT ? `
-                            <div class="modal-feature"><i class="fas fa-ruler-combined"></i> LT: ${luas.LT} m²</div>
+                            <div class="modal-feature"><i class="fas fa-ruler-combined"></i> LT: ${info.LT} m²</div>
                         ` : ''}
                         
                         ${luas.LB ? `
-                            <div class="modal-feature"><i class="fas fa-home"></i> LB: ${luas.LB} m²</div>
+                            <div class="modal-feature"><i class="fas fa-home"></i> LB: ${info.LB} m²</div>
                         ` : ''}
 
                         ${property.Sertifikat && property.Sertifikat.trim() !== "" ? `
                           <div class="modal-feature sertifikat">
-                            <i class="fas fa-file-contract"></i> ${property.Sertifikat}
+                            <i class="fas fa-file-contract"></i> ${info.Sertifikat}
                           </div>
                         ` : ''}
 
@@ -1854,6 +1870,7 @@
     </script>
 </body>
 </html>
+
 
 
 
