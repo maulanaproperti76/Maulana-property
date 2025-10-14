@@ -1436,13 +1436,12 @@
             // Tentukan tampilan harga berdasarkan ada/tidaknya promo
             let priceHTML = '';
             if (property.harga_asli && property.harga_promo) {
-                // Ada promo - tampilkan harga asli tercoret dan harga promo
-                priceHTML = `
-                    <div class="property-price-promo">
-                        <div class="original-price">${property.harga_asli}</div>
-                        <div class="promo-price">${property.harga_promo} (Nego)</div>
-                    </div>
-                `;
+              priceHTML = `
+                <div class="property-price-promo">
+                  <div class="original-price">${property.harga_asli}</div>
+                  <div class="promo-price">${property.harga_promo}</div>
+                </div>
+              `;
             } else {
                 // Harga normal
                 priceHTML = `
@@ -1583,11 +1582,13 @@
             // Tentukan tampilan harga untuk modal
             let modalPriceHTML = '';
             if (property.harga_asli && property.harga_promo) {
-                // Ada promo - tampilkan harga asli tercoret dan harga promo
+                const hasNego = /\bnego\b/i.test(property.harga_promo || '');
                 modalPriceHTML = `
                     <div class="modal-price-promo">
                         <div class="modal-original-price">${property.harga_asli}</div>
-                        <div class="modal-promo-price">${property.harga_promo} (Nego)</div>
+                        <div class="modal-promo-price">
+                        ${property.harga_promo}${hasNego ? '' : ''}
+                        </div>
                     </div>
                 `;
             } else {
@@ -1870,6 +1871,7 @@
     </script>
 </body>
 </html>
+
 
 
 
