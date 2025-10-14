@@ -1416,7 +1416,7 @@
     
         // Function to create property card
         function createPropertyCard(property) {
-            const luas = extractInfoFromDescription(property.deskripsi || '');
+            const info = extractInfoFromDescription(property.deskripsi || '');
             const card = document.createElement('div');
             card.className = 'property-card';
             card.setAttribute('data-id', property.id);
@@ -1470,11 +1470,11 @@
                         <div class="feature"><i class="fas fa-bed"></i> ${property.kamar || '0'} KT</div>
                         <div class="feature"><i class="fas fa-bath"></i> ${property.kamar_mandi || '0'} KM</div>
 
-                        ${luas.LT ? `
+                        ${info.LT ? `
                             <div class="feature luas"><i class="fas fa-ruler-combined"></i> LT: ${info.LT} m²</div>
                         ` : ''}
                         
-                        ${luas.LB ? `
+                        ${info.LB ? `
                             <div class="feature luas"><i class="fas fa-home"></i> LB: ${info.LB} m²</div>
                         ` : ''}
 
@@ -1643,11 +1643,11 @@
                         <div class="modal-feature"><i class="fas fa-bed"></i> ${property.kamar || '0'} KT</div>
                         <div class="modal-feature"><i class="fas fa-bath"></i> ${property.kamar_mandi || '0'} KM</div>
 
-                        ${luas.LT ? `
+                        ${info.LT ? `
                             <div class="modal-feature"><i class="fas fa-ruler-combined"></i> LT: ${info.LT} m²</div>
                         ` : ''}
                         
-                        ${luas.LB ? `
+                        ${info.LB ? `
                             <div class="modal-feature"><i class="fas fa-home"></i> LB: ${info.LB} m²</div>
                         ` : ''}
 
@@ -1870,6 +1870,7 @@
     </script>
 </body>
 </html>
+
 
 
 
