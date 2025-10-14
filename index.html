@@ -1478,7 +1478,7 @@
                             <div class="feature luas"><i class="fas fa-home"></i> LB: ${info.LB} m²</div>
                         ` : ''}
 
-                        ${info.Sertifikat && property.Sertifikat.trim() !== "" ? `
+                        ${info.Sertifikat ? `
                           <div class="feature sertifikat">
                             <i class="fas fa-file-contract"></i> ${info.Sertifikat}
                           </div>
@@ -1651,8 +1651,8 @@
                             <div class="modal-feature"><i class="fas fa-home"></i> LB: ${info.LB} m²</div>
                         ` : ''}
 
-                        ${info.Sertifikat && property.Sertifikat.trim() !== "" ? `
-                          <div class="modal-feature sertifikat">
+                        ${info.Sertifikat ? `
+                          <div class="feature sertifikat">
                             <i class="fas fa-file-contract"></i> ${info.Sertifikat}
                           </div>
                         ` : ''}
@@ -1870,6 +1870,7 @@
     </script>
 </body>
 </html>
+
 
 
 
