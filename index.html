@@ -1398,8 +1398,8 @@
                     ${priceHTML} <!-- GUNAKAN priceHTML di sini, bukan kode lama -->
                     <div class="property-address"><i class="fas fa-map-marker-alt"></i> ${property.alamat || 'Alamat tidak tersedia'}</div>
                     <div class="property-features">
-                        <div class="feature"><i class="fas fa-bed"></i> ${property.KT || '0'} Kamar</div>
-                        <div class="feature"><i class="fas fa-bath"></i> ${property.KM || '0'} Kamar Mandi</div>
+                        <div class="feature"><i class="fas fa-bed"></i> ${property.Kamar || '0'} KT</div>
+                        <div class="feature"><i class="fas fa-bath"></i> ${property.Kamar Mandi || '0'} KM</div>
 
                         ${property.LT && property.LT.trim() !== "" ? `
                             <div class="feature"><i class="fas fa-ruler-combined"></i> LT: ${property.LT} m²</div>
@@ -1546,8 +1546,8 @@
                     </div>
                     <div class="modal-description">${formatDescription(property.deskripsi) || 'Tidak ada deskripsi'}</div>
                     <div class="modal-features">
-                        <div class="modal-feature"><i class="fas fa-bed"></i> ${property.KT || '0'} Kamar Tidur</div>
-                        <div class="modal-feature"><i class="fas fa-bath"></i> ${property.KM || '0'} Kamar Mandi</div>
+                        <div class="modal-feature"><i class="fas fa-bed"></i> ${property.Kamar Tidur || '0'} KT</div>
+                        <div class="modal-feature"><i class="fas fa-bath"></i> ${property.Kamar Mandi || '0'} KM</div>
 
                         ${property.LT && property.LT.trim() !== "" ? `
                             <div class="modal-feature"><i class="fas fa-ruler-combined"></i> LT: ${property.LT} m²</div>
@@ -1769,6 +1769,7 @@
     </script>
 </body>
 </html>
+
 
 
 
