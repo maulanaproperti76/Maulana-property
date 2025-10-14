@@ -620,14 +620,16 @@
         
         .modal-features {
             display: flex;
+            flex-wrap: wrap;
             gap: 1.5rem;
             margin-bottom: 1.5rem;
+            margin-top: 10px;
         }
         
         .modal-feature {
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 6px;
             color: #5a738e;
             font-size: 1rem;
         }
@@ -1317,7 +1319,7 @@
                 .replace(/\n\s*\n/g, '\n\n')
                 .trim(); 
             
-            let formatted = `📝 <strong>Deskripsi:</strong> `;
+            let formatted = `📝 <strong>Deskripsi:</strong><br>`;
             
             // Only apply special formatting if the old structured patterns exist
             if (normalizedDesc.includes('SPESIFIKASI') || normalizedDesc.includes('———————————')) {
@@ -1325,7 +1327,7 @@
                     .replace(/SPESIFIKASI —+/g, '<br><strong>SPESIFIKASI</strong><hr class="desc-separator">')
                     .replace(/FASILITAS PERUMAHAN —+/g, '<br><strong>FASILITAS PERUMAHAN</strong><hr class="desc-separator">')
                     .replace(/SELLING POINT : —+/g, '<br><strong>SELLING POINT</strong><hr class="desc-separator">')
-                    .replace(/•/g, '<br>•')
+                    .replace(/\n*•\s*/g, '<br>•')
                     .replace(/(\d+ Menit ke)/g, '<br>$1');
             } else {
                 // For natural descriptions, just use as is
@@ -1396,8 +1398,16 @@
                     ${priceHTML} <!-- GUNAKAN priceHTML di sini, bukan kode lama -->
                     <div class="property-address"><i class="fas fa-map-marker-alt"></i> ${property.alamat || 'Alamat tidak tersedia'}</div>
                     <div class="property-features">
-                        <div class="feature"><i class="fas fa-bed"></i> ${property.kamar || '0'} Kamar</div>
-                        <div class="feature"><i class="fas fa-bath"></i> ${property.kamar_mandi || '0'} Kamar Mandi</div>
+                        <div class="feature"><i class="fas fa-bed"></i> ${property.KT || '0'} Kamar</div>
+                        <div class="feature"><i class="fas fa-bath"></i> ${property.KM || '0'} Kamar Mandi</div>
+
+                        ${property.LT && property.LT.trim() !== "" ? `
+                            <div class="feature"><i class="fas fa-ruler-combined"></i> LT: ${property.LT} m²</div>
+                        ` : ''}
+                    
+                        ${property.LB && property.LB.trim() !== "" ? `
+                            <div class="feature"><i class="fas fa-home"></i> LB: ${property.LB} m²</div>
+                        ` : ''}
                     </div>
                     <div class="property-action">
                         <button class="view-details-btn"><i class="fas fa-eye"></i> Lihat Detail</button>
@@ -1536,8 +1546,16 @@
                     </div>
                     <div class="modal-description">${formatDescription(property.deskripsi) || 'Tidak ada deskripsi'}</div>
                     <div class="modal-features">
-                        <div class="modal-feature"><i class="fas fa-bed"></i> ${property.kamar || '0'} Kamar Tidur</div>
-                        <div class="modal-feature"><i class="fas fa-bath"></i> ${property.kamar_mandi || '0'} Kamar Mandi</div>
+                        <div class="modal-feature"><i class="fas fa-bed"></i> ${property.KT || '0'} Kamar Tidur</div>
+                        <div class="modal-feature"><i class="fas fa-bath"></i> ${property.KM || '0'} Kamar Mandi</div>
+
+                        ${property.LT && property.LT.trim() !== "" ? `
+                            <div class="modal-feature"><i class="fas fa-ruler-combined"></i> LT: ${property.LT} m²</div>
+                        ` : ''}
+                    
+                        ${property.LB && property.LB.trim() !== "" ? `
+                            <div class="modal-feature"><i class="fas fa-home"></i> LB: ${property.LB} m²</div>
+                        ` : ''}
                     </div>
                 
                     ${property.link && property.link.trim() !== "" ? `
@@ -1751,6 +1769,7 @@
     </script>
 </body>
 </html>
+
 
 
 
