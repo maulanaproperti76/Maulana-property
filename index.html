@@ -252,7 +252,10 @@
         
         .property-features {
             display: flex;
-            gap: 1rem;
+            flex-wrap: wrap;         /* biar rapi di dua baris kalau sempit */
+            align-items: center;
+            justify-content: flex-start;
+            gap: 6px 14px;
             margin-bottom: 1rem;
         }
         
@@ -265,7 +268,15 @@
         }
         
         .feature i {
-            font-size: 0.9rem;
+            font-size: 1rem;         /* kecilkan ikon sedikit */
+            margin-right: 5px;
+            color: #4a6491;
+        }
+
+        .feature span {
+          display: inline-block;
+          min-width: 50px;         /* biar urut sejajar antar item */
+          text-align: left;
         }
         
         .property-action {
@@ -1784,6 +1795,7 @@
     </script>
 </body>
 </html>
+
 
 
 
