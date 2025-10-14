@@ -1478,7 +1478,7 @@
                             <div class="feature luas"><i class="fas fa-home"></i> LB: ${info.LB} m²</div>
                         ` : ''}
 
-                        ${property.Sertifikat && property.Sertifikat.trim() !== "" ? `
+                        ${info.Sertifikat && property.Sertifikat.trim() !== "" ? `
                           <div class="feature sertifikat">
                             <i class="fas fa-file-contract"></i> ${info.Sertifikat}
                           </div>
@@ -1557,7 +1557,7 @@
             const ltMatch = description.match(/LT\s*[:\-]?\s*(\d+(?:[\.,]\d+)?)\s*m/i);
             const lbMatch = description.match(/LB\s*[:\-]?\s*(\d+(?:[\.,]\d+)?)\s*m/i);
 
-            const sertifikatMatch = description.match(/\b(SHM|HM|HGB|AJB|PPJB)\b/i);
+            const sertifikatMatch = description.match(/\b(SHM|shm|hm|HM|HGB|AJB|PPJB)\b/i);
         
             if (ltMatch) result.LT = ltMatch[1];
             if (lbMatch) result.LB = lbMatch[1];
@@ -1651,7 +1651,7 @@
                             <div class="modal-feature"><i class="fas fa-home"></i> LB: ${info.LB} m²</div>
                         ` : ''}
 
-                        ${property.Sertifikat && property.Sertifikat.trim() !== "" ? `
+                        ${info.Sertifikat && property.Sertifikat.trim() !== "" ? `
                           <div class="modal-feature sertifikat">
                             <i class="fas fa-file-contract"></i> ${info.Sertifikat}
                           </div>
@@ -1870,6 +1870,7 @@
     </script>
 </body>
 </html>
+
 
 
 
