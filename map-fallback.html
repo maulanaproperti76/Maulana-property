@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Survey Unit - Maulana Property</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: "Poppins", sans-serif;
+      background: linear-gradient(135deg, #e8f9f1, #ffffff);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      color: #2c3e50;
+      overflow: hidden;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 1.8rem;
+      margin: 10px 0;
+      color: #2c3e50;
+      animation: fadeIn 1s ease-in-out;
+    }
+
+    p {
+      font-size: 1rem;
+      color: #555;
+      margin-bottom: 25px;
+      animation: fadeIn 1.5s ease-in-out;
+    }
+
+    /* Tombol WA */
+    .wa-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      background: linear-gradient(135deg, #25D366, #128C7E);
+      color: white;
+      text-decoration: none;
+      padding: 15px 28px;
+      border-radius: 50px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      box-shadow: 0 5px 15px rgba(37, 211, 102, 0.3);
+      transition: transform 0.3s, box-shadow 0.3s;
+      animation: pulse 1.5s infinite;
+    }
+
+    .wa-btn:hover {
+      transform: scale(1.08);
+      box-shadow: 0 0 25px rgba(37, 211, 102, 0.6);
+    }
+
+    /* SVG tangan animasi */
+    .hand {
+      width: 100px;
+      height: 100px;
+      animation: wave 2s infinite ease-in-out;
+      transform-origin: bottom center;
+      margin-bottom: 10px;
+    }
+
+    @keyframes wave {
+      0%, 100% { transform: rotate(0deg); }
+      25% { transform: rotate(12deg); }
+      50% { transform: rotate(-10deg); }
+      75% { transform: rotate(12deg); }
+    }
+
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.6); }
+      70% { box-shadow: 0 0 0 20px rgba(37, 211, 102, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(15px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    footer {
+      position: absolute;
+      bottom: 15px;
+      font-size: 0.85rem;
+      color: #7f8c8d;
+      animation: fadeIn 2s ease-in-out;
+    }
+  </style>
+</head>
+<body>
+  <!-- SVG tangan kartun -->
+  <svg class="hand" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+    <path fill="#FFD79B" stroke="#D0A561" stroke-width="2" d="M31 10c-2 0-3 1-3 3v18l-3-2c-2-1-5-1-6 2s0 5 2 7l8 8c1 1 3 2 4 2s2-1 3-2l9-9c2-2 3-5 0-8s-5-3-7-1l-2 2V13c0-2-1-3-3-3z"/>
+    <path fill="#FFCC80" d="M34 39l8-8c1-1 2-2 4 0s1 3 0 4l-8 8c-1 1-3 1-4 0s-1-3 0-4z"/>
+  </svg>
+
+  <h1>Bisa langsung chat WA untuk survey unit</h1>
+  <p>Klik tombol di bawah ini untuk menghubungi kami dan menanyakan unit rumah.</p>
+
+  <a id="waBtn" href="#" target="_blank" class="wa-btn">
+    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 24 24">
+      <path d="M20.52 3.48A11.64 11.64 0 0 0 12.03 0 11.71 11.71 0 0 0 .3 11.7c0 2.06.53 4.09 1.55 5.89L0 24l6.65-1.73A11.57 11.57 0 0 0 12 23.4h.01c6.46 0 11.7-5.24 11.7-11.7a11.64 11.64 0 0 0-3.19-8.22zM12 21.4c-1.86 0-3.68-.5-5.26-1.45l-.38-.23-3.94 1.03 1.05-3.84-.25-.39A9.68 9.68 0 0 1 2.3 11.7c0-5.36 4.36-9.72 9.73-9.72 2.6 0 5.05 1.01 6.9 2.86a9.68 9.68 0 0 1 2.84 6.87c0 5.36-4.36 9.7-9.72 9.7zm5.31-7.3c-.29-.15-1.73-.85-2-.94-.27-.1-.46-.15-.65.15s-.75.94-.93 1.14-.34.22-.63.07a8.03 8.03 0 0 1-2.37-1.47 8.86 8.86 0 0 1-1.63-2.03c-.17-.29 0-.45.13-.6.13-.13.29-.34.43-.5.14-.17.19-.29.29-.49.1-.19.05-.36-.03-.51-.07-.15-.65-1.56-.89-2.14-.24-.58-.47-.5-.65-.51h-.55c-.19 0-.5.07-.77.36s-1.01.98-1.01 2.4 1.04 2.78 1.19 2.98c.15.19 2.05 3.13 4.96 4.38.69.3 1.22.48 1.64.61.69.22 1.33.19 1.83.12.56-.08 1.73-.71 1.97-1.4.24-.7.24-1.29.17-1.4-.08-.11-.26-.18-.55-.33z"/>
+    </svg>
+    Chat via WhatsApp
+  </a>
+
+  <footer>© 2025 Maulana Property</footer>
+
+  <script>
+    // Ambil nomor properti dari URL ?nomor=...
+    const params = new URLSearchParams(window.location.search);
+    const nomor = params.get("nomor") || "tidak diketahui";
+    const wa = "6285546451649";
+    const text = encodeURIComponent(`Saya mau bertanya mengenai rumah nomor ${nomor}`);
+    document.getElementById("waBtn").href = `https://wa.me/${wa}?text=${text}`;
+  </script>
+</body>
+</html>
