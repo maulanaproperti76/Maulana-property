@@ -1416,7 +1416,7 @@
     
         // Function to create property card
         function createPropertyCard(property) {
-            const luas = extractLuasFromDescription(property.deskripsi || '');
+            const luas = extractInfoFromDescription(property.deskripsi || '');
             const card = document.createElement('div');
             card.className = 'property-card';
             card.setAttribute('data-id', property.id);
@@ -1870,6 +1870,7 @@
     </script>
 </body>
 </html>
+
 
 
 
