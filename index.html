@@ -659,6 +659,19 @@
         .modal-feature i {
             font-size: 1.3rem;
         }
+
+        .feature.sertifikat,
+        .modal-feature.sertifikat {
+          font-size: 0.85rem;
+          color: #444;
+        }
+        
+        .feature.sertifikat i,
+        .modal-feature.sertifikat i {
+          font-size: 0.9rem;
+          color: #4a6491; /* warna khas Maulana Property */
+          margin-right: 4px;
+        }
         
         .modal-actions {
             display: flex;
@@ -1452,6 +1465,13 @@
                         ${luas.LB ? `
                             <div class="feature luas"><i class="fas fa-home"></i> LB: ${luas.LB} m²</div>
                         ` : ''}
+
+                        ${property.Sertifikat && property.Sertifikat.trim() !== "" ? `
+                          <div class="feature sertifikat">
+                            <i class="fas fa-file-contract"></i> ${property.Sertifikat}
+                          </div>
+                        ` : ''}
+
                     </div>
                     <div class="property-action">
                         <button class="view-details-btn"><i class="fas fa-eye"></i> Lihat Detail</button>
@@ -1614,6 +1634,13 @@
                         ${luas.LB ? `
                             <div class="modal-feature"><i class="fas fa-home"></i> LB: ${luas.LB} m²</div>
                         ` : ''}
+
+                        ${property.Sertifikat && property.Sertifikat.trim() !== "" ? `
+                          <div class="modal-feature sertifikat">
+                            <i class="fas fa-file-contract"></i> ${property.Sertifikat}
+                          </div>
+                        ` : ''}
+
                     </div>
                 
                     ${property.link && property.link.trim() !== "" ? `
@@ -1827,6 +1854,7 @@
     </script>
 </body>
 </html>
+
 
 
 
