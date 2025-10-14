@@ -1436,20 +1436,23 @@
             // Tentukan tampilan harga berdasarkan ada/tidaknya promo
             let priceHTML = '';
             if (property.harga_asli && property.harga_promo) {
+              const hasNego = /\bnego\b/i.test(property.harga_promo || '');
               priceHTML = `
                 <div class="property-price-promo">
                   <div class="original-price">${property.harga_asli}</div>
-                  <div class="promo-price">${property.harga_promo}</div>
+                  <div class="promo-price">
+                    ${property.harga_promo}${hasNego ? '' : ''}
+                  </div>
                 </div>
               `;
             } else {
-                // Harga normal
-                priceHTML = `
-                    <div class="property-price normal-price">
-                        ${property.harga_display || ('Rp ' + new Intl.NumberFormat('id-ID').format(property.harga))}
-                    </div>
-                `;
+              priceHTML = `
+                <div class="property-price normal-price">
+                  ${property.harga_display || ('Rp ' + new Intl.NumberFormat('id-ID').format(property.harga))}
+                </div>
+              `;
             }
+
             
             card.innerHTML = `
                 <div class="property-image">
@@ -1582,23 +1585,23 @@
             // Tentukan tampilan harga untuk modal
             let modalPriceHTML = '';
             if (property.harga_asli && property.harga_promo) {
-                const hasNego = /\bnego\b/i.test(property.harga_promo || '');
-                modalPriceHTML = `
-                    <div class="modal-price-promo">
-                        <div class="modal-original-price">${property.harga_asli}</div>
-                        <div class="modal-promo-price">
-                        ${property.harga_promo}${hasNego ? '' : ''}
-                        </div>
-                    </div>
-                `;
+              const hasNego = /\bnego\b/i.test(property.harga_promo || '');
+              modalPriceHTML = `
+                <div class="modal-price-promo">
+                  <div class="modal-original-price">${property.harga_asli}</div>
+                  <div class="modal-promo-price">
+                    ${property.harga_promo}${hasNego ? '' : ''}
+                  </div>
+                </div>
+              `;
             } else {
-                // Harga normal
-                modalPriceHTML = `
-                    <div class="modal-price normal-price">
-                        ${property.harga_display || ('Rp ' + new Intl.NumberFormat('id-ID').format(property.harga))}
-                    </div>
-                `;
+              modalPriceHTML = `
+                <div class="modal-price normal-price">
+                  ${property.harga_display || ('Rp ' + new Intl.NumberFormat('id-ID').format(property.harga))}
+                </div>
+              `;
             }
+
             
             // Create modal content
             modalContent.innerHTML = `
@@ -1871,6 +1874,7 @@
     </script>
 </body>
 </html>
+
 
 
 
