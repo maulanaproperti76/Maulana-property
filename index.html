@@ -1539,11 +1539,18 @@
                         <div class="modal-feature"><i class="fas fa-bed"></i> ${property.kamar || '0'} Kamar Tidur</div>
                         <div class="modal-feature"><i class="fas fa-bath"></i> ${property.kamar_mandi || '0'} Kamar Mandi</div>
                     </div>
-                    <a href="${property.link}" target="_blank" class="modal-link">
-                        <i class="fas fa-map-marked-alt"></i> Lihat di Google Maps
-                    </a>
+                
+                    ${property.link && property.link.trim() !== "" ? `
+                        <a href="${property.link}" target="_blank" class="modal-link">
+                            <i class="fas fa-map-marked-alt"></i> Lihat di Google Maps
+                        </a>
+                    ` : `
+                        <a href="map-fallback.html?nomor=${property.id}" class="modal-link" style="background: #4a6491; color: white;">
+                            <i class="fas fa-map-marker-alt"></i> Lihat Lokasi (Chat WA)
+                        </a>
+                    `}
                 </div>
-            `;
+
             
             // Show modal
             modal.style.display = 'block';
@@ -1743,6 +1750,7 @@
     </script>
 </body>
 </html>
+
 
 
 
