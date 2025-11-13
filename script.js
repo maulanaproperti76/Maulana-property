@@ -77,7 +77,7 @@ document.getElementById("sortPrice").addEventListener("change", (e) => {
 const BACKEND_API_URL = 'https://foto-backend-omn1.vercel.app/api/photos';
 
 // Nomor WhatsApp untuk kontak
-const WHATSAPP_NUMBER = "6285546451649"; // Ganti dengan nomor WhatsApp Anda
+const WHATSAPP_NUMBER = "6281772875352"; // Ganti dengan nomor WhatsApp Anda
 const WHATSAPP_MESSAGE = "Apakah rumah nomer {nomer} masih ada? Saya tertarik dengan properti ini.";
 
 // Function to format price with proper dots
