@@ -187,7 +187,7 @@ function createPropertyCard(property) {
     card.innerHTML = `
         <div class="property-image">
             ${mainImage ? 
-                `<img src="${mainImage}" alt="Property ${property.id}" loading="lazy">` : 
+                `<img src="${mainImage}" alt="${property.type || 'Rumah'} Dijual di ${property.alamat || 'Area Tertentu'}" loading="lazy">` : 
                 `<div class="no-image"><i class="far fa-image"></i> Tidak ada gambar</div>`
             }
             <div class="property-badge">${property.type || 'Properti'}</div>
