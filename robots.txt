@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://maulanaproperty.web.id/sitemap.xml
