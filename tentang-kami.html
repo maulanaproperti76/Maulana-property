@@ -82,6 +82,24 @@
             font-style: italic;
             text-align: center;   /* Teks keterangan di bawah juga rata tengah */
         }
+
+        @media print {
+            body {
+                font-size: 12pt;
+                color: #000;
+                background: #fff;
+            }
+            /* Membatasi ukuran gambar agar tidak terlalu besar saat diprint */
+            .about-image-container img {
+                max-width: 300px !important;
+                height: auto !important;
+                margin: 10px auto !important;
+            }
+            /* Mencegah elemen terpotong aneh di tengah halaman cetak */
+            .stat-box, .testimonial-card, h2, h3 {
+                page-break-inside: avoid;
+            }
+        }
     </style>
 </head>
 <body>
