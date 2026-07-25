@@ -64,12 +64,13 @@
         }
         .about-image-container {
             margin: 25px 0;
-            text-align: center;
+            text-align: center; /* Membuat elemen di dalamnya berada di tengah */
         }
         .about-image-container img {
-            width: 100%;
-            max-height: 400px;
-            object-fit: cover;
+            max-width: 100%;      /* Responsif mengikuti lebar layar */
+            height: auto;         /* Menjaga proporsi asli gambar (tidak ter-crop) */
+            display: block;       /* Membuat gambar menjadi block element */
+            margin: 0 auto;       /* Otomatis rata tengah secara horizontal */
             border-radius: 8px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
@@ -78,6 +79,7 @@
             color: #666;
             margin-top: 8px;
             font-style: italic;
+            text-align: center;   /* Teks keterangan di bawah juga rata tengah */
         }
     </style>
 </head>
