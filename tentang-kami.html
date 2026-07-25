@@ -7,6 +7,62 @@
     <link rel="icon" href="images/Logo_Center.png" type="image/png" sizes="32x32">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* CSS Tambahan khusus untuk Company Profile yang lebih menarik */
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+            text-align: center;
+        }
+        .stat-box {
+            background: #fdfdfd;
+            border: 1px solid #eaeaea;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+        }
+        .stat-box i {
+            font-size: 2rem;
+            color: #f39c12;
+            margin-bottom: 10px;
+        }
+        .stat-box h3 {
+            font-size: 1.8rem;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+        .stat-box p {
+            color: #666;
+            font-size: 0.9rem;
+            margin: 0;
+        }
+
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+        .testimonial-card {
+            background: #f9f9f9;
+            padding: 20px;
+            border-left: 4px solid #2c3e50;
+            border-radius: 4px;
+            font-style: italic;
+        }
+        .testimonial-card p {
+            margin-bottom: 15px;
+            color: #444;
+        }
+        .testimonial-author {
+            font-style: normal;
+            font-weight: bold;
+            color: #2c3e50;
+            font-size: 0.95rem;
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -26,6 +82,25 @@
     <main class="content-container" style="padding: 40px 20px; max-width: 900px; margin: 0 auto;">
         <h1>Tentang Maulana Property</h1>
         
+        <!-- 1. Statistik / Pencapaian -->
+        <div class="stats-container">
+            <div class="stat-box">
+                <i class="fas fa-home"></i>
+                <h3>50+</h3>
+                <p>Unit Properti Terkelola</p>
+            </div>
+            <div class="stat-box">
+                <i class="fas fa-award"></i>
+                <h3>3+</h3>
+                <p>Tahun Pengalaman</p>
+            </div>
+            <div class="stat-box">
+                <i class="fas fa-handshake"></i>
+                <h3>100%</h3>
+                <p>Pendampingan Legal Aman</p>
+            </div>
+        </div>
+
         <h2>Visi Kami</h2>
         <p>Menjadi agen properti terkemuka di Jawa Tengah yang dikenal karena integritas, pelayanan prima, dan penyediaan properti berkualitas yang sesuai dengan impian dan kebutuhan setiap klien.</p>
 
@@ -38,14 +113,30 @@
         
         <h2>Mengapa Memilih Kami?</h2>
         <h3>Pengalaman Lokal Mendalam</h3>
-        <p>Beroperasi di area Semarang, Kudus, dan Jepara, tim kami memiliki pemahaman mendalam tentang pasar properti lokal, termasuk nilai jual, potensi investasi, dan perkembangan kawasan terbaru.</p>
+        <p>Beroperasi di area Semarang, Kudus, dan Jepara, tim kami memiliki pemahaman mendalam tentang pasar properti lokal, termasuk nilai jual, potensi investasi, dan perkembangan kawasan terbaru seperti Tembalang.</p>
 
-        <h3>Fokus pada Kualitas</h3>
-        <p>Kami hanya memasarkan properti yang telah melalui seleksi ketat untuk memastikan standar kualitas dan legalitas terpenuhi, memberikan ketenangan pikiran bagi para pembeli kami.</p>
+        <h3>Fokus pada Kualitas & Legalitas</h3>
+        <p>Kami hanya memasarkan properti yang telah melalui seleksi ketat untuk memastikan standar kualitas bangunan serta keabsahan legalitas (SHM, PBB, dll) terpenuhi, memberikan ketenangan pikiran bagi para pembeli.</p>
+
+        <h3>Kemudahan & Konsultasi KPR</h3>
+        <p>Kami siap membantu dan menjembatani proses pengurusan KPR Anda melalui bank rekanan terpercaya, serta memberikan layanan survei lokasi tanpa biaya tersembunyi.</p>
 
         <h3>Pelayanan Personal</h3>
-        <p>Kami percaya bahwa mencari rumah adalah perjalanan yang personal. Kami menyediakan pendampingan satu per satu, mulai dari pencarian, negosiasi, hingga penandatanganan akta.</p>
+        <p>Kami percaya bahwa mencari rumah adalah perjalanan yang personal. Kami menyediakan pendampingan satu per satu, mulai dari pencarian unit, negosiasi harga terbaik, hingga penandatanganan akta.</p>
         
+        <!-- 3. Testimoni Klien -->
+        <h2>Apa Kata Klien Kami?</h2>
+        <div class="testimonials-grid">
+            <div class="testimonial-card">
+                <p>"Pelayanan Maulana Property sangat memuaskan dan transparan. Dibantu dari awal survei di Tembalang sampai urusan KPR beres dengan cepat!"</p>
+                <div class="testimonial-author">— Bapak Aris, Pembeli Rumah Mewah Semarang</div>
+            </div>
+            <div class="testimonial-card">
+                <p>"Agennya sangat paham kondisi pasar lokal dan ramah. Sangat direkomendasikan bagi yang sedang mencari properti berkualitas di Jawa Tengah."</p>
+                <div class="testimonial-author">— Ibu Dian, Investor Properti</div>
+            </div>
+        </div>
+
         <h2>Hubungi Tim Kami</h2>
         <p>Tertarik untuk berinvestasi atau menemukan rumah impian Anda? Jangan ragu hubungi tim Maulana Property:</p>
         <ul>
