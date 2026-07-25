@@ -3,101 +3,254 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tentang Kami - Maulana Property</title>
+    <title>Tentang Kami - Maulana Property | Company Profile</title>
     <link rel="icon" href="images/Logo_Center.png" type="image/png" sizes="32x32">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts untuk Tipografi Modern (Inter) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
     <style>
-        /* CSS Tambahan khusus untuk Company Profile yang lebih menarik */
-        .stats-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin: 30px 0;
+        /* === 1. Tipografi & Base Styling === */
+        body {
+            font-family: 'Inter', sans-serif;
+            color: #2d3748;
+            background-color: #f8fafc;
+            line-height: 1.8;
+            letter-spacing: -0.01em;
+        }
+
+        .content-container {
+            max-width: 900px;
+            margin: 50px auto;
+            padding: 50px 40px;
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #1a365d; /* Navy Blue */
+            margin-bottom: 25px;
             text-align: center;
         }
+
+        h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #1a365d;
+            margin-top: 45px;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 8px;
+        }
+
+        h3 {
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: #2b6cb0;
+            margin-top: 25px;
+            margin-bottom: 8px;
+        }
+
+        p, li {
+            font-size: 1rem;
+            color: #4a5568;
+            margin-bottom: 15px;
+        }
+
+        ul {
+            padding-left: 20px;
+        }
+
+        /* === 2. Statistik & White Space (Card Component) === */
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 25px;
+            margin: 40px 0;
+        }
         .stat-box {
-            background: #fdfdfd;
-            border: 1px solid #eaeaea;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            padding: 30px 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+            transition: transform 0.3s ease;
+        }
+        .stat-box:hover {
+            transform: translateY(-5px);
+            border-color: #d69e2e; /* Gold Accent */
         }
         .stat-box i {
-            font-size: 2rem;
-            color: #f39c12;
-            margin-bottom: 10px;
+            font-size: 2.2rem;
+            color: #d69e2e; /* Custom Gold Icon */
+            margin-bottom: 12px;
         }
         .stat-box h3 {
-            font-size: 1.8rem;
-            color: #2c3e50;
-            margin-bottom: 5px;
+            font-size: 2rem;
+            color: #1a365d;
+            margin: 0 0 5px 0;
+            border: none;
+            padding: 0;
         }
         .stat-box p {
-            color: #666;
+            color: #718096;
             font-size: 0.9rem;
             margin: 0;
+            font-weight: 500;
         }
 
-        .testimonials-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 20px;
-            margin: 30px 0;
-        }
-        .testimonial-card {
-            background: #f9f9f9;
-            padding: 20px;
-            border-left: 4px solid #2c3e50;
-            border-radius: 4px;
-            font-style: italic;
-        }
-        .testimonial-card p {
-            margin-bottom: 15px;
-            color: #444;
-        }
-        .testimonial-author {
-            font-style: normal;
-            font-weight: bold;
-            color: #2c3e50;
-            font-size: 0.95rem;
-        }
+        /* === 3. Elemen Visual & Brand Assets (Crop 16:9 & Ukuran Proporsional) === */
         .about-image-container {
-            margin: 25px 0;
-            text-align: center; /* Membuat elemen di dalamnya berada di tengah */
+            margin: 35px 0;
+            text-align: center;
+        }
+        .image-wrapper {
+            position: relative;
+            max-width: 600px; /* Ukuran pas, tidak terlalu besar */
+            margin: 0 auto;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(26, 54, 93, 0.12);
         }
         .about-image-container img {
-            max-width: 400px;     /* Ubah angka ini sesuai selera (misal 500px atau 400px agar lebih kecil lagi) */
-            width: 100%;          /* Tetap responsif jika dibuka di HP */
-            height: auto;         /* Menjaga proporsi asli gambar (tidak ter-crop) */
-            display: block;       /* Membuat gambar menjadi block element */
-            margin: 0 auto;       /* Otomatis rata tengah secara horizontal */
-            border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            width: 100%;
+            height: auto;
+            aspect-ratio: 16 / 9; /* Pemotongan proporsional */
+            object-fit: cover;
+            display: block;
+            margin: 0 auto;
         }
         .image-caption {
-            font-size: 0.85rem;
-            color: #666;
-            margin-top: 8px;
+            font-size: 0.9rem;
+            color: #718096;
+            margin-top: 12px;
             font-style: italic;
-            text-align: center;   /* Teks keterangan di bawah juga rata tengah */
         }
 
+        /* === 4. Testimoni Klien Modern (Rating, Quote & Avatar) === */
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin: 35px 0;
+        }
+        .testimonial-card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            padding: 25px;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .quote-icon {
+            color: #cbd5e0;
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+        .rating-stars {
+            color: #d69e2e;
+            font-size: 0.9rem;
+            margin-bottom: 12px;
+        }
+        .testimonial-card p {
+            font-style: italic;
+            color: #4a5568;
+            font-size: 0.95rem;
+            margin-bottom: 20px;
+        }
+        .testimonial-author-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            border-top: 1px solid #e2e8f0;
+            padding-top: 15px;
+        }
+        .testimonial-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #d69e2e;
+        }
+        .testimonial-author-info h4 {
+            margin: 0;
+            font-size: 0.95rem;
+            color: #1a365d;
+        }
+        .testimonial-author-info p {
+            margin: 0;
+            font-size: 0.8rem;
+            color: #718096;
+            font-style: normal;
+        }
+
+        /* === 5. CTA Button WhatsApp Interaktif === */
+        .cta-box {
+            background: linear-gradient(135deg, #1a365d 0%, #2b6cb0 100%);
+            color: #ffffff;
+            padding: 35px;
+            border-radius: 10px;
+            text-align: center;
+            margin-top: 50px;
+        }
+        .cta-box h2 {
+            color: #ffffff;
+            border: none;
+            margin-top: 0;
+        }
+        .cta-box p {
+            color: #e2e8f0;
+            max-width: 600px;
+            margin: 0 auto 20px auto;
+        }
+        .whatsapp-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background-color: #25d366;
+            color: #ffffff;
+            padding: 12px 28px;
+            border-radius: 50px;
+            font-weight: 600;
+            text-decoration: none;
+            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4);
+            transition: background 0.3s ease, transform 0.2s ease;
+        }
+        .whatsapp-btn:hover {
+            background-color: #20ba5a;
+            transform: translateY(-2px);
+            color: #ffffff;
+        }
+
+        /* === Print / PDF Friendly Styling === */
         @media print {
             body {
                 font-size: 12pt;
                 color: #000;
                 background: #fff;
             }
-            /* Membatasi ukuran gambar agar tidak terlalu besar saat diprint */
             .about-image-container img {
                 max-width: 300px !important;
                 height: auto !important;
                 margin: 10px auto !important;
             }
-            /* Mencegah elemen terpotong aneh di tengah halaman cetak */
             .stat-box, .testimonial-card, h2, h3 {
                 page-break-inside: avoid;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .content-container {
+                margin: 20px;
+                padding: 25px 20px;
             }
         }
     </style>
@@ -117,7 +270,7 @@
         </nav>
     </header>
 
-    <main class="content-container" style="padding: 40px 20px; max-width: 900px; margin: 0 auto;">
+    <main class="content-container">
         <h1>Tentang Maulana Property</h1>
         
         <!-- 1. Statistik / Pencapaian -->
@@ -141,7 +294,9 @@
 
         <!-- Foto / Visual Profil -->
         <div class="about-image-container">
-            <img src="images/Tim.jpg" alt="Survey Rumah">
+            <div class="image-wrapper">
+                <img src="images/Tim.jpg" alt="Survey Rumah">
+            </div>
             <div class="image-caption">Suasana pelayanan profesional di kantor Maulana Property, Tembalang.</div>
         </div>
 
@@ -168,16 +323,41 @@
         <h3>Pelayanan Personal</h3>
         <p>Kami percaya bahwa mencari rumah adalah perjalanan yang personal. Kami menyediakan pendampingan satu per satu, mulai dari pencarian unit, negosiasi harga terbaik, hingga penandatanganan akta.</p>
         
-        <!-- 3. Testimoni Klien -->
+        <!-- 3. Testimoni Klien dengan Avatar & Rating -->
         <h2>Apa Kata Klien Kami?</h2>
         <div class="testimonials-grid">
             <div class="testimonial-card">
-                <p>"Pelayanan Maulana Property sangat memuaskan dan transparan. Dibantu dari awal survei di Tembalang sampai urusan KPR beres dengan cepat!"</p>
-                <div class="testimonial-author">— Bapak Aris, Pembeli Rumah</div>
+                <div>
+                    <i class="fas fa-quote-left quote-icon"></i>
+                    <div class="rating-stars">
+                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                    </div>
+                    <p>"Pelayanan Maulana Property sangat memuaskan dan transparan. Dibantu dari awal survei di Tembalang sampai urusan KPR beres dengan cepat!"</p>
+                </div>
+                <div class="testimonial-author-wrapper">
+                    <img src="images/avatar-1.jpg" alt="Bapak Aris" class="testimonial-avatar">
+                    <div class="testimonial-author-info">
+                        <h4>Bapak Aris</h4>
+                        <p>Pembeli Rumah</p>
+                    </div>
+                </div>
             </div>
+            
             <div class="testimonial-card">
-                <p>"Agennya sangat paham kondisi pasar lokal dan ramah. Sangat direkomendasikan bagi yang sedang mencari properti berkualitas di Jawa Tengah."</p>
-                <div class="testimonial-author">— Ibu Dian, Investor Properti</div>
+                <div>
+                    <i class="fas fa-quote-left quote-icon"></i>
+                    <div class="rating-stars">
+                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                    </div>
+                    <p>"Agennya sangat paham kondisi pasar lokal dan ramah. Sangat direkomendasikan bagi yang sedang mencari properti berkualitas di Jawa Tengah."</p>
+                </div>
+                <div class="testimonial-author-wrapper">
+                    <img src="images/avatar-2.jpg" alt="Ibu Dian" class="testimonial-avatar">
+                    <div class="testimonial-author-info">
+                        <h4>Ibu Dian</h4>
+                        <p>Investor Properti</p>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -188,6 +368,15 @@
             <li><strong>Telepon/WhatsApp:</strong> <a href="https://wa.me/6281772875352?text=Halo%20Maulana%20Property,%20saya%20tertarik%20dengan%20properti%20Anda." target="_blank" style="color: #f39c12; text-decoration: none; font-weight: bold;">+62 817-7287-5352</a></li>
             <li><strong>Email:</strong> Maulanaproperti76@gmail.com</li>
         </ul>
+
+        <!-- Kotak CTA Interaktif & WhatsApp -->
+        <div class="cta-box">
+            <h2>Wujudkan Rumah Impian Anda Bersama Kami</h2>
+            <p>Tertarik untuk berinvestasi atau menjadwalkan survei lokasi properti premium di Semarang dan sekitarnya? Tim kami siap melayani Anda.</p>
+            <a href="https://wa.me/6281772875352?text=Halo%20Maulana%20Property,%20saya%20tertarik%20dengan%20properti%20Anda." target="_blank" class="whatsapp-btn">
+                <i class="fab fa-whatsapp fa-lg"></i> Hubungi via WhatsApp
+            </a>
+        </div>
     </main>
     
     <footer>
@@ -201,7 +390,7 @@
                 <p>Tembalang</p>
                 <p>Kota Semarang, 50252</p>
                 <p>Email: Maulanaproperti76@gmail.com</p>
-                <p>Telp: +62 817-7287-5352</p>
+                <p>Telp: <a href="https://wa.me/6281772875352" target="_blank" style="color: #f39c12; text-decoration: none;">+62 817-7287-5352</a></p>
             </div>
             <div class="footer-social">
                 <h3>Sosial Media</h3>
